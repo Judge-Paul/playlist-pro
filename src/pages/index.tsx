@@ -3,17 +3,31 @@ import { Inter } from "next/font/google";
 import { Download } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { URLSchema } from "@/lib/zod";
-import { ZodError } from "zod";
+import { toast } from "sonner";
+import { useSearchParams } from "next/navigation";
+import { useRouter } from "next/router";
 
 const inter = Inter({ subsets: ["latin"] });
 
 export default function Home() {
+  const params = useSearchParams();
+  const router = useRouter();
+  // https://www.youtube.com/playlist?list=PLDcLgcF8urTLDDfde1p9W5BJxPvWDSlQn
   function handleClick() {
-    const result = URLSchema.safeParse(
-      "https://www.yutube.com/playlist?list=PLDcLgcF8urTLDDfde1p9W5BJxPvWDSlQn",
-    );
+    const URL = params.get("playlist");
+    const result = URLSchema.safeParse(URL);
     if (!result.success) {
-      console.error("Invalid YouTube Playlist URL");
+      toast.error("Enter a Valid YouTube Playlist URL");
+    } else {
+      toast.success("Downloading Playlist...");
+    }
+  }
+  function handleChange(event: any) {
+    const { value } = event.target;
+    if (value) {
+      router.push(`/?playlist=${value}`);
+    } else {
+      router.push("/");
     }
   }
   // console.log(
@@ -54,6 +68,7 @@ export default function Home() {
           <div className="mt-5 flex gap-2 rounded-full bg-gradient-to-r from-pink-500 to-red-500 p-1">
             <div className="flex w-full gap-2 rounded-full bg-background p-1.5">
               <input
+                onChange={handleChange}
                 className="text-md w-full rounded-l-full bg-transparent py-2.5 pl-4 pr-2 focus:outline-none md:text-xl"
                 placeholder="Enter a valid YouTube Playlist"
               />
