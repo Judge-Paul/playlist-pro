@@ -2,10 +2,42 @@ import Image from "next/image";
 import { Inter } from "next/font/google";
 import { Download } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { URLSchema } from "@/lib/zod";
+import { ZodError } from "zod";
 
 const inter = Inter({ subsets: ["latin"] });
 
 export default function Home() {
+  function handleClick() {
+    const result = URLSchema.safeParse(
+      "https://www.yutube.com/playlist?list=PLDcLgcF8urTLDDfde1p9W5BJxPvWDSlQn",
+    );
+    if (!result.success) {
+      console.error("Invalid YouTube Playlist URL");
+    }
+  }
+  // console.log(
+  //   URLSchema.safeParse(
+  //     "https://www.youtube.com/playlist?list=PLDcLgcF8urTLDDfde1p9W5BJxPvWDSlQn",
+  //   ),
+  // );
+  // console.log(
+  //   URLSchema.safeParse(
+  //     "https://youtu.be/playlist?list=PLDcLgcF8urTLDDfde1p9W5BJxPvWDSlQn",
+  //   ),
+  // );
+  // console.log(URLSchema.safeParse("https://www.youtube.com/watch?v=VIDEOID"));
+  // console.log(URLSchema.safeParse("invalid-url-format"));
+  // console.log(URLSchema.safeParse(""));
+  // console.log(
+  //   URLSchema.safeParse(
+  //     "https://www.youtube.com/playlist?list=PLDcLgcF8urTLDDfde1p9W5BJxPvWDSlQn&index=1",
+  //   ),
+  // );
+  // console.log(
+  //   URLSchema.safeParse("https://www.youtube.com/playlist?video=VIDEOID"),
+  // );
+
   return (
     <main>
       <div className="flex min-h-screen w-full items-center justify-center">
@@ -21,8 +53,14 @@ export default function Home() {
           </p>
           <div className="mt-5 flex gap-2 rounded-full bg-gradient-to-r from-pink-500 to-red-500 p-1">
             <div className="flex w-full gap-2 rounded-full bg-background p-1.5">
-              <input className="text-md w-full rounded-l-full bg-transparent py-2.5 pl-4 pr-2 focus:outline-none md:text-xl" />
-              <Button className="h-full rounded-full bg-gradient-to-r from-pink-500 to-red-500 px-4 text-sm font-semibold hover:scale-95 dark:text-white md:px-7 md:text-lg">
+              <input
+                className="text-md w-full rounded-l-full bg-transparent py-2.5 pl-4 pr-2 focus:outline-none md:text-xl"
+                placeholder="Enter a valid YouTube Playlist"
+              />
+              <Button
+                onClick={handleClick}
+                className="h-full rounded-full bg-gradient-to-r from-pink-500 to-red-500 px-4 text-sm font-semibold hover:scale-95 dark:text-white md:px-7 md:text-lg"
+              >
                 <Download className="mr-2" />
                 Download
               </Button>
