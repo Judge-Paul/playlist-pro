@@ -7,6 +7,7 @@ import { toast } from "sonner";
 import { useSearchParams } from "next/navigation";
 import { useRouter } from "next/router";
 import { getPlaylistId } from "@/lib/utils";
+import { FormEvent } from "react";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -14,7 +15,8 @@ export default function Home() {
   const params = useSearchParams();
   const router = useRouter();
   // https://www.youtube.com/playlist?list=PLDcLgcF8urTLDDfde1p9W5BJxPvWDSlQn
-  function handleClick() {
+  function handleSubmit(event: FormEvent) {
+    event.preventDefault();
     const URL: any = params.get("playlist");
     const playlistId: string | null = getPlaylistId(URL);
     try {
@@ -68,20 +70,20 @@ export default function Home() {
           immediately.
         </p>
         <div className="mt-5 flex gap-2 rounded-full bg-gradient-to-r from-pink-500 to-red-500 p-1">
-          <div className="flex w-full gap-2 rounded-full bg-background p-1.5">
+          <form
+            onSubmit={handleSubmit}
+            className="flex w-full gap-2 rounded-full bg-background p-1.5"
+          >
             <input
               onChange={handleChange}
               className="text-md w-full rounded-l-full bg-transparent py-2.5 pl-4 pr-2 focus:outline-none md:text-xl"
               placeholder="Enter a valid YouTube Playlist"
             />
-            <Button
-              onClick={handleClick}
-              className="h-full rounded-full bg-gradient-to-r from-pink-500 to-red-500 px-4 text-sm font-semibold hover:scale-95 dark:text-white md:px-7 md:text-lg"
-            >
+            <Button className="h-full rounded-full bg-gradient-to-r from-pink-500 to-red-500 px-4 text-sm font-semibold hover:scale-95 active:scale-90 dark:text-white md:px-7 md:text-lg">
               <Download className="mr-2" />
               Download
             </Button>
-          </div>
+          </form>
         </div>
       </div>
     </main>
