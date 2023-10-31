@@ -15,14 +15,12 @@ export default function VideoCard({
         className="h-40 w-full bg-secondary sm:h-28 sm:w-40"
         alt="Example Image"
       />
-      {/* <div className="h-40 w-full bg-secondary sm:h-24 sm:w-36"></div> */}
       <div className="mt-3 sm:mt-0 sm:w-3/4">
         <h4 className="line-clamp-2 h-12 w-full font-semibold sm:w-2/3 md:w-1/2">
           {title}
         </h4>
-        {/* <div className="h-8 w-full bg-secondary sm:w-2/3 md:w-1/2"></div> */}
         <p className="mt-4 line-clamp-3 h-12 w-full text-xs md:w-2/3">
-          {description}
+          {description || "N/A"}
         </p>
       </div>
       <div className="mt-3 flex justify-between sm:flex-col">
