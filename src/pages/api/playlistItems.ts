@@ -43,6 +43,7 @@ export default async function handler(
 
     res.status(200).json(allItems);
   } catch (error) {
+    res.status(400).json({ error: "Playlist ID is Invalid" });
     res.status(500).json({ error: "Failed to fetch data" });
   }
 }

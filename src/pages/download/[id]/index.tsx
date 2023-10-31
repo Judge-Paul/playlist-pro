@@ -16,11 +16,12 @@ const fetcher = (url: string) => fetch(url).then((res) => res.json());
 export default function Download() {
   const router = useRouter();
   const id = router.query.id;
-  const { data, error } = useSWR(`/api/playlistItems?id=${id}`, fetcher);
-  if (error) {
-    toast.error(error.message);
+  const { data, error } = useSWR(`/api/playlistItems?id=${id}`, fetcher, {
+    revalidateOnFocus: false,
+  });
+  if (data?.error) {
+    toast.error(data.error + ". Reload the page to Try Again.");
   }
-
   return (
     <main>
       <h1 className="mt-10 text-center text-3xl font-bold lg:text-5xl">
@@ -28,7 +29,7 @@ export default function Download() {
       </h1>
       <div className="mx-auto mt-7 max-w-5xl px-8">
         <div className="flex justify-between">
-          {data ? (
+          {data && !data?.error ? (
             <h4 className="my-auto text-lg">
               {data.length} Videos in Playlist
             </h4>
@@ -46,7 +47,7 @@ export default function Download() {
           </Popover>
         </div>
         <div className="mt-7">
-          {data ? (
+          {data && !data?.error ? (
             data.map((video: any) => (
               <VideoCard key={video.id} {...video.snippet} />
             ))
