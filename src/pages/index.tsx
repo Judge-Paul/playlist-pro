@@ -18,11 +18,11 @@ export default function Home() {
   // https://www.youtube.com/playlist?list=PLDcLgcF8urTLDDfde1p9W5BJxPvWDSlQn
   function handleSubmit(event: FormEvent) {
     event.preventDefault();
-    const URL: URL = params.get("playlist");
-    let playlistId: string | null;
-    playlistId = getPlaylistId(URL ?? "");
     try {
+      const URL: string | null = params.get("playlist");
       URLSchema.parse(URL);
+      let playlistId: string;
+      playlistId = getPlaylistId(URL as URL);
       toast.success("Generating Playlist Downloads...");
       playlistId
         ? router.push(`/download/${playlistId}`)
