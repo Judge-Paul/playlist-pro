@@ -8,6 +8,7 @@ import { useSearchParams } from "next/navigation";
 import { useRouter } from "next/router";
 import { getPlaylistId } from "@/lib/utils";
 import { FormEvent } from "react";
+import { URL } from "@/types";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -17,8 +18,9 @@ export default function Home() {
   // https://www.youtube.com/playlist?list=PLDcLgcF8urTLDDfde1p9W5BJxPvWDSlQn
   function handleSubmit(event: FormEvent) {
     event.preventDefault();
-    const URL: any = params.get("playlist");
-    const playlistId: string | null = getPlaylistId(URL);
+    const URL: URL = params.get("playlist");
+    let playlistId: string | null;
+    playlistId = getPlaylistId(URL ?? "");
     try {
       URLSchema.parse(URL);
       toast.success("Generating Playlist Downloads...");
@@ -35,6 +37,26 @@ export default function Home() {
       router.push(`/?playlist=${value}`);
     }
   }
+  // console.log(getPlaylistId("hello world"), "FAIL");
+  // console.log(
+  //   getPlaylistId(
+  //     "youtube.com/playlist?list=PLqkLaKB2GJhWXV9rcarwvn06ISlL_9mPQ&si=lvHKuJAnxBsIAlVp",
+  //   ),
+  //   "PASS",
+  // );
+  // console.log(
+  //   getPlaylistId(
+  //     "www.youtube.com/playlist?list=PLqkLaKB2GJhWXV9rcarwvn06ISlL_9mPQ&si=lvHKuJAnxBsIAlVp",
+  //   ),
+  //   "PASS",
+  // );
+  // console.log(
+  //   getPlaylistId(
+  //     "https://youtu.be/playlist?list=PLqkLaKB2GJhWXV9rcarwvn06ISlL_9mPQ&si=lvHKuJAnxBsIAlVp",
+  //   ),
+  //   "PASS",
+  // );
+  // console.log(getPlaylistId(""), "FAIL");
   // console.log(
   //   URLSchema.safeParse(
   //     "https://www.youtube.com/playlist?list=PLDcLgcF8urTLDDfde1p9W5BJxPvWDSlQn",
