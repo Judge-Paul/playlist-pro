@@ -1,6 +1,9 @@
 export type VideoCardProps = {
   title: string;
   description: string;
+  resourceId: {
+    videoId: string;
+  };
   thumbnails: {
     default: {
       url: string;

@@ -1,11 +1,14 @@
 import { ArrowUpRightSquare, Download } from "lucide-react";
 import { VideoCardProps } from "@/types";
 import Image from "next/image";
+import Link from "next/link";
 export default function VideoCard({
   thumbnails,
   title,
   description,
+  resourceId,
 }: VideoCardProps) {
+  console.log;
   return (
     <div className="mb-2 justify-between gap-3 border border-secondary p-5 sm:flex">
       <Image
@@ -25,7 +28,9 @@ export default function VideoCard({
       </div>
       <div className="mt-3 flex justify-between sm:flex-col">
         <Download className="h-8 w-8 cursor-pointer hover:scale-[.90] active:scale-[.85]" />
-        <ArrowUpRightSquare className="h-8 w-8 cursor-pointer hover:scale-[.90] active:scale-[.85]" />
+        <Link href={`https://youtu.be/${resourceId.videoId}`}>
+          <ArrowUpRightSquare className="h-8 w-8 cursor-pointer hover:scale-[.90] active:scale-[.85]" />
+        </Link>
       </div>
     </div>
   );
