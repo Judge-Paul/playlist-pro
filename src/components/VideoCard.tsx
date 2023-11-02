@@ -1,14 +1,24 @@
-import { ArrowUpRightSquare, Download } from "lucide-react";
+import { Download, ExternalLink } from "lucide-react";
 import { VideoCardProps } from "@/types";
 import Image from "next/image";
 import Link from "next/link";
+import useSWR from "swr";
+import { fetcher } from "@/lib/utils";
+
 export default function VideoCard({
   thumbnails,
   title,
   description,
   resourceId,
 }: VideoCardProps) {
-  console.log;
+  const { videoId } = resourceId;
+  const { data, error } = useSWR(
+    `/api/downloadLinks?videoId=${videoId}`,
+    fetcher,
+    {
+      revalidateOnFocus: false,
+    },
+  );
   return (
     <div className="mb-2 justify-between gap-3 border border-secondary p-5 sm:flex">
       <Image
@@ -27,9 +37,15 @@ export default function VideoCard({
         </p>
       </div>
       <div className="mt-3 flex justify-between sm:flex-col">
-        <Download className="h-8 w-8 cursor-pointer hover:scale-[.90] active:scale-[.85]" />
-        <Link href={`https://youtu.be/${resourceId.videoId}`}>
-          <ArrowUpRightSquare className="h-8 w-8 cursor-pointer hover:scale-[.90] active:scale-[.85]" />
+        {data ? (
+          <Link href={data[2].link}>
+            <Download className="h-8 w-8 cursor-pointer hover:scale-[.90] active:scale-[.85]" />
+          </Link>
+        ) : (
+          <div className="h-8 w-8 bg-secondary"></div>
+        )}
+        <Link href={`https://youtu.be/${videoId}`}>
+          <ExternalLink className="h-8 w-8 cursor-pointer hover:scale-[.90] active:scale-[.85]" />
         </Link>
       </div>
     </div>
