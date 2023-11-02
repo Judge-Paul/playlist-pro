@@ -1,5 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import axios from "axios";
+import type { PlaylistPrivateItem } from "@/types";
 
 export default async function handler(
   req: NextApiRequest,
@@ -13,7 +14,6 @@ export default async function handler(
   }
 
   try {
-    // Function to make requests recursively and accumulate items
     const fetchItems = async (pageToken = "") => {
       const response = await axios.get(
         `https://www.googleapis.com/youtube/v3/playlistItems?part=snippet&playlistId=${id}&key=${apiKey}&pageToken=${pageToken}`,
@@ -25,7 +25,16 @@ export default async function handler(
         return [];
       }
 
-      const itemsArray = items;
+      const filteredItems: PlaylistPrivateItem[] = items.filter(
+        (item: PlaylistPrivateItem) => {
+          return (
+            item.snippet.title !== "Private video" &&
+            item.snippet.description !== "This video is private."
+          );
+        },
+      );
+
+      const itemsArray = filteredItems;
 
       if (nextPageToken) {
         const nextItems = await fetchItems(nextPageToken);

@@ -15,3 +15,10 @@ export type VideoCardProps = {
 
 type URL = string;
 export type URL<T> = T extends null ? "" : T;
+
+export type PlaylistPrivateItem = {
+  snippet: {
+    title: string;
+    description: string;
+  };
+};
