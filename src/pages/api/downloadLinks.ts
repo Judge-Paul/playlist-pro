@@ -6,10 +6,16 @@ export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse,
 ) {
+  const { videoId } = req.query;
+
+  if (!videoId) {
+    return res.status(400).json({ error: "Missing videoId" });
+  }
+
   try {
     // Make an HTTP GET request to the target URL using Axios
     const response = await axios.get(
-      "https://dwntube.com/download?v=https://www.youtube.com/watch?v=zBPeGR48_vE",
+      `https://dwntube.com/download?v=https://www.youtube.com/watch?v=${videoId}}`,
     ); // Replace with your target URL
 
     if (response.status === 200) {
