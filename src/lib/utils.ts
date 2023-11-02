@@ -14,7 +14,8 @@ export function getPlaylistId(url: string) {
 
   if (match && match[1]) {
     return match[1];
-  } else {
-    return null;
   }
+  return "";
 }
+
+export const fetcher = (url: string) => fetch(url).then((res) => res.json());

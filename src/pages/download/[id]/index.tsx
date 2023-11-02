@@ -10,8 +10,7 @@ import VideoLoadingCard from "@/components/VideoLoadingCard";
 import VideoCard from "@/components/VideoCard";
 import { toast } from "sonner";
 import useSWR from "swr";
-
-const fetcher = (url: string) => fetch(url).then((res) => res.json());
+import { fetcher } from "@/lib/utils";
 
 export default function Download() {
   const router = useRouter();
@@ -29,7 +28,7 @@ export default function Download() {
       </h1>
       <div className="mx-auto mt-7 max-w-5xl px-8">
         <div className="flex justify-between">
-          {data && !data?.error ? (
+          {data && !data.error ? (
             <h4 className="my-auto text-lg">
               {data.length} Videos in Playlist
             </h4>
