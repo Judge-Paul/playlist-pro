@@ -6,14 +6,11 @@ const isYouTubePlaylist = (url: string) => {
   return isYouTube && isPlaylist;
 };
 
-export const URLSchema = z
-  .string()
-  .url()
-  .refine(
-    (url) => {
-      return isYouTubePlaylist(url);
-    },
-    {
-      message: "Invalid YouTube playlist URL",
-    },
-  );
+export const URLSchema = z.string().refine(
+  (url) => {
+    return isYouTubePlaylist(url);
+  },
+  {
+    message: "Invalid YouTube playlist URL",
+  },
+);
