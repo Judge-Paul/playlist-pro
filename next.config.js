@@ -6,7 +6,10 @@ const nextConfig = {
       {
         protocol: "https",
         hostname: "i.ytimg.com",
-        port: "",
+      },
+      {
+        protocol: "https",
+        hostname: "gravatar.com",
       },
     ],
   },
