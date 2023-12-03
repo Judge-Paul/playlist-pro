@@ -7,14 +7,15 @@ import {
 import { ChevronDown } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import VideoLoadingCard from "@/components/VideoLoadingCard";
-import VideoCard from "@/components/VideoCard";
+import PlaylistCard from "@/components/PlaylistCard";
 import { toast } from "sonner";
 import useSWR from "swr";
 import { fetcher } from "@/lib/utils";
+import { PlaylistItem } from "@/types";
 
 export default function Download() {
   const router = useRouter();
-  const id = router.query.id;
+  const { id } = router.query;
   const { data, error } = useSWR(`/api/playlistItems?id=${id}`, fetcher, {
     revalidateOnFocus: false,
   });
@@ -47,8 +48,8 @@ export default function Download() {
         </div>
         <div className="mt-7">
           {data && !data?.error ? (
-            data.map((video: any) => (
-              <VideoCard key={video.id} {...video.snippet} />
+            data.map((playlist: PlaylistItem) => (
+              <PlaylistCard key={playlist.id} {...playlist} />
             ))
           ) : (
             <>
