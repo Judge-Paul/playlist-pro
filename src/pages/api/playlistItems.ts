@@ -1,12 +1,13 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import axios from "axios";
-import type { PlaylistPrivateItem } from "@/types";
+import type { PlaylistItem } from "@/types";
 
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse,
 ) {
   const apiKey = process.env.API_KEY;
+  const baseURL = process.env.BASE_URL;
   const { id } = req.query;
 
   if (!id) {
@@ -25,8 +26,8 @@ export default async function handler(
         return [];
       }
 
-      const filteredItems: PlaylistPrivateItem[] = items.filter(
-        (item: PlaylistPrivateItem) => {
+      const filteredItems: PlaylistItem[] = items.filter(
+        (item: PlaylistItem) => {
           return (
             item.snippet.title !== "Private video" &&
             item.snippet.description !== "This video is private."
@@ -50,9 +51,19 @@ export default async function handler(
       return res.status(400).json({ error: "Playlist Not Found" });
     }
 
+    // Make request to get all downloadlinks and add them to the object being sent to the client
+    await Promise.all(
+      allItems.map(async (item) => {
+        const { videoId } = item.snippet.resourceId;
+        const response = await axios.get(
+          `${baseURL}/api/downloadLinks?videoId=${videoId}`,
+        );
+        item.downloadLinks = response.data.downloadLinks;
+      }),
+    );
+
     res.status(200).json(allItems);
   } catch (error) {
-    res.status(400).json({ error: "Playlist ID is Invalid" });
     res.status(500).json({ error: "Failed to fetch data" });
   }
 }
