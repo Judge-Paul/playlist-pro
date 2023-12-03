@@ -1,24 +1,41 @@
-export type VideoCardProps = {
-  title: string;
-  description: string;
-  resourceId: {
-    videoId: string;
-  };
-  thumbnails: {
-    default: {
-      url: string;
-      height: number;
-      width: number;
-    };
-  };
-};
-
 type URL = string;
 export type URL<T> = T extends null ? "" : T;
 
-export type PlaylistPrivateItem = {
+type VideoLinkData = {
+  quality: "144p" | "360p" | "720p";
+  format: "mp4" | "3gp";
+  link: string;
+};
+
+export type PlaylistItem = {
+  etag: string;
+  id: string;
+  kind: string;
   snippet: {
+    publishedAt: string;
+    channelId: string;
     title: string;
+    channelTitle: string;
     description: string;
+    playlistId: string;
+    position: number;
+    publishedAt: string;
+    resourceId: {
+      kind: string;
+      videoId: string;
+    };
+    thumbnails: {
+      default: { url: string; width: number; height: number };
+      medium: { url: string; width: number; height: number };
+      high: { url: string; width: number; height: number };
+    };
+    title: string;
+    videoOwnerChannelId: string;
+    videoOwnerChannelTitle: string;
+  };
+  downloadLinks: {
+    high: VideoLinkData;
+    medium: VideoLinkData;
+    low: VideoLinkData;
   };
 };
