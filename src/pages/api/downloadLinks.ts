@@ -13,6 +13,8 @@ export default async function handler(
   }
 
   try {
+    const qualityMap = ["high", "medium", "low"];
+
     // Make an HTTP GET request to the target URL using Axios
     const response = await axios.get(
       `https://dwntube.com/download?v=https://www.youtube.com/watch?v=${videoId}}`,
@@ -20,7 +22,7 @@ export default async function handler(
 
     if (response.status === 200) {
       const $ = cheerio.load(response.data);
-      const downloadLinks: object[] = [];
+      let downloadLinks = {};
 
       // Select the table with class "downloadsTable" and iterate through its rows
       const firstTable = $(".downloadsTable").first();
@@ -31,21 +33,22 @@ export default async function handler(
         const link = $(row).find("a.downloadBtn").attr("href");
 
         if (quality && format && link) {
-          downloadLinks.push({ quality, format, link });
+          downloadLinks = {
+            ...downloadLinks,
+            [qualityMap[i]]: { quality, format, link },
+          };
         }
       });
 
-      if (downloadLinks.length > 0) {
-        res.status(200).json(downloadLinks);
+      if (JSON.stringify(downloadLinks) !== "{}") {
+        res.status(200).json({ downloadLinks });
       } else {
-        res.status(response.status).json({ error: "Failed to retrieve data" });
+        res.status(response.status).json({ error: "Links not Available." });
       }
     } else {
-      // Handle the case when the HTTP request fails
       res.status(response.status).json({ error: "Failed to retrieve data" });
     }
   } catch (error) {
-    // Handle any errors that may occur during the process
     res.status(500).json({ error: "Internal server error" });
   }
 }
