@@ -7,7 +7,7 @@ import { toast } from "sonner";
 import { useSearchParams } from "next/navigation";
 import { useRouter } from "next/router";
 import { getPlaylistId } from "@/lib/utils";
-import { FormEvent } from "react";
+import { FormEvent, useState } from "react";
 import { URL } from "@/types";
 
 const inter = Inter({ subsets: ["latin"] });
@@ -15,9 +15,11 @@ const inter = Inter({ subsets: ["latin"] });
 export default function Home() {
   const params = useSearchParams();
   const router = useRouter();
+  const [isLoading, setIsLoading] = useState(false);
   // https://www.youtube.com/playlist?list=PLDcLgcF8urTLDDfde1p9W5BJxPvWDSlQn
   function handleSubmit(event: FormEvent) {
     event.preventDefault();
+    setIsLoading(true);
     try {
       const URL: string | null = params.get("playlist");
       URLSchema.parse(URL);
@@ -25,10 +27,12 @@ export default function Home() {
       playlistId = getPlaylistId(URL as URL);
       toast.success("Generating Playlist Downloads...");
       playlistId
-        ? router.push(`/download/${playlistId}`)
+        ? router.push(`/download/${playlistId}?quality=medium`)
         : toast.error("Error Generating Playlist Downloads...");
+      setIsLoading(false);
     } catch (error: any) {
       toast.error("Enter a Valid YouTube Playlist URL");
+      setIsLoading(false);
     }
   }
   function handleChange(event: any) {
@@ -101,7 +105,10 @@ export default function Home() {
               className="text-md w-full rounded-l-full bg-transparent py-2.5 pl-4 pr-2 focus:outline-none md:text-xl"
               placeholder="Enter a valid YouTube Playlist"
             />
-            <Button className="h-full rounded-full bg-gradient-to-r from-pink-500 to-red-500 px-4 text-sm font-semibold hover:scale-95 active:scale-90 dark:text-white md:px-7 md:text-lg">
+            <Button
+              disabled={isLoading}
+              className="h-full rounded-full bg-gradient-to-r from-pink-500 to-red-500 px-4 text-sm font-semibold hover:scale-95 active:scale-90 dark:text-white md:px-7 md:text-lg"
+            >
               <Download className="mr-2" />
               Download
             </Button>
