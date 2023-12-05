@@ -5,6 +5,8 @@ type VideoLinkData = {
   quality: "144p" | "360p" | "720p";
   format: "mp4" | "3gp";
   link: string;
+  size: number;
+  resolution: string;
 };
 
 export type PlaylistItem = {
