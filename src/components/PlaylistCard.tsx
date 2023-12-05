@@ -3,15 +3,24 @@ import { useRouter } from "next/router";
 import { PlaylistItem } from "@/types";
 import Image from "next/image";
 import Link from "next/link";
+import { formatBytes } from "@/lib/utils";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 
 export default function PlaylistCard({ snippet, downloadLinks }: PlaylistItem) {
+  const router = useRouter();
+  const { quality } = router.query;
   const {
     title,
     description,
     thumbnails,
     resourceId: { videoId },
   } = snippet;
-  const router = useRouter();
+  const { link, size, resolution } = downloadLinks[quality];
   return (
     <div className="mb-2 justify-between gap-3 border border-secondary p-5 sm:flex">
       <Image
@@ -33,8 +42,17 @@ export default function PlaylistCard({ snippet, downloadLinks }: PlaylistItem) {
         </p>
       </div>
       <div className="hidden flex-col justify-between sm:flex">
-        <Link href={downloadLinks.medium.link || `${router.asPath}#`}>
-          <Download className="h-8 w-8 cursor-pointer hover:scale-[.90] active:scale-[.85]" />
+        <Link href={link || `${router.asPath}#`}>
+          <TooltipProvider>
+            <Tooltip>
+              <TooltipTrigger>
+                <Download className="h-8 w-8 cursor-pointer hover:scale-[.90] active:scale-[.85]" />
+              </TooltipTrigger>
+              <TooltipContent>
+                {` ${resolution} (${formatBytes(size)})`}
+              </TooltipContent>
+            </Tooltip>
+          </TooltipProvider>
         </Link>
         <Link href={`https://youtu.be/${videoId}`}>
           <ExternalLink className="h-8 w-8 cursor-pointer hover:scale-[.90] active:scale-[.85]" />
@@ -42,10 +60,10 @@ export default function PlaylistCard({ snippet, downloadLinks }: PlaylistItem) {
       </div>
       <div className="mt-2 sm:hidden">
         <Link
-          href={downloadLinks.medium.link || `${router.asPath}#`}
+          href={link || `${router.asPath}#`}
           className="flex w-full items-center justify-center rounded-md bg-primary px-4 py-2 text-secondary"
         >
-          Download <Download className="ml-2" />
+          Download ({formatBytes(size)}) <Download className="ml-2" />
         </Link>
         <Link
           href={`https://youtu.be/${videoId}`}
