@@ -13,40 +13,52 @@ export default async function handler(
   }
 
   try {
-    const qualityMap = ["high", "medium", "low"];
-
-    // Make an HTTP GET request to the target URL using Axios
     const response = await axios.get(
       `https://dwntube.com/download?v=https://www.youtube.com/watch?v=${videoId}}`,
-    ); // Replace with your target URL
+    );
 
     if (response.status === 200) {
       const $ = cheerio.load(response.data);
+
+      const qualityMap = ["high", "medium", "low"];
+      const firstTable = $(".downloadsTable").first();
+      const rows = firstTable.find("tr:gt(0)");
+
+      const promises = rows
+        .map(async (i, row) => {
+          const quality = qualityMap[i];
+          const resolution = $(row).find("td:nth-child(1)").text();
+          const format = $(row).find("td:nth-child(2)").text();
+          const link = $(row).find("a.downloadBtn").attr("href");
+
+          const headResponse = await axios.head(link ?? "");
+          const size = parseInt(headResponse.headers["content-length"]) ?? 0;
+
+          return {
+            [quality]: {
+              resolution,
+              format,
+              link,
+              size,
+            },
+          };
+        })
+        .get();
+
+      const results = await Promise.all(promises);
       let downloadLinks = {};
 
-      // Select the table with class "downloadsTable" and iterate through its rows
-      const firstTable = $(".downloadsTable").first();
-      const rows = firstTable.find("tr:gt(0)"); // Skip the header row
-      rows.each((i, row) => {
-        const quality = $(row).find("td:nth-child(1)").text();
-        const format = $(row).find("td:nth-child(2)").text();
-        const link = $(row).find("a.downloadBtn").attr("href");
-
-        if (quality && format && link) {
-          downloadLinks = {
-            ...downloadLinks,
-            [qualityMap[i]]: { quality, format, link },
-          };
-        }
+      results.forEach((result) => {
+        Object.assign(downloadLinks, result);
       });
 
       if (JSON.stringify(downloadLinks) !== "{}") {
         res.status(200).json({ downloadLinks });
       } else {
-        res.status(response.status).json({ error: "Links not Available." });
+        res.status(response.status).json({ error: "Links not available." });
       }
     } else {
-      res.status(response.status).json({ error: "Failed to retrieve data" });
+      res.status(response.status).json({ error: "Unable to access URL" });
     }
   } catch (error) {
     res.status(500).json({ error: "Internal server error" });
