@@ -1,6 +1,6 @@
 import { Download, ExternalLink, Youtube } from "lucide-react";
 import { useRouter } from "next/router";
-import { PlaylistItem } from "@/types";
+import { PlaylistItem, VideoLinkData } from "@/types";
 import Image from "next/image";
 import Link from "next/link";
 import { formatBytes } from "@/lib/utils";
@@ -11,16 +11,25 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 
-export default function PlaylistCard({ snippet, downloadLinks }: PlaylistItem) {
+type PlaylistCardProps = PlaylistItem & {
+  quality: any;
+};
+
+export default function PlaylistCard({
+  snippet,
+  downloadLinks,
+  quality,
+}: PlaylistCardProps) {
   const router = useRouter();
-  const { quality } = router.query;
   const {
     title,
     description,
     thumbnails,
     resourceId: { videoId },
   } = snippet;
-  const { link, size, resolution } = downloadLinks[quality];
+  const { link, size, resolution } = (
+    downloadLinks as Record<string, VideoLinkData>
+  )[quality];
   return (
     <div className="mb-2 justify-between gap-3 border border-secondary p-5 sm:flex">
       <Image
@@ -50,6 +59,7 @@ export default function PlaylistCard({ snippet, downloadLinks }: PlaylistItem) {
               </TooltipTrigger>
               <TooltipContent>
                 {` ${resolution} (${formatBytes(size)})`}
+                {link ? "" : " (Not Available)"}
               </TooltipContent>
             </Tooltip>
           </TooltipProvider>

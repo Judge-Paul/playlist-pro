@@ -1,4 +1,5 @@
 import { useRouter } from "next/router";
+import { useSearchParams } from "next/navigation";
 import {
   Popover,
   PopoverContent,
@@ -15,7 +16,9 @@ import { PlaylistItem } from "@/types";
 
 export default function Download() {
   const router = useRouter();
+  const searchParams = useSearchParams();
   const { id } = router.query;
+  const quality = searchParams.get("quality") || "medium";
   const { data, error } = useSWR(`/api/playlistItems?id=${id}`, fetcher, {
     revalidateOnFocus: false,
   });
@@ -24,6 +27,7 @@ export default function Download() {
   }
 
   function changeQuality(quality: string) {
+    toast.message(`Changing Quality to ${quality}`);
     quality = quality.toLowerCase();
     router.push(`/download/${id}?quality=${quality}`);
   }
@@ -49,19 +53,19 @@ export default function Download() {
               </PopoverTrigger>
               <PopoverContent className="max-w-max">
                 <Button
-                  onClick={() => changeQuality("high")}
+                  onClick={() => changeQuality("High")}
                   className="block w-full"
                 >
                   High
                 </Button>
                 <Button
-                  onClick={() => changeQuality("medium")}
+                  onClick={() => changeQuality("Medium")}
                   className="mt-2 block w-full"
                 >
                   Medium
                 </Button>
                 <Button
-                  onClick={() => changeQuality("low")}
+                  onClick={() => toast.error("Low Quality is not available")}
                   className="mt-2 block w-full"
                 >
                   Low
@@ -82,7 +86,7 @@ export default function Download() {
         <div className="mt-7">
           {data && !data?.error ? (
             data.map((playlist: PlaylistItem) => (
-              <PlaylistCard key={playlist.id} {...playlist} />
+              <PlaylistCard key={playlist.id} {...playlist} quality={quality} />
             ))
           ) : (
             <>
