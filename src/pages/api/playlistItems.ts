@@ -1,5 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from "next";
-import axios from "axios";
+import axios, { AxiosError } from "axios";
 import type { PlaylistItem } from "@/types";
 
 export default async function handler(
@@ -64,10 +64,16 @@ export default async function handler(
 
     res.status(200).json(allItems);
   } catch (error: any) {
-    if (error.response.status === 404) {
-      return res.status(404).json({ error: "Playlist not found" });
+    if (axios.isAxiosError(error)) {
+      const axiosError: AxiosError = error;
+
+      if (axiosError.response?.status === 404) {
+        return res.status(404).json({ error: "Playlist not found" });
+      } else {
+        return res.status(500).json({ error: "Failed to get playlists" });
+      }
     } else {
-      return res.status(500).json({ error: "Failed to get playlists" });
+      return res.status(500).json({ error: "Unexpected error occurred" });
     }
   }
 }
