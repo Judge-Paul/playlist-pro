@@ -27,7 +27,7 @@ export default function Download() {
   }
 
   function changeQuality(quality: string) {
-    toast.message(`Changing Quality to ${quality}`);
+    toast.success(`Changed Video Download Quality to ${quality}`);
     quality = quality.toLowerCase();
     router.push(`/download/${id}?quality=${quality}`);
   }
@@ -77,8 +77,18 @@ export default function Download() {
                 Download All <ChevronDown className="ml-2" />
               </PopoverTrigger>
               <PopoverContent className="max-w-max">
-                <Button className="block">Download .zip</Button>
-                <Button className="mt-2 block">Download .rar</Button>
+                <Button
+                  onClick={() => toast.error("Downloading all isn't available")}
+                  className="block"
+                >
+                  Download .zip
+                </Button>
+                <Button
+                  onClick={() => toast.error("Downloading all isn't available")}
+                  className="mt-2 block"
+                >
+                  Download .rar
+                </Button>
               </PopoverContent>
             </Popover>
           </div>
