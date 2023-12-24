@@ -51,7 +51,7 @@ export default function PlaylistCard({
         </p>
       </div>
       <div className="hidden flex-col justify-between sm:flex">
-        <Link href={link || `${router.asPath}#`}>
+        <Link href={link || `${router.asPath}#`} target="_blank">
           <TooltipProvider>
             <Tooltip>
               <TooltipTrigger>
@@ -64,19 +64,21 @@ export default function PlaylistCard({
             </Tooltip>
           </TooltipProvider>
         </Link>
-        <Link href={`https://youtu.be/${videoId}`}>
+        <Link href={`https://youtu.be/${videoId}`} target="_blank">
           <ExternalLink className="h-8 w-8 cursor-pointer hover:scale-[.90] active:scale-[.85]" />
         </Link>
       </div>
       <div className="mt-2 sm:hidden">
         <Link
           href={link || `${router.asPath}#`}
+          target="_blank"
           className="flex w-full items-center justify-center rounded-md bg-primary px-4 py-2 text-secondary"
         >
           Download ({formatBytes(size)}) <Download className="ml-2" />
         </Link>
         <Link
           href={`https://youtu.be/${videoId}`}
+          target="_blank"
           className="mt-2 flex w-full items-center justify-center rounded-md bg-primary px-4 py-2 text-secondary"
         >
           Watch <Youtube className="ml-2" />
