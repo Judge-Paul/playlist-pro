@@ -25,9 +25,8 @@ export default function Download() {
     fetcher,
   );
   if (data?.error) {
-    toast.error(data.error + ". Reload the page to Try Again.");
+    toast.error(error + ". Reload the page to Try Again.");
   }
-
   function changeQuality(quality: string) {
     toast.success(`Changed Video Download Quality to ${quality}`);
     quality = quality.toLowerCase();

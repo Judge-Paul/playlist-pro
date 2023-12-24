@@ -27,9 +27,9 @@ export default function PlaylistCard({
     thumbnails,
     resourceId: { videoId },
   } = snippet;
-  // const { link, size, resolution } = (
-  //   downloadLinks as Record<string, VideoLinkData>
-  // )[quality];
+  const { link, size, resolution } = (
+    downloadLinks as Record<string, VideoLinkData>
+  )[quality];
   return (
     <div className="mb-2 justify-between gap-3 border border-secondary p-5 sm:flex">
       <Image
@@ -51,7 +51,7 @@ export default function PlaylistCard({
         </p>
       </div>
       <div className="hidden flex-col justify-between sm:flex">
-        {/* <Link href={link || `${router.asPath}#`}>
+        <Link href={link || `${router.asPath}#`}>
           <TooltipProvider>
             <Tooltip>
               <TooltipTrigger>
@@ -66,15 +66,15 @@ export default function PlaylistCard({
         </Link>
         <Link href={`https://youtu.be/${videoId}`}>
           <ExternalLink className="h-8 w-8 cursor-pointer hover:scale-[.90] active:scale-[.85]" />
-        </Link> */}
+        </Link>
       </div>
       <div className="mt-2 sm:hidden">
-        {/* <Link
+        <Link
           href={link || `${router.asPath}#`}
           className="flex w-full items-center justify-center rounded-md bg-primary px-4 py-2 text-secondary"
         >
           Download ({formatBytes(size)}) <Download className="ml-2" />
-        </Link> */}
+        </Link>
         <Link
           href={`https://youtu.be/${videoId}`}
           className="mt-2 flex w-full items-center justify-center rounded-md bg-primary px-4 py-2 text-secondary"
