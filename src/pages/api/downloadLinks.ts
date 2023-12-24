@@ -14,7 +14,7 @@ export default async function handler(
 
   try {
     const response = await axios.get(
-      `https://ytsnag.com/download?v=https://www.youtube.com/watch?v=${videoId}}`,
+      `https://ytsnag.com/download?v=https://www.youtube.com/watch?v=${videoId}`,
     );
 
     if (response.status === 200) {

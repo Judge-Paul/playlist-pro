@@ -15,54 +15,42 @@ export default async function handler(
   }
 
   try {
-    const fetchItems = async (pageToken = "") => {
-      const response = await axios.get(
-        `https://www.googleapis.com/youtube/v3/playlistItems?part=snippet&playlistId=${id}&key=${apiKey}&pageToken=${pageToken}`,
-      );
+    const response = await axios.get(
+      `https://www.googleapis.com/youtube/v3/playlistItems?part=snippet&maxResults=50&playlistId=${id}&key=${apiKey}`,
+    );
 
-      const { items, nextPageToken } = response.data;
+    if (response.status === 200) {
+      const { items } = response.data;
 
       if (!items || items.length === 0) {
-        return [];
+        return res.status(200).json([]);
       }
 
       const filteredItems: PlaylistItem[] = items.filter(
-        (item: PlaylistItem) => {
-          return (
-            item.snippet.title !== "Private video" &&
-            item.snippet.description !== "This video is private."
-          );
-        },
+        (item: PlaylistItem) =>
+          item.snippet.title !== "Private video" &&
+          item.snippet.description !== "This video is private.",
       );
 
-      const itemsArray = filteredItems;
-
-      if (nextPageToken) {
-        const nextItems = await fetchItems(nextPageToken);
-        itemsArray.push(...nextItems);
+      if (filteredItems.length === 0) {
+        return res.status(404).json({ error: "Playlist Not Found" });
       }
 
-      return itemsArray;
-    };
-
-    const allItems = await fetchItems();
-
-    if (allItems.length === 0) {
-      return res.status(400).json({ error: "Playlist Not Found" });
+      await Promise.all(
+        filteredItems.map(async (item) => {
+          const { videoId } = item.snippet.resourceId;
+          const response = await axios.get(
+            `${baseURL}/api/downloadLinks?videoId=${videoId}`,
+          );
+          // const { downloadLinks } = response.data;
+          // return { ...item, downloadLinks };
+          item.downloadLinks = response.data.downloadLinks;
+        }),
+      );
+      res.status(200).json(filteredItems);
+    } else {
+      return res.status(500).json({ error: "Failed getting playlists data" });
     }
-
-    // Make request to get all downloadlinks and add them to the object being sent to the client
-    // await Promise.all(
-    //   allItems.map(async (item) => {
-    //     const { videoId } = item.snippet.resourceId;
-    //     const response = await axios.get(
-    //       `${baseURL}/api/downloadLinks?videoId=${videoId}`,
-    //     );
-    //     item.downloadLinks = response.data.downloadLinks;
-    //   }),
-    // );
-
-    res.status(200).json(allItems);
   } catch (error: any) {
     if (axios.isAxiosError(error)) {
       const axiosError: AxiosError = error;

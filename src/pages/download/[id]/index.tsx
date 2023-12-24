@@ -10,18 +10,20 @@ import { Button } from "@/components/ui/button";
 import VideoLoadingCard from "@/components/VideoLoadingCard";
 import PlaylistCard from "@/components/PlaylistCard";
 import { toast } from "sonner";
-import useSWR from "swr";
+import useSWRImmtable from "swr/immutable";
 import { fetcher } from "@/lib/utils";
 import { PlaylistItem } from "@/types";
+import useSWRImmutable from "swr/immutable";
 
 export default function Download() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const { id } = router.query;
   const quality = searchParams.get("quality") || "medium";
-  const { data, error } = useSWR(`/api/playlistItems?id=${id}`, fetcher, {
-    revalidateOnFocus: false,
-  });
+  const { data, error } = useSWRImmutable(
+    `/api/playlistItems?id=${id}`,
+    fetcher,
+  );
   if (data?.error) {
     toast.error(data.error + ". Reload the page to Try Again.");
   }
