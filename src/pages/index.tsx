@@ -16,7 +16,6 @@ export default function Home() {
   const params = useSearchParams();
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
-  // https://www.youtube.com/playlist?list=PLDcLgcF8urTLDDfde1p9W5BJxPvWDSlQn
   function handleSubmit(event: FormEvent) {
     event.preventDefault();
     setIsLoading(true);
@@ -25,10 +24,12 @@ export default function Home() {
       URLSchema.parse(URL);
       let playlistId: string;
       playlistId = getPlaylistId(URL as URL);
-      toast.success("Generating Playlist Downloads...");
-      playlistId
-        ? router.push(`/download/${playlistId}?quality=medium`)
-        : toast.error("Error Generating Playlist Downloads...");
+      if (playlistId) {
+        router.push(`/download/${playlistId}?quality=medium`);
+        toast.info("Generating Playlist Downloads...");
+      } else {
+        toast.error("Error Generating Playlist Downloads...");
+      }
       setIsLoading(false);
     } catch (error: any) {
       toast.error("Enter a Valid YouTube Playlist URL");
@@ -39,49 +40,10 @@ export default function Home() {
     const { value } = event.target;
     if (value) {
       router.push(`/?playlist=${value}`);
+    } else {
+      router.push("/");
     }
   }
-  // console.log(getPlaylistId("hello world"), "FAIL");
-  // console.log(
-  //   getPlaylistId(
-  //     "youtube.com/playlist?list=PLqkLaKB2GJhWXV9rcarwvn06ISlL_9mPQ&si=lvHKuJAnxBsIAlVp",
-  //   ),
-  //   "PASS",
-  // );
-  // console.log(
-  //   getPlaylistId(
-  //     "www.youtube.com/playlist?list=PLqkLaKB2GJhWXV9rcarwvn06ISlL_9mPQ&si=lvHKuJAnxBsIAlVp",
-  //   ),
-  //   "PASS",
-  // );
-  // console.log(
-  //   getPlaylistId(
-  //     "https://youtu.be/playlist?list=PLqkLaKB2GJhWXV9rcarwvn06ISlL_9mPQ&si=lvHKuJAnxBsIAlVp",
-  //   ),
-  //   "PASS",
-  // );
-  // console.log(getPlaylistId(""), "FAIL");
-  // console.log(
-  //   URLSchema.safeParse(
-  //     "https://www.youtube.com/playlist?list=PLDcLgcF8urTLDDfde1p9W5BJxPvWDSlQn",
-  //   ),
-  // );
-  // console.log(
-  //   URLSchema.safeParse(
-  //     "https://youtu.be/playlist?list=PLDcLgcF8urTLDDfde1p9W5BJxPvWDSlQn",
-  //   ),
-  // );
-  // console.log(URLSchema.safeParse("https://www.youtube.com/watch?v=VIDEOID"));
-  // console.log(URLSchema.safeParse("invalid-url-format"));
-  // console.log(URLSchema.safeParse(""));
-  // console.log(
-  //   URLSchema.safeParse(
-  //     "https://www.youtube.com/playlist?list=PLDcLgcF8urTLDDfde1p9W5BJxPvWDSlQn&index=1",
-  //   ),
-  // );
-  // console.log(
-  //   URLSchema.safeParse("https://www.youtube.com/playlist?video=VIDEOID"),
-  // );
 
   return (
     <main className="flex min-h-screen w-full items-center justify-center">
