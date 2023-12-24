@@ -5,15 +5,15 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import { ChevronDown } from "lucide-react";
+import { ChevronDown, ArrowLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import VideoLoadingCard from "@/components/VideoLoadingCard";
 import PlaylistCard from "@/components/PlaylistCard";
 import { toast } from "sonner";
-import useSWRImmtable from "swr/immutable";
+import useSWRImmutable from "swr/immutable";
 import { fetcher } from "@/lib/utils";
 import { PlaylistItem } from "@/types";
-import useSWRImmutable from "swr/immutable";
+import Link from "next/link";
 
 export default function Download() {
   const router = useRouter();
@@ -24,8 +24,8 @@ export default function Download() {
     `/api/playlistItems?id=${id}`,
     fetcher,
   );
-  if (data?.error) {
-    toast.error(error + ". Reload the page to Try Again.");
+  if (data?.error || error) {
+    toast.error("Failed to get playlists.\nReload the page to Try Again.");
   }
   function changeQuality(quality: string) {
     toast.success(`Changed Video Download Quality to ${quality}`);
@@ -38,6 +38,15 @@ export default function Download() {
       <h1 className="mt-10 text-center text-3xl font-bold lg:text-5xl">
         Playlist Videos
       </h1>
+      <div className="mx-auto mt-7 max-w-5xl px-8">
+        <Link
+          href="/"
+          className="flex gap-2 hover:text-gray-700 active:text-gray-500"
+        >
+          <ArrowLeft size="30px" />{" "}
+          <span className="text-xl font-semibold">Get another playlist</span>
+        </Link>
+      </div>
       <div className="mx-auto mt-7 max-w-5xl px-8">
         <div className="justify-between sm:flex">
           {data && !data.error ? (
@@ -79,13 +88,17 @@ export default function Download() {
               </PopoverTrigger>
               <PopoverContent className="max-w-max">
                 <Button
-                  onClick={() => toast.error("Downloading all isn't available")}
+                  onClick={() =>
+                    toast.error("Downloading all isn't available yet")
+                  }
                   className="block"
                 >
                   Download .zip
                 </Button>
                 <Button
-                  onClick={() => toast.error("Downloading all isn't available")}
+                  onClick={() =>
+                    toast.error("Downloading all isn't available yet")
+                  }
                   className="mt-2 block"
                 >
                   Download .rar
