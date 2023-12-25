@@ -1,10 +1,17 @@
 import { Button } from "@/components/ui/button";
+import { fetcher } from "@/lib/utils";
 import { Github } from "lucide-react";
 import Link from "next/link";
+import useSWR from "swr";
 
 export default function Navbar() {
+  const { data, error } = useSWR(
+    "https://api.github.com/Judge-Paul/playlist-pro",
+    fetcher,
+  );
+
   return (
-    <nav className="mx-auto mt-7 flex w-full max-w-6xl justify-between px-8 py-8">
+    <nav className="mx-auto mt-7 flex w-full max-w-6xl justify-between px-8">
       <div className="my-auto flex">
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -21,21 +28,25 @@ export default function Navbar() {
             transform="matrix(.1 0 0 -.1 0 500)"
           ></path>
         </svg>
-        <span className="my-auto text-xl font-semibold">YTPlaylistPro</span>
+        <span className="my-auto text-xl font-semibold">PlaylistPro</span>
       </div>
       <div className="my-auto flex gap-6 font-semibold">
         <span>How it Works</span>
-        <Link href="#">Contribute</Link>
+        <Link href="https://github.com/Judge-Paul/playlist-pro">
+          Contribute
+        </Link>
       </div>
       {/* <span className="my-auto flex rounded-full border border-primary px-5 py-2">
         Star on GitHub
       </span> */}
       <Button
         variant="outline"
-        className="text-md flex gap-2 rounded-full font-semibold"
+        className="text-md flex w-max gap-2 rounded-full py-2 font-semibold"
       >
-        <Github size="20px" />
-        Star on GitHub
+        <Github size="20px" /> Star on Github
+        <span className="flex gap-2 rounded-full bg-secondary px-2 text-sm">
+          {data?.stargazers_count ?? 0}
+        </span>
       </Button>
     </nav>
   );
