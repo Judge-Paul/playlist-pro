@@ -34,7 +34,7 @@ export default function Download() {
   }
 
   return (
-    <main>
+    <main className="py-10">
       <h2 className="text-center text-2xl font-bold lg:text-5xl">
         Playlist Videos
       </h2>

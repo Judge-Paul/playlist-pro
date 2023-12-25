@@ -36,18 +36,18 @@ export default function Home() {
   }
 
   return (
-    <main className="flex min-h-screen w-full items-center justify-center">
+    <main className="flex min-h-[90vh] w-full items-center justify-center">
       <div className="px-4 md:w-[36rem] lg:w-[44rem] lg:px-0">
         <h2 className="bg-gradient-to-r from-pink-500 to-red-500 bg-clip-text text-center text-3xl font-bold text-transparent lg:text-6xl">
           Download any YouTube Playlist in a few clicks
         </h2>
-        <p className="text-md mt-5 text-center">
+        <p className="text-md mt-8 text-center">
           Our easy-to-use tool allows you to download as many YouTube videos as
           you want in only a few clicks. Just create a playlist or paste an
           already existing playlist into the input below and download videos
           immediately.
         </p>
-        <div className="mt-5 flex gap-2 rounded-full bg-gradient-to-r from-pink-500 to-red-500 p-1">
+        <div className="mt-8 flex gap-2 rounded-full bg-gradient-to-r from-pink-500 to-red-500 p-1">
           <form
             onSubmit={handleSubmit}
             className="flex w-full gap-2 rounded-full bg-background p-1.5"
