@@ -43,8 +43,10 @@ export default function Download() {
           href="/"
           className="flex gap-2 hover:text-gray-700 active:text-gray-500"
         >
-          <ArrowLeft size="30px" />{" "}
-          <span className="text-xl font-semibold">Get another playlist</span>
+          <ArrowLeft size="27px" />{" "}
+          <span className="text-lg font-semibold sm:text-xl">
+            Get another playlist
+          </span>
         </Link>
       </div>
       <div className="mx-auto mt-7 max-w-5xl px-8">
