@@ -1,39 +1,57 @@
 import { useRouter } from "next/router";
+import { useSearchParams } from "next/navigation";
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import { ChevronDown } from "lucide-react";
+import { ChevronDown, ArrowLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import VideoLoadingCard from "@/components/VideoLoadingCard";
 import PlaylistCard from "@/components/PlaylistCard";
 import { toast } from "sonner";
-import useSWR from "swr";
+import useSWRImmutable from "swr/immutable";
 import { fetcher } from "@/lib/utils";
 import { PlaylistItem } from "@/types";
+import Link from "next/link";
 
 export default function Download() {
   const router = useRouter();
+  const searchParams = useSearchParams();
   const { id } = router.query;
-  const { data, error } = useSWR(`/api/playlistItems?id=${id}`, fetcher, {
-    revalidateOnFocus: false,
-  });
-  if (data?.error) {
-    toast.error(data.error + ". Reload the page to Try Again.");
+  const quality = searchParams.get("quality") || "medium";
+  const { data, error } = useSWRImmutable(
+    `/api/playlistItems?id=${id}`,
+    fetcher,
+  );
+  if (data?.error || error) {
+    toast.error("Failed to get playlists.\nReload the page to Try Again.");
   }
-
   function changeQuality(quality: string) {
+    toast.success(`Changed Video Download Quality to ${quality}`);
     quality = quality.toLowerCase();
     router.push(`/download/${id}?quality=${quality}`);
   }
 
   return (
-    <main>
-      <h1 className="mt-10 text-center text-3xl font-bold lg:text-5xl">
+    <main className="py-10">
+      <h2 className="text-center text-2xl font-bold lg:text-5xl">
         Playlist Videos
-      </h1>
-      <div className="mx-auto mt-7 max-w-5xl px-8">
+      </h2>
+      <div className="mx-auto mt-7 max-w-6xl px-8">
+        <div>
+          <Link
+            href="/"
+            className="flex w-max gap-2 hover:text-gray-800 active:text-secondary dark:hover:text-gray-300"
+          >
+            <ArrowLeft size="27px" />{" "}
+            <span className="text-lg font-semibold sm:text-xl">
+              Get another playlist
+            </span>
+          </Link>
+        </div>
+      </div>
+      <div className="mx-auto mt-7 max-w-6xl px-8">
         <div className="justify-between sm:flex">
           {data && !data.error ? (
             <h4 className="my-auto text-lg">
@@ -49,19 +67,19 @@ export default function Download() {
               </PopoverTrigger>
               <PopoverContent className="max-w-max">
                 <Button
-                  onClick={() => changeQuality("high")}
+                  onClick={() => changeQuality("High")}
                   className="block w-full"
                 >
                   High
                 </Button>
                 <Button
-                  onClick={() => changeQuality("medium")}
+                  onClick={() => changeQuality("Medium")}
                   className="mt-2 block w-full"
                 >
                   Medium
                 </Button>
                 <Button
-                  onClick={() => changeQuality("low")}
+                  onClick={() => toast.error("Low Quality is not available")}
                   className="mt-2 block w-full"
                 >
                   Low
@@ -73,8 +91,22 @@ export default function Download() {
                 Download All <ChevronDown className="ml-2" />
               </PopoverTrigger>
               <PopoverContent className="max-w-max">
-                <Button className="block">Download .zip</Button>
-                <Button className="mt-2 block">Download .rar</Button>
+                <Button
+                  onClick={() =>
+                    toast.error("Downloading all isn't available yet")
+                  }
+                  className="block"
+                >
+                  Download .zip
+                </Button>
+                <Button
+                  onClick={() =>
+                    toast.error("Downloading all isn't available yet")
+                  }
+                  className="mt-2 block"
+                >
+                  Download .rar
+                </Button>
               </PopoverContent>
             </Popover>
           </div>
@@ -82,7 +114,7 @@ export default function Download() {
         <div className="mt-7">
           {data && !data?.error ? (
             data.map((playlist: PlaylistItem) => (
-              <PlaylistCard key={playlist.id} {...playlist} />
+              <PlaylistCard key={playlist.id} {...playlist} quality={quality} />
             ))
           ) : (
             <>

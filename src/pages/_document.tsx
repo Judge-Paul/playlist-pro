@@ -1,5 +1,6 @@
 import { Html, Head, Main, NextScript } from "next/document";
 import { ThemeProvider } from "@/components/theme-provider";
+import Layout from "@/components/Layout";
 
 export default function Document() {
   return (
@@ -8,11 +9,13 @@ export default function Document() {
       <body>
         <ThemeProvider
           attribute="class"
-          defaultTheme="system"
+          defaultTheme="dark"
           enableSystem
           disableTransitionOnChange
         >
-          <Main />
+          <Layout>
+            <Main />
+          </Layout>
         </ThemeProvider>
         <NextScript />
       </body>

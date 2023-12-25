@@ -8,100 +8,52 @@ import { useSearchParams } from "next/navigation";
 import { useRouter } from "next/router";
 import { getPlaylistId } from "@/lib/utils";
 import { FormEvent, useState } from "react";
-import { URL } from "@/types";
 
 const inter = Inter({ subsets: ["latin"] });
 
 export default function Home() {
+  const [playlistURL, setPlaylistURL] = useState("");
   const params = useSearchParams();
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
-  // https://www.youtube.com/playlist?list=PLDcLgcF8urTLDDfde1p9W5BJxPvWDSlQn
   function handleSubmit(event: FormEvent) {
     event.preventDefault();
     setIsLoading(true);
     try {
-      const URL: string | null = params.get("playlist");
-      URLSchema.parse(URL);
-      let playlistId: string;
-      playlistId = getPlaylistId(URL as URL);
-      toast.success("Generating Playlist Downloads...");
-      playlistId
-        ? router.push(`/download/${playlistId}?quality=medium`)
-        : toast.error("Error Generating Playlist Downloads...");
+      URLSchema.parse(playlistURL);
+      let playlistId = getPlaylistId(playlistURL);
+      if (playlistId) {
+        router.push(`/download/${playlistId}?quality=medium`);
+        toast.info("Generating Playlist Downloads...");
+      } else {
+        toast.error("Error Generating Playlist Downloads...");
+      }
       setIsLoading(false);
     } catch (error: any) {
       toast.error("Enter a Valid YouTube Playlist URL");
       setIsLoading(false);
     }
   }
-  function handleChange(event: any) {
-    const { value } = event.target;
-    if (value) {
-      router.push(`/?playlist=${value}`);
-    }
-  }
-  // console.log(getPlaylistId("hello world"), "FAIL");
-  // console.log(
-  //   getPlaylistId(
-  //     "youtube.com/playlist?list=PLqkLaKB2GJhWXV9rcarwvn06ISlL_9mPQ&si=lvHKuJAnxBsIAlVp",
-  //   ),
-  //   "PASS",
-  // );
-  // console.log(
-  //   getPlaylistId(
-  //     "www.youtube.com/playlist?list=PLqkLaKB2GJhWXV9rcarwvn06ISlL_9mPQ&si=lvHKuJAnxBsIAlVp",
-  //   ),
-  //   "PASS",
-  // );
-  // console.log(
-  //   getPlaylistId(
-  //     "https://youtu.be/playlist?list=PLqkLaKB2GJhWXV9rcarwvn06ISlL_9mPQ&si=lvHKuJAnxBsIAlVp",
-  //   ),
-  //   "PASS",
-  // );
-  // console.log(getPlaylistId(""), "FAIL");
-  // console.log(
-  //   URLSchema.safeParse(
-  //     "https://www.youtube.com/playlist?list=PLDcLgcF8urTLDDfde1p9W5BJxPvWDSlQn",
-  //   ),
-  // );
-  // console.log(
-  //   URLSchema.safeParse(
-  //     "https://youtu.be/playlist?list=PLDcLgcF8urTLDDfde1p9W5BJxPvWDSlQn",
-  //   ),
-  // );
-  // console.log(URLSchema.safeParse("https://www.youtube.com/watch?v=VIDEOID"));
-  // console.log(URLSchema.safeParse("invalid-url-format"));
-  // console.log(URLSchema.safeParse(""));
-  // console.log(
-  //   URLSchema.safeParse(
-  //     "https://www.youtube.com/playlist?list=PLDcLgcF8urTLDDfde1p9W5BJxPvWDSlQn&index=1",
-  //   ),
-  // );
-  // console.log(
-  //   URLSchema.safeParse("https://www.youtube.com/playlist?video=VIDEOID"),
-  // );
 
   return (
-    <main className="flex min-h-screen w-full items-center justify-center">
+    <main className="flex min-h-[90vh] w-full items-center justify-center">
       <div className="px-4 md:w-[36rem] lg:w-[44rem] lg:px-0">
         <h2 className="bg-gradient-to-r from-pink-500 to-red-500 bg-clip-text text-center text-3xl font-bold text-transparent lg:text-6xl">
           Download any YouTube Playlist in a few clicks
         </h2>
-        <p className="text-md mt-5 text-center">
+        <p className="text-md mt-8 text-center">
           Our easy-to-use tool allows you to download as many YouTube videos as
           you want in only a few clicks. Just create a playlist or paste an
           already existing playlist into the input below and download videos
           immediately.
         </p>
-        <div className="mt-5 flex gap-2 rounded-full bg-gradient-to-r from-pink-500 to-red-500 p-1">
+        <div className="mt-8 flex gap-2 rounded-full bg-gradient-to-r from-pink-500 to-red-500 p-1">
           <form
             onSubmit={handleSubmit}
             className="flex w-full gap-2 rounded-full bg-background p-1.5"
           >
             <input
-              onChange={handleChange}
+              onChange={(e) => setPlaylistURL(e.target.value)}
               className="text-md w-full rounded-l-full bg-transparent py-2.5 pl-4 pr-2 focus:outline-none md:text-xl"
               placeholder="Enter a valid YouTube Playlist"
             />
