@@ -4,7 +4,7 @@ import Link from "next/link";
 
 export default function Navbar() {
   return (
-    <nav className="fixed flex w-full justify-between px-2 py-8 sm:px-6 xl:px-20">
+    <nav className="mx-auto mt-7 flex w-full max-w-6xl justify-between px-8 py-8">
       <div className="my-auto flex">
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -23,7 +23,7 @@ export default function Navbar() {
         </svg>
         <span className="my-auto text-xl font-semibold">YTPlaylistPro</span>
       </div>
-      <div className="my-auto flex gap-4 font-semibold">
+      <div className="my-auto flex gap-6 font-semibold">
         <span>How it Works</span>
         <Link href="#">Contribute</Link>
       </div>
