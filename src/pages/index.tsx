@@ -8,11 +8,11 @@ import { useSearchParams } from "next/navigation";
 import { useRouter } from "next/router";
 import { getPlaylistId } from "@/lib/utils";
 import { FormEvent, useState } from "react";
-import { URL } from "@/types";
 
 const inter = Inter({ subsets: ["latin"] });
 
 export default function Home() {
+  const [playlistURL, setPlaylistURL] = useState("");
   const params = useSearchParams();
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
@@ -20,10 +20,8 @@ export default function Home() {
     event.preventDefault();
     setIsLoading(true);
     try {
-      const URL: string | null = params.get("playlist");
-      URLSchema.parse(URL);
-      let playlistId: string;
-      playlistId = getPlaylistId(URL as URL);
+      URLSchema.parse(playlistURL);
+      let playlistId = getPlaylistId(playlistURL);
       if (playlistId) {
         router.push(`/download/${playlistId}?quality=medium`);
         toast.info("Generating Playlist Downloads...");
@@ -34,14 +32,6 @@ export default function Home() {
     } catch (error: any) {
       toast.error("Enter a Valid YouTube Playlist URL");
       setIsLoading(false);
-    }
-  }
-  function handleChange(event: any) {
-    const { value } = event.target;
-    if (value) {
-      router.push(`/?playlist=${value}`);
-    } else {
-      router.push("/");
     }
   }
 
@@ -63,7 +53,7 @@ export default function Home() {
             className="flex w-full gap-2 rounded-full bg-background p-1.5"
           >
             <input
-              onChange={handleChange}
+              onChange={(e) => setPlaylistURL(e.target.value)}
               className="text-md w-full rounded-l-full bg-transparent py-2.5 pl-4 pr-2 focus:outline-none md:text-xl"
               placeholder="Enter a valid YouTube Playlist"
             />
