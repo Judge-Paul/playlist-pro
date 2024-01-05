@@ -1,7 +1,7 @@
 import Link from "next/link";
-import { Button } from "./ui/button";
+import { Button } from "@/components/ui/button";
 import { Star, Coffee } from "lucide-react";
-import XTwitter from "./ui/x-twitter";
+import XTwitter from "@/components/ui/x-twitter";
 
 export default function Footer() {
   return (
