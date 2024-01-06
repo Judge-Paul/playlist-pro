@@ -3,15 +3,14 @@ import { fetcher } from "@/lib/utils";
 import { Github, Menu, XIcon, AlignRight } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
-import useSWR from "swr";
+import useSWRImmutable from "swr/immutable";
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
-  const { data, error } = useSWR(
-    "https://api.github.com/Judge-Paul/playlist-pro",
+  const { data, error } = useSWRImmutable(
+    "https://api.github.com/repos/Judge-Paul/playlist-pro",
     fetcher,
   );
-  console.log(data);
 
   return (
     <>
@@ -55,7 +54,7 @@ export default function Navbar() {
         </Button>
       </nav>
       {isOpen && (
-        <nav className="fixed inset-y-0 h-full w-full rounded-r-3xl bg-background px-8 py-12 sm:hidden">
+        <nav className="fixed inset-y-0 h-full w-full rounded-r-3xl bg-background px-8 py-7 sm:hidden">
           <span className="flex justify-between">
             <span className="flex">
               <svg
@@ -86,10 +85,10 @@ export default function Navbar() {
             </Link>
             <Button
               variant="outline"
-              className="sm:text-md flex w-max gap-2 rounded-full py-2 text-sm font-semibold"
+              className="sm:text-md text-md flex w-max gap-2 rounded-full p-6 font-semibold"
             >
-              <Github size="20px" /> Star on GitHub
-              <span className="flex gap-2 rounded-full bg-secondary px-2 text-xs sm:text-sm">
+              <Github size="22px" /> Star on GitHub
+              <span className="flex gap-2 rounded-full bg-secondary px-2 text-sm">
                 {data?.stargazers_count ?? 0}
               </span>
             </Button>
