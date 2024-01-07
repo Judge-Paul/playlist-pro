@@ -47,19 +47,19 @@ export default function Home() {
           already existing playlist into the input below and download videos
           immediately.
         </p>
-        <div className="mt-8 flex gap-2 rounded-full bg-gradient-to-r from-pink-500 to-red-500 p-1">
+        <div className="mt-8 flex gap-2 rounded-lg bg-gradient-to-r from-pink-500 to-red-500 p-1">
           <form
             onSubmit={handleSubmit}
-            className="flex w-full gap-2 rounded-full bg-background p-1.5"
+            className="flex w-full gap-2  bg-background p-1.5"
           >
             <input
               onChange={(e) => setPlaylistURL(e.target.value)}
-              className="text-md w-full rounded-l-full bg-transparent py-2.5 pl-4 pr-2 focus:outline-none md:text-xl"
+              className="sm:text-md w-full rounded-l-full bg-transparent py-2.5 pl-4 pr-2 text-xs focus:outline-none md:text-xl"
               placeholder="Enter a valid YouTube Playlist"
             />
             <Button
               disabled={isLoading}
-              className="h-full rounded-full bg-gradient-to-r from-pink-500 to-red-500 px-4 text-sm font-semibold hover:scale-95 active:scale-90 dark:text-white md:px-7 md:text-lg"
+              className="h-full  bg-gradient-to-r from-pink-500 to-red-500 px-4 text-sm font-semibold hover:scale-95 active:scale-90 dark:text-white md:px-7 md:text-lg"
             >
               <Download className="mr-2" />
               Download

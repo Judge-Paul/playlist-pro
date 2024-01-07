@@ -15,22 +15,22 @@ export default function Footer() {
             Playlist Pro is the only web application which allows you to easily
             download YouTube playlists no ads, no signups.
           </p>
-          <div className="mt-4 flex w-max gap-1 rounded-full border-2 border-secondary px-4 py-2.5">
+          <div className="mt-4 flex w-max gap-1 rounded-full  border-2 border-secondary px-4 py-2.5">
             <Sun
-              className={`h-8 w-8 rounded-full p-1.5 hover:bg-secondary ${
-                theme === "light" && "bg-secondary"
+              className={`h-8 w-8 rounded-full p-1.5 hover:bg-secondary${
+                theme === "light" ? " bg-secondary" : ""
               }`}
               onClick={() => setTheme("light")}
             />
             <Monitor
-              className={`h-8 w-8 rounded-full p-1.5 hover:bg-secondary ${
-                theme === "system" && "bg-secondary"
+              className={`h-8 w-8 rounded-full p-1.5 hover:bg-secondary${
+                theme === "system" ? " bg-secondary" : ""
               }`}
               onClick={() => setTheme("system")}
             />
             <Moon
-              className={`h-8 w-8 rounded-full p-1.5 hover:bg-secondary ${
-                theme === "dark" && "bg-secondary"
+              className={`h-8 w-8 rounded-full p-1.5 hover:bg-secondary${
+                theme === "dark" ? " bg-secondary" : ""
               }`}
               onClick={() => setTheme("dark")}
             />
@@ -72,26 +72,22 @@ export default function Footer() {
         </div>
         <div className="mb-6 flex w-full flex-col md:mb-0 md:w-1/4">
           <h2 className="mb-4 text-lg font-semibold">Support</h2>
-          <Link href="https://x.com/jadge_dev" target="_blank">
-            <Button
-              onFocus={(e) => e.preventDefault()}
-              className="mb-2 w-full rounded-full"
-              variant="outline"
-            >
+          <Button asChild className="mb-2 w-full " variant="outline">
+            <Link href="https://x.com/jadge_dev" target="_blank">
               <XTwitter className="mr-1 h-4 w-4 text-primary" />
               Follow me
-            </Button>
-          </Link>
-          <Link
-            href="https://github.com/Judge-Paul/playlist-pro"
-            target="_blank"
-          >
-            <Button className="mb-2 w-full rounded-full" variant="outline">
+            </Link>
+          </Button>
+          <Button asChild className="mb-2 w-full " variant="outline">
+            <Link
+              href="https://github.com/Judge-Paul/playlist-pro"
+              target="_blank"
+            >
               <Star className="mr-1 h-4 w-4" />
               Star on GitHub
-            </Button>
-          </Link>
-          <Button className="mb-2 rounded-full" variant="outline">
+            </Link>
+          </Button>
+          <Button className="mb-2 " variant="outline">
             <Coffee className="mr-1 h-4 w-4" />
             Buy Me a Coffee
           </Button>

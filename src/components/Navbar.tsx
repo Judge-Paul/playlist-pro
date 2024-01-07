@@ -4,6 +4,7 @@ import { Github, Menu, XIcon, AlignRight } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
 import useSWRImmutable from "swr/immutable";
+import { buttonVariants } from "@/components/ui/button";
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
@@ -45,12 +46,15 @@ export default function Navbar() {
         />
         <Button
           variant="outline"
-          className="sm:text-md hidden w-max gap-2 rounded-full py-2 text-sm font-semibold sm:flex"
+          className="sm:text-md hidden w-max gap-2  py-2 text-sm font-semibold sm:flex"
+          asChild
         >
-          <Github size="20px" /> Star on GitHub
-          <span className="flex gap-2 rounded-full bg-secondary px-2 text-xs sm:text-sm">
-            {data?.stargazers_count ?? 0}
-          </span>
+          <Link href="https://github.com/Judge-Paul/playlist-pro">
+            <Github size="20px" /> Star on GitHub
+            <span className="flex gap-2 rounded-full bg-secondary px-2 text-xs sm:text-sm">
+              {data?.stargazers_count ?? 0}
+            </span>
+          </Link>
         </Button>
       </nav>
       {isOpen && (
@@ -83,14 +87,18 @@ export default function Navbar() {
             <Link href="https://github.com/Judge-Paul/playlist-pro">
               Contribute
             </Link>
+
             <Button
               variant="outline"
-              className="sm:text-md text-md flex w-max gap-2 rounded-full p-6 font-semibold"
+              className="sm:text-md w-max gap-2  py-2 text-sm font-semibold sm:flex"
+              asChild
             >
-              <Github size="22px" /> Star on GitHub
-              <span className="flex gap-2 rounded-full bg-secondary px-2 text-sm">
-                {data?.stargazers_count ?? 0}
-              </span>
+              <Link href="https://github.com/Judge-Paul/playlist-pro">
+                <Github size="20px" /> Star on GitHub
+                <span className="flex gap-2 rounded-full bg-secondary px-2 text-xs sm:text-sm">
+                  {data?.stargazers_count ?? 0}
+                </span>
+              </Link>
             </Button>
           </ul>
         </nav>
