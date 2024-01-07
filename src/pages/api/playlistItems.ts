@@ -20,34 +20,22 @@ export default async function handler(
     );
 
     if (response.status === 200) {
-      const { items } = response.data;
+      const items: PlaylistItem[] = response.data.items;
 
       if (!items || items.length === 0) {
-        return res.status(200).json([]);
-      }
-
-      const filteredItems: PlaylistItem[] = items.filter(
-        (item: PlaylistItem) =>
-          item.snippet.title !== "Private video" &&
-          item.snippet.description !== "This video is private.",
-      );
-
-      if (filteredItems.length === 0) {
-        return res.status(404).json({ error: "Playlist Not Found" });
+        return res.status(404).json({ error: "Playlist Items Not Found" });
       }
 
       await Promise.all(
-        filteredItems.map(async (item) => {
+        items.map(async (item) => {
           const { videoId } = item.snippet.resourceId;
           const response = await axios.get(
             `${baseURL}/api/downloadLinks?videoId=${videoId}`,
           );
-          // const { downloadLinks } = response.data;
-          // return { ...item, downloadLinks };
           item.downloadLinks = response.data.downloadLinks;
         }),
       );
-      res.status(200).json(filteredItems);
+      res.status(200).json(items);
     } else {
       return res.status(500).json({ error: "Failed getting playlists data" });
     }
