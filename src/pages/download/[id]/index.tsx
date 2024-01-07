@@ -112,9 +112,23 @@ export default function Download() {
         </div>
         <div className="mt-7">
           {data && !data?.error ? (
-            data.map((playlist: PlaylistItem) => (
-              <PlaylistCard key={playlist.id} {...playlist} quality={quality} />
-            ))
+            data.map((playlist: PlaylistItem) => {
+              const { title, description } = playlist.snippet;
+              if (
+                (title !== "Private video" &&
+                  description !== "This video is private.") ||
+                (title !== "Deleted video" &&
+                  description !== "This video is unavailable.")
+              ) {
+                return (
+                  <PlaylistCard
+                    key={playlist.id}
+                    {...playlist}
+                    quality={quality}
+                  />
+                );
+              }
+            })
           ) : (
             <>
               <VideoLoadingCard />
