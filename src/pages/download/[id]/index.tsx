@@ -39,31 +39,28 @@ export default function Download() {
         Playlist Videos
       </h2>
       <div className="mx-auto mt-7 max-w-6xl px-8">
-        <div>
+        {data && !data.error ? (
+          <h4 className="my-auto text-lg">{data.length} Videos in Playlist</h4>
+        ) : (
+          <div className="my-auto h-6 w-40 bg-secondary"></div>
+        )}
+      </div>
+      <div className="mx-auto mt-7 max-w-6xl px-8">
+        <div className="flex justify-between">
           <Link
             href="/"
-            className="flex w-max gap-2 hover:text-gray-800 active:text-secondary dark:hover:text-gray-300"
+            className="my-auto flex w-max gap-2 hover:text-gray-800 active:text-secondary dark:hover:text-gray-300"
           >
-            <ArrowLeft size="27px" />{" "}
-            <span className="text-lg font-semibold sm:text-xl">
+            <ArrowLeft className="h-8 w-8" />{" "}
+            <span className="my-auto hidden text-lg font-semibold sm:flex md:text-xl">
               Get another playlist
             </span>
           </Link>
-        </div>
-      </div>
-      <div className="mx-auto mt-7 max-w-6xl px-8">
-        <div className="justify-between sm:flex">
-          {data && !data.error ? (
-            <h4 className="my-auto text-lg">
-              {data.length} Videos in Playlist
-            </h4>
-          ) : (
-            <div className="my-auto h-6 w-40 bg-secondary"></div>
-          )}
-          <div className="sm:flex sm:gap-2">
+          <div className="flex gap-2 text-sm sm:text-lg">
             <Popover>
-              <PopoverTrigger className="ml-auto mt-2 flex rounded-md border border-primary px-4 py-2 dark:border-secondary sm:mt-0">
-                Quality <ChevronDown className="ml-2" />
+              <PopoverTrigger className="flex rounded-md border border-primary px-2 py-2 dark:border-secondary sm:mt-0 sm:px-4">
+                Quality{" "}
+                <ChevronDown className="my-auto ml-2 h-4 w-4 sm:h-6 sm:w-6" />
               </PopoverTrigger>
               <PopoverContent className="max-w-max">
                 <Button
@@ -79,7 +76,8 @@ export default function Download() {
                   Medium
                 </Button>
                 <Button
-                  onClick={() => toast.error("Low Quality is not available")}
+                  // onClick={() => toast.error("Low Quality is not available")}
+                  onClick={() => changeQuality("Low")}
                   className="mt-2 block w-full"
                 >
                   Low
@@ -87,8 +85,9 @@ export default function Download() {
               </PopoverContent>
             </Popover>
             <Popover>
-              <PopoverTrigger className="ml-auto mt-2 flex rounded-md border border-primary px-4 py-2 dark:border-secondary sm:mt-0">
-                Download All <ChevronDown className="ml-2" />
+              <PopoverTrigger className="flex rounded-md border border-primary px-2 py-2 dark:border-secondary sm:mt-0 sm:px-4">
+                Download All
+                <ChevronDown className="my-auto ml-2 h-4 w-4 sm:h-6 sm:w-6" />
               </PopoverTrigger>
               <PopoverContent className="max-w-max">
                 <Button
