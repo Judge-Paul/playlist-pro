@@ -34,20 +34,20 @@ export default function PlaylistCard({
     <div className="mb-2 justify-between gap-3 border border-secondary p-5 sm:flex">
       <Image
         src={
-          thumbnails?.default?.url ||
+          thumbnails?.standard?.url ??
           "https://www.gravatar.com/avatar/18c42a6912b0288d4c6a5c0ec3e3553d?s=120&d=blank&r=g"
         }
         width={thumbnails?.default?.width || 160}
         height={thumbnails?.default?.height || 112}
         className="h-40 w-full bg-secondary sm:h-28 sm:w-40"
-        alt={title || "Image not Available"}
+        alt={title ?? "Image not Available"}
       />
       <div className="mt-3 sm:mt-0 sm:w-3/4">
         <h4 className="line-clamp-2 h-12 w-full font-semibold sm:w-2/3 md:w-1/2">
-          {title || "N/A"}
+          {title ?? "N/A"}
         </h4>
         <p className="mt-4 line-clamp-3 h-12 w-full text-xs md:w-2/3">
-          {description || "N/A"}
+          {description ?? "N/A"}
         </p>
       </div>
       <div className="hidden flex-col justify-between sm:flex">
