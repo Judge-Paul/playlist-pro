@@ -6,6 +6,9 @@ export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse,
 ) {
+  res.setHeader("Vercel-CDN-Cache-Control", "max-age=2419200");
+  res.setHeader("CDN-Cache-Control", "max-age=2419200");
+  res.setHeader("Cache-Control", "max-age=2419200");
   const { videoId } = req.query;
 
   if (!videoId) {

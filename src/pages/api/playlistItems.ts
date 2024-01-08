@@ -2,10 +2,17 @@ import type { NextApiRequest, NextApiResponse } from "next";
 import axios, { AxiosError } from "axios";
 import type { PlaylistItem } from "@/types";
 
+export const config = {
+  runtime: "edge",
+};
+
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse,
 ) {
+  res.setHeader("Vercel-CDN-Cache-Control", "max-age=1209600");
+  res.setHeader("CDN-Cache-Control", "max-age=1209600");
+  res.setHeader("Cache-Control", "max-age=1209600");
   const apiKey = process.env.API_KEY;
   const baseURL = process.env.BASE_URL;
   const { id } = req.query;
@@ -35,7 +42,7 @@ export default async function handler(
           item.downloadLinks = response.data.downloadLinks;
         }),
       );
-      res.status(200).json(items);
+      return res.status(200).json(items);
     } else {
       return res.status(500).json({ error: "Failed getting playlists data" });
     }
