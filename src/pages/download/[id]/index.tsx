@@ -24,7 +24,7 @@ export default function Download() {
     `/api/playlistItems?id=${id}`,
     fetcher,
   );
-  if (data?.error || error) {
+  if (!data && (data?.error || error)) {
     toast.error("Failed to get playlists.\nReload the page to Try Again.");
   }
   function changeQuality(quality: string) {
