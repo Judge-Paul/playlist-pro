@@ -6,11 +6,11 @@ export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse,
 ) {
-  res.setHeader("Vercel-CDN-Cache-Control", "max-age=3600");
-  res.setHeader("CDN-Cache-Control", "max-age=60");
+  res.setHeader("Vercel-CDN-Cache-Control", "max-age=604800");
+  res.setHeader("CDN-Cache-Control", "max-age=604800");
   res.setHeader(
     "Cache-Control",
-    "max-age=30, must-revalidate, stale-while-revalidate=600",
+    "max-age=604800, must-revalidate, stale-while-revalidate=864000",
   );
   const apiKey = process.env.API_KEY;
   const baseURL = process.env.BASE_URL;
