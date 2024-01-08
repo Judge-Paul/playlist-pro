@@ -2,17 +2,16 @@ import type { NextApiRequest, NextApiResponse } from "next";
 import axios, { AxiosError } from "axios";
 import type { PlaylistItem } from "@/types";
 
-export const config = {
-  runtime: "edge",
-};
-
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse,
 ) {
-  res.setHeader("Vercel-CDN-Cache-Control", "max-age=1209600");
-  res.setHeader("CDN-Cache-Control", "max-age=1209600");
-  res.setHeader("Cache-Control", "max-age=1209600");
+  res.setHeader("Vercel-CDN-Cache-Control", "max-age=3600");
+  res.setHeader("CDN-Cache-Control", "max-age=60");
+  res.setHeader(
+    "Cache-Control",
+    "max-age=30, must-revalidate, stale-while-revalidate=600",
+  );
   const apiKey = process.env.API_KEY;
   const baseURL = process.env.BASE_URL;
   const { id } = req.query;
