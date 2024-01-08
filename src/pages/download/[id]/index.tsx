@@ -75,13 +75,13 @@ export default function Download() {
                 >
                   Medium
                 </Button>
-                <Button
+                {/* <Button
                   // onClick={() => toast.error("Low Quality is not available")}
                   onClick={() => changeQuality("Low")}
                   className="mt-2 block w-full"
                 >
                   Low
-                </Button>
+                </Button> */}
               </PopoverContent>
             </Popover>
             <Popover>
