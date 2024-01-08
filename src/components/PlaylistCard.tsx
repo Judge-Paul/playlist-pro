@@ -35,6 +35,7 @@ export default function PlaylistCard({
       <Image
         src={
           thumbnails?.standard?.url ??
+          thumbnails?.default?.url ??
           "https://www.gravatar.com/avatar/18c42a6912b0288d4c6a5c0ec3e3553d?s=120&d=blank&r=g"
         }
         width={thumbnails?.default?.width || 160}
