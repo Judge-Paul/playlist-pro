@@ -32,7 +32,6 @@ export default function Download() {
     quality = quality.toLowerCase();
     router.push(`/download/${id}?quality=${quality}`);
   }
-
   return (
     <main className="py-10">
       <h2 className="text-center text-2xl font-bold lg:text-5xl">

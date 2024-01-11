@@ -2,15 +2,10 @@ import { NextApiRequest, NextApiResponse } from "next";
 import axios from "axios";
 import * as cheerio from "cheerio";
 
-// export const config = {
-//   runtime: "edge",
-// };
-
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse,
 ) {
-  res.setHeader("Vercel-CDN-Cache-Control", "max-age=2419200");
   res.setHeader("CDN-Cache-Control", "max-age=2419200");
   // res.setHeader("Cache-Control", "max-age=3600");
   const { videoId } = req.query;
