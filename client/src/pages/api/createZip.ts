@@ -1,6 +1,5 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import axios from "axios";
-import JSZip from "jszip";
 
 export default async function handler(
   req: NextApiRequest,
