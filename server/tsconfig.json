@@ -1,0 +1,22 @@
+{
+  "compilerOptions": {
+    "target": "es2020", // Target ECMAScript version
+    "module": "commonjs", // Use CommonJS for module resolution
+    "lib": ["es2020"], // Specify the libraries to include
+    "strict": true, // Enable all strict type-checking options
+    "esModuleInterop": true, // Enable/disable emitting of interop import for default exports
+    "skipLibCheck": true, // Skip type checking of declaration files
+    "forceConsistentCasingInFileNames": true, // Enforce consistent casing in file names
+    "moduleResolution": "node", // Use Node.js-style module resolution
+    "resolveJsonModule": true, // Enable importing JSON modules
+    "isolatedModules": true, // Ensure that each file can be safely transpiled in isolation
+    "noEmit": true, // Do not emit output files during the compilation
+    "declaration": true, // Generate corresponding .d.ts files
+    "outDir": "./dist", // Specify an output directory for emitted files
+    "rootDir": "./src", // Specify the root directory of input files
+    "baseUrl": ".", // Base directory to resolve non-relative module names
+    "typeRoots": ["./types", "./node_modules/@types"] // Specify the location where TypeScript will look for type definitions
+  },
+  "include": ["src/**/*.ts"], // Files to include in the compilation
+  "exclude": ["node_modules", "dist"] // Files to exclude from the compilation
+}
