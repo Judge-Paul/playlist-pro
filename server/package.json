@@ -20,7 +20,9 @@
     "jszip": "^3.10.1"
   },
   "devDependencies": {
+    "@types/cors": "^2.8.17",
     "@types/express": "^4.17.21",
+    "@types/morgan": "^1.9.9",
     "@types/node": "^20.11.1",
     "morgan": "^1.10.0",
     "nodemon": "^3.0.2",
