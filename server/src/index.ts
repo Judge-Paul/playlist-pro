@@ -1,26 +1,26 @@
-const express = require("express");
-const axios = require("axios");
-const JSZip = require("jszip");
-const dotenv = require("dotenv");
-const cors = require("cors");
-const morgan = require("morgan");
+import express, { Request, Response } from "express";
+import axios from "axios";
+import JSZip from "jszip";
+import dotenv from "dotenv";
+import cors from "cors";
+import morgan from "morgan";
 
 dotenv.config();
 
 const app = express();
-const port = parseInt(process.env.PORT) || 8080;
+const port = parseInt(process.env.PORT ?? "") || 8080;
 
 app.use(morgan("dev"));
-app.use(cors((origin = "*")));
+app.use(cors({ origin: "*" }));
 app.use(express.json({ limit: "250kb" }));
 
-app.get("/", (req, res) => {
+app.get("/", (req: Request, res: Response) => {
   res.send(`Go to /createZip to get ZIP file`);
 });
 
-app.post("/createZip", async (req, res) => {
+app.get("/createZip", async (req: Request, res: Response) => {
   const payload = req.body;
-  const { quality } = req.query;
+  const { quality } = req.query as { quality?: string };
 
   if (req.method !== "POST")
     return res.status(405).json({ error: "Method not allowed" });
@@ -31,8 +31,8 @@ app.post("/createZip", async (req, res) => {
   if (!Array.isArray(payload) || !payload[0].downloadLinks)
     return res.status(400).json({ error: "Payload is incorrect" });
 
-  if (!req.query.quality)
-    return res.status(400).json({ error: "Quality not specified" });
+  if (!quality) return res.status(400).json({ error: "Quality not specified" });
+
   try {
     const zip = new JSZip();
 
