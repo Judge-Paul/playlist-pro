@@ -5,6 +5,7 @@ import dotenv from "dotenv";
 import cors from "cors";
 import morgan from "morgan";
 import { PlaylistItem } from "./@types";
+import NodeCache from "node-cache";
 
 dotenv.config();
 
@@ -17,7 +18,9 @@ app.use(express.json({ limit: "250kb" }));
 app.use(cors({ origin: "*" }));
 
 app.get("/", (req: Request, res: Response) => {
-  res.send(`Go to /createZip to get ZIP file`);
+  res.send(
+    `Go to /createZip to get ZIP file\nGo to /playlistItems to get playlist items`,
+  );
 });
 
 app.get("/createZip", async (req: Request, res: Response) => {
@@ -58,17 +61,34 @@ app.get("/createZip", async (req: Request, res: Response) => {
   }
 });
 
+const cacheDuration = 6 * 60 * 60;
+
+const playlistCache = new NodeCache({
+  stdTTL: cacheDuration,
+  checkperiod: cacheDuration * 0.2,
+});
+
 app.get("/playlistItems", async (req: Request, res: Response) => {
-  res.setHeader("CDN-Cache-Control", "max-age=21600");
+  res.setHeader("CDN-Cache-Control", `max-age=${cacheDuration}`);
   res.setHeader(
     "Cache-Control",
-    "max-age=18000, must-revalidate, stale-while-revalidate=21600",
+    `max-age=${cacheDuration}, must-revalidate, stale-while-revalidate=${
+      cacheDuration * 0.2
+    }`,
   );
   const apiKey = process.env.GOOGLE_API_KEY;
-  const { id } = req.query;
+  const id = req.query.id as string;
 
   if (!id) {
     return res.status(400).json({ error: "Missing playlistId" });
+  }
+
+  // Check if the data is in the cache
+  const cachedData = playlistCache.get<PlaylistItem[]>(id);
+
+  if (cachedData) {
+    console.log(`Sending cached data for playlistId: ${id}`);
+    return res.status(200).json(cachedData);
   }
 
   try {
@@ -93,6 +113,10 @@ app.get("/playlistItems", async (req: Request, res: Response) => {
       items.map((item: PlaylistItem, index: number) => {
         item.downloadLinks = linksRes.data[index];
       });
+
+      // Cache the data for the specified duration
+      playlistCache.set(id, items);
+
       return res.status(200).json(items);
     } else {
       return res.status(500).json({ error: "Failed getting playlists data" });
