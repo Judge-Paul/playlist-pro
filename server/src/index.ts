@@ -85,15 +85,14 @@ app.get("/playlistItems", async (req: Request, res: Response) => {
 
       const videoIds = items.map((item) => item.snippet.resourceId.videoId);
 
-      const downloadLinks = await axios.get(
-        `${clientURL}/api/downloadLinks?videoIds?${encodeURIComponent(
+      const linksRes = await axios.get(
+        `${clientURL}/api/downloadLinks?videoIds=${encodeURIComponent(
           JSON.stringify(videoIds),
         )}`,
       );
-
-      for (let i = 0; i < items.length; i++) {
-        items[i].downloadLinks = downloadLinks.data[i].downloadLinks;
-      }
+      items.map((item: PlaylistItem, index: number) => {
+        item.downloadLinks = linksRes.data[index];
+      });
       return res.status(200).json(items);
     } else {
       return res.status(500).json({ error: "Failed getting playlists data" });
