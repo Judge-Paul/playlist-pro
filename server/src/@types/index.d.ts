@@ -26,9 +26,15 @@ export type PlaylistItem = {
     videoOwnerChannelId: string;
     videoOwnerChannelTitle: string;
   };
-  downloadLinks: {
+  downloadLinks?: {
     [high: string]: VideoLinkData;
     [medium: string]: VideoLinkData;
     [low: string]: VideoLinkData;
   };
+};
+type VideoLinkData = {
+  format: "mp4" | "3gp";
+  link: string;
+  size: number;
+  resolution: "144p" | "360p" | "720p";
 };
