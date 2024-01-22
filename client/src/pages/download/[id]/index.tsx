@@ -11,27 +11,35 @@ import VideoLoadingCard from "@/components/VideoLoadingCard";
 import PlaylistCard from "@/components/PlaylistCard";
 import { toast } from "sonner";
 import useSWRImmutable from "swr/immutable";
-import { fetcher } from "@/lib/utils";
+import { fetcher, getQualities } from "@/lib/utils";
 import { PlaylistItem } from "@/types";
 import Link from "next/link";
+import axios from "axios";
 
 export default function Download() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const { id } = router.query;
-  const quality = searchParams.get("quality") || "medium";
+  const serverURL = process.env.NEXT_PUBLIC_SERVER_URL;
+
   const { data, error } = useSWRImmutable(
-    `/api/playlistItems?id=${id}`,
+    `${serverURL}/playlistItems?id=${id}`,
     fetcher,
   );
-  if (!data && (data?.error || error)) {
+
+  // let qualities = getQualities(data);
+  async function downloadZip() {
+    try {
+      router.push(`${serverURL}/createZip?id=${id}`);
+    } catch (error) {
+      toast.error("Couldn't Generate Zip file. Please Try Again");
+    }
+  }
+
+  if (data?.error || error) {
     toast.error("Failed to get playlists.\nReload the page to Try Again.");
   }
-  function changeQuality(quality: string) {
-    toast.success(`Changed Video Download Quality to ${quality}`);
-    quality = quality.toLowerCase();
-    router.push(`/download/${id}?quality=${quality}`);
-  }
+
   return (
     <main className="py-10">
       <h2 className="text-center text-2xl font-bold lg:text-5xl">
@@ -58,52 +66,23 @@ export default function Download() {
           <div className="flex gap-2 text-sm sm:text-lg">
             <Popover>
               <PopoverTrigger className="flex rounded-md border border-primary px-2 py-2 dark:border-secondary sm:mt-0 sm:px-4">
-                Quality{" "}
-                <ChevronDown className="my-auto ml-2 h-4 w-4 sm:h-6 sm:w-6" />
-              </PopoverTrigger>
-              <PopoverContent className="max-w-max">
-                <Button
-                  onClick={() => changeQuality("High")}
-                  className="block w-full"
-                >
-                  High
-                </Button>
-                <Button
-                  onClick={() => changeQuality("Medium")}
-                  className="mt-2 block w-full"
-                >
-                  Medium
-                </Button>
-                {/* <Button
-                  // onClick={() => toast.error("Low Quality is not available")}
-                  onClick={() => changeQuality("Low")}
-                  className="mt-2 block w-full"
-                >
-                  Low
-                </Button> */}
-              </PopoverContent>
-            </Popover>
-            <Popover>
-              <PopoverTrigger className="flex rounded-md border border-primary px-2 py-2 dark:border-secondary sm:mt-0 sm:px-4">
                 Download All
                 <ChevronDown className="my-auto ml-2 h-4 w-4 sm:h-6 sm:w-6" />
               </PopoverTrigger>
               <PopoverContent className="max-w-max">
-                <Button
-                  onClick={() =>
-                    toast.error("Downloading all isn't available yet")
-                  }
-                  className="block"
-                >
-                  Download .zip
-                </Button>
-                <Button
-                  onClick={() =>
-                    toast.error("Downloading all isn't available yet")
-                  }
-                  className="mt-2 block"
-                >
-                  Download .rar
+                {/* {qualities.map((quality) => {
+                  return (
+                    <Button
+                      key={quality}
+                      onClick={() => downloadZip(quality)}
+                      className="mt-2 block w-full"
+                    >
+                      Download {quality} quality .zip
+                    </Button>
+                  );
+                })} */}
+                <Button onClick={downloadZip} className="mt-2 block w-full">
+                  Download All
                 </Button>
               </PopoverContent>
             </Popover>
@@ -119,13 +98,7 @@ export default function Download() {
                 (title !== "Deleted video" &&
                   description !== "This video is unavailable.")
               ) {
-                return (
-                  <PlaylistCard
-                    key={playlist.id}
-                    {...playlist}
-                    quality={quality}
-                  />
-                );
+                return <PlaylistCard key={playlist.id} {...playlist} />;
               }
             })
           ) : (
