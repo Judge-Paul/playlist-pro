@@ -10,7 +10,6 @@ export type PlaylistItem = {
     description: string;
     playlistId: string;
     position: number;
-    publishedAt: string;
     resourceId: {
       kind: string;
       videoId: string;
@@ -22,15 +21,15 @@ export type PlaylistItem = {
       medium: { url: string; width: number; height: number };
       standard: { url: string; width: number; height: number };
     };
-    title: string;
     videoOwnerChannelId: string;
     videoOwnerChannelTitle: string;
   };
-  downloadLinks?: {
+  downloadLinks: {
     [high: string]: VideoLinkData;
     [medium: string]: VideoLinkData;
     [low: string]: VideoLinkData;
   };
+  qualities: string[];
 };
 type VideoLinkData = {
   format: "mp4" | "3gp";
