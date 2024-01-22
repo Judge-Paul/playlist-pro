@@ -6,12 +6,14 @@ import cors from "cors";
 import morgan from "morgan";
 import { PlaylistItem } from "./@types";
 import NodeCache from "node-cache";
+import { getQualities } from "./utils";
 
 dotenv.config();
 
 const app = express();
 const port = parseInt(process.env.PORT ?? "") || 8080;
 const clientURL = process.env.CLIENT_URL;
+const serverURL = process.env.SERVER_URL;
 
 app.use(morgan("dev"));
 app.use(express.json({ limit: "250kb" }));
@@ -24,32 +26,26 @@ app.get("/", (req: Request, res: Response) => {
 });
 
 app.get("/createZip", async (req: Request, res: Response) => {
-  const payload = req.body;
-  const { quality } = req.query as { quality?: string };
+  const id = req.query.id as string;
 
-  if (req.method !== "POST")
-    return res.status(405).json({ error: "Method not allowed" });
-
-  if (!req.body)
-    return res.status(400).json({ error: "Payload not specified" });
-
-  if (!Array.isArray(payload) || !payload[0].downloadLinks)
-    return res.status(400).json({ error: "Payload is incorrect" });
-
-  if (!quality) return res.status(400).json({ error: "Quality not specified" });
+  if (!id) return res.status(400).json({ error: "Playlist id not specified" });
 
   try {
+    const playlistRes = await axios.get(`${serverURL}/playlistItems?id=${id}`);
+    const playlist: PlaylistItem[] = playlistRes.data;
+
     const zip = new JSZip();
 
-    for (let i = 0; i < payload.length; i++) {
-      const response = await axios.get(payload[i].downloadLinks[quality].link, {
+    playlist.map(async (item) => {
+      const qualities = getQualities(playlist);
+      const quality = qualities[0];
+      const downloadLink = item.downloadLinks[quality].link;
+      const fileName = `${item.snippet.title} ytplaylistpro.vercel.app`;
+      const response = await axios.get(downloadLink, {
         responseType: "stream",
       });
-      zip.file(`${payload[i].title} ytplaylistpro.vercel.app`, response.data, {
-        binary: true,
-      });
-    }
-
+      zip.file(fileName, response.data, { binary: true });
+    });
     res.setHeader("Content-Type", "application/zip");
     res.setHeader(
       "Content-Disposition",
@@ -69,13 +65,6 @@ const playlistCache = new NodeCache({
 });
 
 app.get("/playlistItems", async (req: Request, res: Response) => {
-  res.setHeader("CDN-Cache-Control", `max-age=${cacheDuration}`);
-  res.setHeader(
-    "Cache-Control",
-    `max-age=${cacheDuration}, must-revalidate, stale-while-revalidate=${
-      cacheDuration * 0.2
-    }`,
-  );
   const apiKey = process.env.GOOGLE_API_KEY;
   const id = req.query.id as string;
 
@@ -112,8 +101,8 @@ app.get("/playlistItems", async (req: Request, res: Response) => {
       );
       items.map((item: PlaylistItem, index: number) => {
         item.downloadLinks = linksRes.data[index];
+        item.qualities = Object.getOwnPropertyNames(item.downloadLinks);
       });
-
       // Cache the data for the specified duration
       playlistCache.set(id, items);
 
