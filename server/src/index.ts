@@ -15,8 +15,8 @@ const port = parseInt(process.env.PORT ?? "") || 8080;
 const clientURL = process.env.CLIENT_URL;
 const serverURL = process.env.SERVER_URL;
 
-app.use(morgan("dev"));
-app.use(express.json({ limit: "250kb" }));
+app.use(morgan("combined"));
+app.use(express.json({ limit: "400kb" }));
 app.use(cors({ origin: "*" }));
 
 app.get("/", (req: Request, res: Response) => {
