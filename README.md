@@ -39,6 +39,10 @@ By following these steps and creating an issue, you help maintain a structured d
 
 Thank you for your contributions!
 
-## License
+<h2> 👬 Contributors </h2>
+
+<img src="https://contrib.rocks/image?repo=Judge-Paul/playlist-pro" />
+
+<h2> License </h2>
 
 [Apache](./.github/LICENSE)
