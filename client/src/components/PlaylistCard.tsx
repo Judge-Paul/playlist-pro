@@ -11,15 +11,11 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 
-type PlaylistCardProps = PlaylistItem & {
-  quality: any;
-};
-
 export default function PlaylistCard({
   snippet,
   downloadLinks,
-  quality,
-}: PlaylistCardProps) {
+  qualities,
+}: PlaylistItem) {
   const router = useRouter();
   const {
     title,
@@ -27,9 +23,9 @@ export default function PlaylistCard({
     thumbnails,
     resourceId: { videoId },
   } = snippet;
-  const { link, size, resolution } = (
-    downloadLinks as Record<string, VideoLinkData>
-  )[quality];
+  const { link, resolution } = (downloadLinks as Record<string, VideoLinkData>)[
+    qualities[0]
+  ];
   return (
     <div className="mb-2 justify-between gap-3 border border-secondary p-5 sm:flex">
       <Image
@@ -59,7 +55,7 @@ export default function PlaylistCard({
                 <Download className="h-8 w-8 cursor-pointer hover:scale-[.90] active:scale-[.85]" />
               </TooltipTrigger>
               <TooltipContent>
-                {` ${resolution} (${formatBytes(size)})`}
+                {` ${resolution}`}
                 {link ? "" : " (Not Available)"}
               </TooltipContent>
             </Tooltip>
@@ -75,7 +71,7 @@ export default function PlaylistCard({
           target="_blank"
           className="flex w-full items-center justify-center rounded-md bg-primary px-4 py-2 text-secondary"
         >
-          Download ({formatBytes(size)}) <Download className="ml-2" />
+          Download {resolution} video <Download className="ml-2" />
         </Link>
         <Link
           href={`https://youtu.be/${videoId}`}
