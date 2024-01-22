@@ -37,8 +37,9 @@ export type PlaylistItem = {
     videoOwnerChannelTitle: string;
   };
   downloadLinks: {
-    [high: string]: VideoLinkData;
-    [medium: string]: VideoLinkData;
-    [low: string]: VideoLinkData;
+    [high?: string]: VideoLinkData;
+    [medium?: string]: VideoLinkData;
+    [low?: string]: VideoLinkData;
   };
+  qualities: string[];
 };
