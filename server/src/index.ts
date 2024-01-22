@@ -36,16 +36,18 @@ app.get("/createZip", async (req: Request, res: Response) => {
 
     const zip = new JSZip();
 
-    playlist.map(async (item) => {
-      const qualities = getQualities(playlist);
-      const quality = qualities[0];
-      const downloadLink = item.downloadLinks[quality].link;
-      const fileName = `${item.snippet.title} ytplaylistpro.vercel.app`;
-      const response = await axios.get(downloadLink, {
-        responseType: "stream",
-      });
-      zip.file(fileName, response.data, { binary: true });
-    });
+    await Promise.all(
+      playlist.map(async (item) => {
+        const qualities = getQualities(playlist);
+        const quality = qualities[0];
+        const downloadLink = item.downloadLinks[quality]?.link;
+        const fileName = `${item.snippet.title} ytplaylistpro.vercel.app`;
+        const response = await axios.get(downloadLink, {
+          responseType: "stream",
+        });
+        zip.file(fileName, response.data, { binary: true });
+      }),
+    );
     res.setHeader("Content-Type", "application/zip");
     res.setHeader(
       "Content-Disposition",
