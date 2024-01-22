@@ -10,7 +10,6 @@
     "moduleResolution": "node", // Use Node.js-style module resolution
     "resolveJsonModule": true, // Enable importing JSON modules
     "isolatedModules": true, // Ensure that each file can be safely transpiled in isolation
-    "noEmit": true, // Do not emit output files during the compilation
     "declaration": true, // Generate corresponding .d.ts files
     "outDir": "./dist", // Specify an output directory for emitted files
     "rootDir": "./src", // Specify the root directory of input files
