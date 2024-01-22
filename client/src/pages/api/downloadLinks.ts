@@ -43,16 +43,11 @@ export default async function handler(
                 const format = $(row).find("td:nth-child(2)").text();
                 const link = $(row).find("a.downloadBtn").attr("href");
 
-                const headResponse = await axios.head(link ?? "");
-                const size =
-                  parseInt(headResponse.headers["content-length"]) ?? 0;
-
                 return {
                   [quality]: {
                     resolution,
                     format,
                     link,
-                    size,
                   },
                 };
               })
