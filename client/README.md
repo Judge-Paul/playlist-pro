@@ -1,48 +1,40 @@
-<h1 align="center" id="title">YTPlaylistPro</h1>
+This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
 
-<p align="center"><img src="https://socialify.git.ci/Judge-Paul/playlist-pro/image?description=1&descriptionEditable=Easily%20download%20any%20YouTube%20%0APlaylist%20no%20ads%20or%20signup%20needed.&font=Source%20Code%20Pro&forks=1&issues=1&language=1&name=1&owner=1&pattern=Circuit%20Board&stargazers=1&theme=Dark" alt="project-image"></p>
+## Getting Started
 
-<p align="center"><img src="https://img.shields.io/github/v/release/Judge-Paul/playlist-pro" alt="shields"><img src="https://img.shields.io/github/contributors/Judge-Paul/playlist-pro" alt="shields"></p>
+First, run the development server:
 
-<h2>💻 Built with</h2>
+```bash
+npm run dev
+# or
+yarn dev
+# or
+pnpm dev
+# or
+bun dev
+```
 
-<img src="https://img.shields.io/badge/Next-black?style=for-the-badge&logo=next.js&logoColor=white" /> <img src="https://img.shields.io/badge/typescript-%23007ACC.svg?style=for-the-badge&logo=typescript&logoColor=white" /> <img src="https://img.shields.io/badge/Tailwind_CSS-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white" /> <img src="https://img.shields.io/badge/shadcn/ui-000000.svg?style=for-the-badge&logo=shadcn/ui&logoColor=white" /> <img src="https://img.shields.io/badge/Radix%20UI-161618.svg?style=for-the-badge&logo=Radix-UI&logoColor=white" /> <img src="https://img.shields.io/badge/Zod-3E67B1.svg?style=for-the-badge&logo=Zod&logoColor=white" /> <img src="https://img.shields.io/badge/SWR-000000.svg?style=for-the-badge&logo=SWR&logoColor=white" /> <img src="https://img.shields.io/badge/Axios-5A29E4.svg?style=for-the-badge&logo=Axios&logoColor=white" /> <img src="https://img.shields.io/badge/Node.js-43853D?style=for-the-badge&logo=node.js&logoColor=white" /> <img src="https://img.shields.io/badge/npm-CB3837?style=for-the-badge&logo=npm&logoColor=white" /> <img src="https://img.shields.io/badge/express.js-%23404d59.svg?style=for-the-badge&logo=express&logoColor=%2361DAFB" /> <img src="https://img.shields.io/badge/GIT-E44C30?style=for-the-badge&logo=git&logoColor=white" /> <img src="https://img.shields.io/badge/Vercel-000000.svg?style=for-the-badge&logo=Vercel&logoColor=white" /> <img src="https://img.shields.io/badge/Google%20Cloud-4285F4.svg?style=for-the-badge&logo=Google-Cloud&logoColor=white"/>
+Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
-<h2>🤝 Contributing</h2>
+You can start editing the page by modifying `pages/index.tsx`. The page auto-updates as you edit the file.
 
-Contributions are welcome! To contribute to this project, follow these steps:
+[API routes](https://nextjs.org/docs/api-routes/introduction) can be accessed on [http://localhost:3000/api/hello](http://localhost:3000/api/hello). This endpoint can be edited in `pages/api/hello.ts`.
 
-1. **Create an Issue**: Before starting work on a new feature, enhancement, or bug fix, it's recommended to create a new issue. This allows for discussions and feedback on the proposed changes. Issues help ensure that your contribution aligns with the project's goals and avoids duplication of effort.
+The `pages/api` directory is mapped to `/api/*`. Files in this directory are treated as [API routes](https://nextjs.org/docs/api-routes/introduction) instead of React pages.
 
-2. **Fork this repository**.
+This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
 
-3. **Create a new branch**: `git checkout -b feature/my-feature`.
+## Learn More
 
-4. **Make your changes and commit them**: `git commit -am 'Add some feature'`.
+To learn more about Next.js, take a look at the following resources:
 
-5. **Push the changes to your fork**: `git push origin feature/my-feature`.
+- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
+- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
 
-6. **Create a pull request**, explaining your changes.
+You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
 
-Please ensure that your pull request follows the project's coding guidelines and standards.
+## Deploy on Vercel
 
-### Creating an Issue
+The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
 
-When creating an issue, provide the following details:
-
-- A clear and descriptive title.
-- A detailed description of the problem or enhancement you are addressing.
-- Steps to reproduce (for bugs).
-- Any relevant code snippets or screenshots.
-
-By following these steps and creating an issue, you help maintain a structured development process and ensure that your contributions are aligned with the project's objectives.
-
-Thank you for your contributions!
-
-<h2> 👬 Contributors </h2>
-
-<img src="https://contrib.rocks/image?repo=Judge-Paul/playlist-pro" />
-
-<h2> License </h2>
-
-[Apache](./.github/LICENSE)
+Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
