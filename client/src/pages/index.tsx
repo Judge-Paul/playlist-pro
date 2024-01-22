@@ -23,7 +23,7 @@ export default function Home() {
       URLSchema.parse(playlistURL);
       let playlistId = getPlaylistId(playlistURL);
       if (playlistId) {
-        router.push(`/download/${playlistId}?quality=medium`);
+        router.push(`/download/${playlistId}`);
         toast.info("Generating Playlist Downloads...");
       } else {
         toast.error("Error Generating Playlist Downloads...");
