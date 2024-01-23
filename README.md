@@ -4,6 +4,55 @@
 
 <p align="center"><img src="https://img.shields.io/github/v/release/Judge-Paul/playlist-pro" alt="shields"><img src="https://img.shields.io/github/contributors/Judge-Paul/playlist-pro" alt="shields"></p>
 
+<h2>⚙️ Installation</h2>
+
+### Client Setup
+
+1. **Navigate to the `client` folder and install dependencies:**
+
+```bash
+cd client
+npm install
+```
+
+2. **Set environment variables:**
+   Create a `.env.local` file in the root of the `client` folder and add:
+
+```dotenv
+NEXT_PUBLIC_SERVER_URL=http://localhost:8080
+```
+
+3. **Start the development server:**
+
+```bash
+npm run dev
+```
+
+### Server Setup
+
+1. **Navigate to the `server` folder and install dependencies:**
+
+```bash
+cd server
+npm install
+```
+
+2. **Set environment variables:**
+   Create a `.env` file in the root of the `server` folder and add the following:
+
+```dotenv
+CLIENT_URL=http://localhost:3000
+SERVER_URL=http://localhost:8080
+```
+
+**PS:** If the issue you were asked to work on requires you testing the /playlistItems endpoint, you'll need to get an API key from [cloud console](https://console.cloud.google.com) or you can reach out to me on [X (Twitter)](https://x.com/jadge_dev) for a temporary one.
+
+3. **Start the development server:**
+
+```bash
+npm run dev
+```
+
 <h2>💻 Built with</h2>
 
 <img src="https://img.shields.io/badge/Next-black?style=for-the-badge&logo=next.js&logoColor=white" /> <img src="https://img.shields.io/badge/typescript-%23007ACC.svg?style=for-the-badge&logo=typescript&logoColor=white" /> <img src="https://img.shields.io/badge/Tailwind_CSS-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white" /> <img src="https://img.shields.io/badge/shadcn/ui-000000.svg?style=for-the-badge&logo=shadcn/ui&logoColor=white" /> <img src="https://img.shields.io/badge/Radix%20UI-161618.svg?style=for-the-badge&logo=Radix-UI&logoColor=white" /> <img src="https://img.shields.io/badge/Zod-3E67B1.svg?style=for-the-badge&logo=Zod&logoColor=white" /> <img src="https://img.shields.io/badge/SWR-000000.svg?style=for-the-badge&logo=SWR&logoColor=white" /> <img src="https://img.shields.io/badge/Axios-5A29E4.svg?style=for-the-badge&logo=Axios&logoColor=white" /> <img src="https://img.shields.io/badge/Node.js-43853D?style=for-the-badge&logo=node.js&logoColor=white" /> <img src="https://img.shields.io/badge/npm-CB3837?style=for-the-badge&logo=npm&logoColor=white" /> <img src="https://img.shields.io/badge/express.js-%23404d59.svg?style=for-the-badge&logo=express&logoColor=%2361DAFB" /> <img src="https://img.shields.io/badge/GIT-E44C30?style=for-the-badge&logo=git&logoColor=white" /> <img src="https://img.shields.io/badge/Vercel-000000.svg?style=for-the-badge&logo=Vercel&logoColor=white" /> <img src="https://img.shields.io/badge/Google%20Cloud-4285F4.svg?style=for-the-badge&logo=Google-Cloud&logoColor=white"/>
@@ -12,7 +61,7 @@
 
 Contributions are welcome! To contribute to this project, follow these steps:
 
-1. **Create an Issue**: Before starting work on a new feature, enhancement, or bug fix, it's recommended to create a new issue. This allows for discussions and feedback on the proposed changes. Issues help ensure that your contribution aligns with the project's goals and avoids duplication of effort.
+1. **Create an Issue**: Before starting work on a new feature, enhancement, or bug fix, it's recommended to create a new issue or make a request on an existing issue. This allows for discussions and feedback on the proposed changes. Issues help ensure that your contribution aligns with the project's goals and avoids duplication of effort.
 
 2. **Fork this repository**.
 
