@@ -17,7 +17,7 @@ const serverURL = process.env.SERVER_URL;
 
 app.use(morgan("combined"));
 app.use(express.json({ limit: "400kb" }));
-app.use(cors({ origin: "*" }));
+app.use(cors({ origin: clientURL }));
 
 app.get("/", (req: Request, res: Response) => {
   res.send(
