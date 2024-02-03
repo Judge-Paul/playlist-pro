@@ -1,10 +1,9 @@
 import { Button } from "@/components/ui/button";
 import { fetcher } from "@/lib/utils";
-import { Github, Menu, XIcon, AlignRight } from "lucide-react";
+import { Github, XIcon, AlignRight } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
 import useSWRImmutable from "swr/immutable";
-import { buttonVariants } from "@/components/ui/button";
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
@@ -16,7 +15,7 @@ export default function Navbar() {
   return (
     <>
       <nav className="mx-auto mt-7 flex w-full max-w-6xl justify-between px-8">
-        <div className="my-auto flex">
+        <Link href="/" className="my-auto flex">
           <svg
             xmlns="http://www.w3.org/2000/svg"
             version="1"
@@ -33,7 +32,7 @@ export default function Navbar() {
             ></path>
           </svg>
           <span className="my-auto text-xl font-semibold">PlaylistPro</span>
-        </div>
+        </Link>
         <div className="my-auto hidden gap-6 font-semibold sm:flex">
           <span>How it Works</span>
           <Link href="https://github.com/Judge-Paul/playlist-pro">

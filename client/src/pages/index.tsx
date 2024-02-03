@@ -4,18 +4,17 @@ import { Download } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { URLSchema } from "@/lib/zod";
 import { toast } from "sonner";
-import { useSearchParams } from "next/navigation";
 import { useRouter } from "next/router";
-import { getPlaylistId } from "@/lib/utils";
+import { cn, getPlaylistId } from "@/lib/utils";
 import { FormEvent, useState } from "react";
 
 const inter = Inter({ subsets: ["latin"] });
 
 export default function Home() {
   const [playlistURL, setPlaylistURL] = useState("");
-  const params = useSearchParams();
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
+
   function handleSubmit(event: FormEvent) {
     event.preventDefault();
     setIsLoading(true);
@@ -36,7 +35,12 @@ export default function Home() {
   }
 
   return (
-    <main className="flex min-h-[90vh] w-full items-center justify-center">
+    <main
+      className={cn(
+        inter.className,
+        "flex min-h-[90vh] w-full items-center justify-center",
+      )}
+    >
       <div className="px-4 md:w-[36rem] lg:w-[44rem] lg:px-0">
         <h2 className="bg-gradient-to-r from-pink-500 to-red-500 bg-clip-text text-center text-3xl font-bold text-transparent lg:text-6xl">
           Download any YouTube Playlist in a few clicks
