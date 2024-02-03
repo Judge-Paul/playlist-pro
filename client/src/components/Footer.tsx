@@ -1,11 +1,12 @@
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { Star, Coffee, Sun, Monitor, Moon } from "lucide-react";
+import { Star, Coffee } from "lucide-react";
 import XTwitter from "@/components/ui/x-twitter";
-import { useTheme } from "next-themes";
+import dynamic from "next/dynamic";
+
+const Toggle = dynamic(() => import("@/components/Toggle"), { ssr: false });
 
 export default function Footer() {
-  const { theme, setTheme } = useTheme();
   return (
     <footer className="border border-t-primary bg-background py-10">
       <div className="container mx-auto flex max-w-6xl flex-wrap justify-between">
@@ -15,26 +16,7 @@ export default function Footer() {
             Playlist Pro is the only web application which allows you to easily
             download YouTube playlists no ads, no signups.
           </p>
-          <div className="mt-4 flex w-max gap-1 rounded-full  border-2 border-secondary px-4 py-2.5">
-            <Sun
-              className={`h-8 w-8 rounded-full p-1.5 hover:bg-secondary${
-                theme === "light" ? " bg-secondary" : ""
-              }`}
-              onClick={() => setTheme("light")}
-            />
-            <Monitor
-              className={`h-8 w-8 rounded-full p-1.5 hover:bg-secondary${
-                theme === "system" ? " bg-secondary" : ""
-              }`}
-              onClick={() => setTheme("system")}
-            />
-            <Moon
-              className={`h-8 w-8 rounded-full p-1.5 hover:bg-secondary${
-                theme === "dark" ? " bg-secondary" : ""
-              }`}
-              onClick={() => setTheme("dark")}
-            />
-          </div>
+          <Toggle />
           {/* <div className="flex items-center">
             <Avatar
               alt="Creator's avatar"
