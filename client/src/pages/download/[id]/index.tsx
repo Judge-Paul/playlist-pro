@@ -16,10 +16,8 @@ import { PlaylistItem } from "@/types";
 import Link from "next/link";
 import axios from "axios";
 
-export default function Download() {
+export default function Download({ id }) {
   const router = useRouter();
-  const searchParams = useSearchParams();
-  const { id } = router.query;
   const serverURL = process.env.NEXT_PUBLIC_SERVER_URL;
 
   const { data, error } = useSWRImmutable(
@@ -111,4 +109,20 @@ export default function Download() {
       </div>
     </main>
   );
+}
+
+interface Params {
+  params: { id: string };
+}
+
+export async function getServerSideProps({ params }: Params) {
+  const id = params.id;
+  const serverURL = process.env.NEXT_PUBLIC_SERVER_URL;
+
+  // const data = await fetch(`${serverURL}/playlistItems?id=${params.id}`).then(
+  //   (data) => {
+  //     return data.json();
+  //   },
+  // );
+  return { props: { id } };
 }
