@@ -1,39 +1,25 @@
-import { useRouter } from "next/router";
-import { useSearchParams } from "next/navigation";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
-import { ChevronDown, ArrowLeft } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { ArrowLeft } from "lucide-react";
+import { buttonVariants } from "@/components/ui/button";
 import VideoLoadingCard from "@/components/VideoLoadingCard";
 import PlaylistCard from "@/components/PlaylistCard";
 import { toast } from "sonner";
 import useSWRImmutable from "swr/immutable";
-import { fetcher, getQualities } from "@/lib/utils";
+import { cn, fetcher, getQualities } from "@/lib/utils";
 import { PlaylistItem } from "@/types";
 import Link from "next/link";
-import axios from "axios";
 
-export default function Download({ id }) {
-  const router = useRouter();
+interface DownloadProps {
+  id: string;
+}
+
+export default function Download({ id }: DownloadProps) {
   const serverURL = process.env.NEXT_PUBLIC_SERVER_URL;
 
   const { data, error } = useSWRImmutable(
-    `${serverURL}/playlistItems?id=${id}`,
+    `/api/playlistItems?id=${id}`,
     fetcher,
   );
-
   // let qualities = getQualities(data);
-  async function downloadZip() {
-    try {
-      router.push(`${serverURL}/createZip?id=${id}`);
-    } catch (error) {
-      toast.error("Couldn't Generate Zip file. Please Try Again");
-    }
-  }
-
   if (data?.error || error) {
     toast.error("Failed to get playlists.\nReload the page to Try Again.");
   }
@@ -62,28 +48,15 @@ export default function Download({ id }) {
             </span>
           </Link>
           <div className="flex gap-2 text-sm sm:text-lg">
-            <Popover>
-              <PopoverTrigger className="flex rounded-md border border-primary px-2 py-2 dark:border-secondary sm:mt-0 sm:px-4">
-                Download All
-                <ChevronDown className="my-auto ml-2 h-4 w-4 sm:h-6 sm:w-6" />
-              </PopoverTrigger>
-              <PopoverContent className="max-w-max">
-                {/* {qualities.map((quality) => {
-                  return (
-                    <Button
-                      key={quality}
-                      onClick={() => downloadZip(quality)}
-                      className="mt-2 block w-full"
-                    >
-                      Download {quality} quality .zip
-                    </Button>
-                  );
-                })} */}
-                <Button onClick={downloadZip} className="mt-2 block w-full">
-                  Download All
-                </Button>
-              </PopoverContent>
-            </Popover>
+            <Link
+              href={`${serverURL}/createZip?id=${id}`}
+              className={cn(
+                "mt-2 block w-full",
+                buttonVariants({ variant: "outline" }),
+              )}
+            >
+              Download All
+            </Link>
           </div>
         </div>
         <div className="mt-7">
@@ -103,6 +76,7 @@ export default function Download({ id }) {
             <>
               <VideoLoadingCard />
               <VideoLoadingCard />
+              <VideoLoadingCard />
             </>
           )}
         </div>
@@ -111,18 +85,12 @@ export default function Download({ id }) {
   );
 }
 
-interface Params {
+interface ServerSideProps {
   params: { id: string };
 }
 
-export async function getServerSideProps({ params }: Params) {
+export async function getServerSideProps({ params }: ServerSideProps) {
   const id = params.id;
-  const serverURL = process.env.NEXT_PUBLIC_SERVER_URL;
 
-  // const data = await fetch(`${serverURL}/playlistItems?id=${params.id}`).then(
-  //   (data) => {
-  //     return data.json();
-  //   },
-  // );
   return { props: { id } };
 }

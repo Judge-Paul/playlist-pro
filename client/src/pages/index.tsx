@@ -1,4 +1,3 @@
-import Image from "next/image";
 import { Inter } from "next/font/google";
 import { Download } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -15,23 +14,22 @@ export default function Home() {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
 
-  function handleSubmit(event: FormEvent) {
+  async function handleSubmit(event: FormEvent) {
     event.preventDefault();
     setIsLoading(true);
     try {
       URLSchema.parse(playlistURL);
       let playlistId = getPlaylistId(playlistURL);
       if (playlistId) {
-        router.push(`/download/${playlistId}`);
+        await router.push(`/download/${playlistId}`);
         toast.info("Generating Playlist Downloads...");
       } else {
         toast.error("Error Generating Playlist Downloads...");
       }
-      setIsLoading(false);
     } catch (error: any) {
       toast.error("Enter a Valid YouTube Playlist URL");
-      setIsLoading(false);
     }
+    setIsLoading(false);
   }
 
   return (
