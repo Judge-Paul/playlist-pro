@@ -7,6 +7,7 @@ import morgan from "morgan";
 import { PlaylistItem } from "./@types";
 import NodeCache from "node-cache";
 import { getQualities } from "./utils";
+import { Redis } from "@upstash/redis";
 
 dotenv.config();
 
@@ -14,6 +15,13 @@ const app = express();
 const port = parseInt(process.env.PORT ?? "") || 8080;
 const clientURL = process.env.CLIENT_URL;
 const serverURL = process.env.SERVER_URL;
+const redisURL = process.env.REDIS_URL || "";
+const redisToken = process.env.REDIS_TOKEN || "";
+
+const redis = new Redis({
+  url: redisURL,
+  token: redisToken,
+});
 
 app.use(morgan("combined"));
 app.use(express.json({ limit: "400kb" }));
@@ -31,13 +39,12 @@ app.get("/createZip", async (req: Request, res: Response) => {
   if (!id) return res.status(400).json({ error: "Playlist id not specified" });
 
   try {
-    const playlistRes = await axios.get(`${serverURL}/playlistItems?id=${id}`);
-    const playlist: PlaylistItem[] = playlistRes.data;
+    const playlist: any = await redis.get(id);
 
     const zip = new JSZip();
 
     await Promise.all(
-      playlist.map(async (item) => {
+      playlist.map(async (item: any) => {
         const qualities = getQualities(playlist);
         const quality = qualities[0];
         const downloadLink = item.downloadLinks[quality]?.link;
@@ -51,7 +58,7 @@ app.get("/createZip", async (req: Request, res: Response) => {
     res.setHeader("Content-Type", "application/zip");
     res.setHeader(
       "Content-Disposition",
-      "attachment; filename=YTPlaylistPro.zip",
+      "attachment; filename=ytplaylistpro.vercel.app.zip",
     );
     zip.generateNodeStream({ streamFiles: true }).pipe(res);
   } catch (error) {
