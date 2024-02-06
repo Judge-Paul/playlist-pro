@@ -7,6 +7,10 @@ export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse,
 ) {
+  res.setHeader("Vercel-CDN-Cache-Control", "max-age=21600");
+  res.setHeader("CDN-Cache-Control", "max-age=21600");
+  res.setHeader("Cache-Control", "public, must-revalidate, max-age=21600");
+
   const apiKey = process.env.GOOGLE_API_KEY;
   const clientURL = process.env.NEXT_PUBLIC_CLIENT_URL;
   const id = req.query.id as string;
@@ -39,14 +43,24 @@ export default async function handler(
           JSON.stringify(videoIds),
         )}`,
       );
-      items.map((item: PlaylistItem, index: number) => {
-        item.downloadLinks = linksRes.data[index];
-        item.qualities = Object.getOwnPropertyNames(item.downloadLinks);
+      const playlist = items.map((item: PlaylistItem, index: number) => {
+        return {
+          snippet: {
+            title: item.snippet.title,
+            description: item.snippet.description,
+            thumbnails: item.snippet.thumbnails,
+            resourceId: {
+              videoId: item.snippet.resourceId.videoId,
+            },
+          },
+          downloadLinks: linksRes.data[index],
+          qualities: Object.getOwnPropertyNames(linksRes.data[index]),
+        };
       });
-      await redis.set(id, items);
+      await redis.set(id, playlist);
       await redis.expire(id, 21600);
 
-      return res.status(200).json(items);
+      return res.status(200).json(playlist);
     } else {
       return res.status(500).json({ error: "Failed getting playlists data" });
     }
