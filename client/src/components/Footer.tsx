@@ -69,9 +69,11 @@ export default function Footer() {
               Star on GitHub
             </Link>
           </Button>
-          <Button className="mb-2 " variant="outline">
-            <Coffee className="mr-1 h-4 w-4" />
-            Buy Me a Coffee
+          <Button asChild className="mb-2 w-full " variant="outline">
+            <Link href="https://www.buymeacoffee.com/jadge_dev" target="_blank">
+              <Coffee className="mr-1 h-4 w-4" />
+              Buy Me a Coffee
+            </Link>
           </Button>
         </div>
       </div>
