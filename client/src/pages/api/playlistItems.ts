@@ -30,7 +30,7 @@ export default async function handler(
     );
 
     if (response.status === 200) {
-      const items: PlaylistItem[] = response.data.items;
+      let items: PlaylistItem[] = response.data.items;
 
       if (!items || items.length === 0) {
         return res.status(404).json({ error: "Playlist Items Not Found" });
@@ -38,13 +38,20 @@ export default async function handler(
 
       const videoIds = items.map((item) => item.snippet.resourceId.videoId);
 
-      const linksRes = await axios.get(
-        `${clientURL}/api/downloadLinks?videoIds=${encodeURIComponent(
-          JSON.stringify(videoIds),
-        )}`,
-      );
-      const playlist = items.map((item: PlaylistItem, index: number) => {
+      const [linksRes, playlistRes] = await Promise.all([
+        axios.get(
+          `${clientURL}/api/downloadLinks?videoIds=${encodeURIComponent(
+            JSON.stringify(videoIds),
+          )}`,
+        ),
+        axios.get(
+          `https://youtube.googleapis.com/youtube/v3/playlists?part=snippet&id=${id}&key=${apiKey}`,
+        ),
+      ]);
+
+      items = items.map((item: PlaylistItem, index: number) => {
         return {
+          id: item.id,
           snippet: {
             title: item.snippet.title,
             description: item.snippet.description,
@@ -57,6 +64,13 @@ export default async function handler(
           qualities: Object.getOwnPropertyNames(linksRes.data[index]),
         };
       });
+
+      const playlist = {
+        title: playlistRes.data.items[0].snippet.title,
+        description: playlistRes.data.items[0].snippet.description,
+        items,
+      };
+
       await redis.set(id, playlist);
       await redis.expire(id, 21600);
 
@@ -65,16 +79,6 @@ export default async function handler(
       return res.status(500).json({ error: "Failed getting playlists data" });
     }
   } catch (error: any) {
-    if (axios.isAxiosError(error)) {
-      const axiosError: AxiosError = error;
-
-      if (axiosError.response?.status === 404) {
-        return res.status(404).json({ error: "Playlist not found" });
-      } else {
-        return res.status(500).json({ error });
-      }
-    } else {
-      return res.status(500).json({ error: "Unexpected error occurred" });
-    }
+    return res.status(500).json({ error: "Unexpected error occurred" });
   }
 }
