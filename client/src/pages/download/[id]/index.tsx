@@ -32,10 +32,10 @@ export default function Download({ id }: DownloadProps) {
       </Head>
       {data && !data.error ? (
         <>
-          <h2 className="text-center text-xl font-bold lg:text-4xl">
+          <h2 className="line-clamp-2 text-ellipsis px-8 text-center text-xl font-bold sm:px-20 md:px-40 lg:text-4xl">
             {data?.title ?? "Playlist Videos"}
           </h2>
-          <h3 className="mt-3 text-center text-lg text-secondary lg:text-xl">
+          <h3 className="mt-3 line-clamp-3 px-8 text-center text-lg font-light lg:text-xl">
             {data?.description}
           </h3>
         </>
