@@ -17,7 +17,15 @@ export default function App({ Component, pageProps }: AppProps) {
         disableTransitionOnChange
       >
         <Head>
-          <title>Playlist Pro</title>
+          <title>YTPlaylistPro - Download YouTube Playlists</title>
+          <meta
+            name="description"
+            content="YTPlaylistPro is a free, easy to use, open source, YouTube playlist downloader, no ads, no signup, very fast."
+          />
+          <meta
+            name="google-site-verification"
+            content="23XufbDHBlhKy2wvMDOypKfHZhvAyneuSqIsp2jrMLI"
+          />
           <link rel="icon" href="/favicon.png" />
         </Head>
         <Layout>

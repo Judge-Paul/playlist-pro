@@ -7,6 +7,7 @@ import useSWRImmutable from "swr/immutable";
 import { cn, fetcher, getQualities } from "@/lib/utils";
 import { PlaylistItem } from "@/types";
 import Link from "next/link";
+import Head from "next/head";
 
 interface DownloadProps {
   id: string;
@@ -26,6 +27,9 @@ export default function Download({ id }: DownloadProps) {
 
   return (
     <main className="mx-auto max-w-6xl py-5">
+      <Head>
+        <title>Playlist Pro</title>
+      </Head>
       {data && !data.error ? (
         <>
           <h2 className="text-center text-xl font-bold lg:text-4xl">
