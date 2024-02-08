@@ -1,17 +1,9 @@
 export type PlaylistItem = {
-  etag: string;
   id: string;
-  kind: string;
   snippet: {
-    publishedAt: string;
-    channelId: string;
     title: string;
-    channelTitle: string;
     description: string;
-    playlistId: string;
-    position: number;
     resourceId: {
-      kind: string;
       videoId: string;
     };
     thumbnails: {
@@ -21,13 +13,11 @@ export type PlaylistItem = {
       medium: { url: string; width: number; height: number };
       standard: { url: string; width: number; height: number };
     };
-    videoOwnerChannelId: string;
-    videoOwnerChannelTitle: string;
   };
   downloadLinks: {
-    [high: string]: VideoLinkData;
-    [medium: string]: VideoLinkData;
-    [low: string]: VideoLinkData;
+    [high?: string]: VideoLinkData;
+    [medium?: string]: VideoLinkData;
+    [low?: string]: VideoLinkData;
   };
   qualities: string[];
 };
@@ -36,4 +26,10 @@ type VideoLinkData = {
   link: string;
   size: number;
   resolution: "144p" | "360p" | "720p";
+};
+
+export type Playlist = {
+  title: string;
+  description: string;
+  items: PlaylistItem[];
 };

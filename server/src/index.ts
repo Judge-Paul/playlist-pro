@@ -40,8 +40,8 @@ app.get("/createZip", async (req: Request, res: Response) => {
     const zip = new JSZip();
 
     await Promise.all(
-      playlist.map(async (item: PlaylistItem) => {
-        const qualities = getQualities(playlist);
+      playlist.items.map(async (item: PlaylistItem) => {
+        const qualities = getQualities(playlist.items);
         const quality = qualities[0];
         const downloadLink = item.downloadLinks[quality]?.link;
         const fileName = `${item.snippet.title} ytplaylistpro.vercel.app`;
@@ -54,7 +54,7 @@ app.get("/createZip", async (req: Request, res: Response) => {
     res.setHeader("Content-Type", "application/zip");
     res.setHeader(
       "Content-Disposition",
-      "attachment; filename=ytplaylistpro.vercel.app.zip",
+      `attachment; filename=${playlist.title} ytplaylistpro.vercel.app.zip`,
     );
     zip.generateNodeStream({ streamFiles: true }).pipe(res);
   } catch (error) {
