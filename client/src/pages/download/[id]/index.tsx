@@ -7,6 +7,7 @@ import useSWRImmutable from "swr/immutable";
 import { cn, fetcher, getQualities } from "@/lib/utils";
 import { PlaylistItem } from "@/types";
 import Link from "next/link";
+import Head from "next/head";
 
 interface DownloadProps {
   id: string;
@@ -25,17 +26,22 @@ export default function Download({ id }: DownloadProps) {
   }
 
   return (
-    <main className="py-10">
-      <h2 className="text-center text-2xl font-bold lg:text-5xl">
-        Playlist Videos
-      </h2>
-      <div className="mx-auto mt-7 max-w-6xl px-8">
-        {data && !data.error ? (
-          <h4 className="my-auto text-lg">{data.length} Videos in Playlist</h4>
-        ) : (
-          <div className="my-auto h-6 w-40 bg-secondary"></div>
-        )}
-      </div>
+    <main className="mx-auto max-w-6xl py-5">
+      <Head>
+        <title>Playlist Pro</title>
+      </Head>
+      {data && !data.error ? (
+        <>
+          <h2 className="text-center text-xl font-bold lg:text-4xl">
+            {data?.title ?? "Playlist Videos"}
+          </h2>
+          <h3 className="mt-3 text-center text-lg text-secondary lg:text-xl">
+            {data?.description}
+          </h3>
+        </>
+      ) : (
+        <div className="mx-auto my-auto h-10 w-96 bg-secondary"></div>
+      )}
       <div className="mx-auto mt-7 max-w-6xl px-8">
         <div className="flex justify-between">
           <Link
@@ -61,7 +67,7 @@ export default function Download({ id }: DownloadProps) {
         </div>
         <div className="mt-7">
           {data && !data?.error ? (
-            data.map((playlist: PlaylistItem) => {
+            data.items.map((playlist: PlaylistItem) => {
               const { title, description } = playlist.snippet;
               if (
                 (title !== "Private video" &&
