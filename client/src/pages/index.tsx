@@ -6,13 +6,27 @@ import { toast } from "sonner";
 import { useRouter } from "next/router";
 import { cn, getPlaylistId } from "@/lib/utils";
 import { FormEvent, useState } from "react";
+import { useTour } from "@reactour/tour";
+import { useEffect } from "react";
 
 const inter = Inter({ subsets: ["latin"] });
 
 export default function Home() {
-  const [playlistURL, setPlaylistURL] = useState("");
   const router = useRouter();
+  const [playlistURL, setPlaylistURL] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+
+  const { setSteps } = useTour();
+
+  useEffect(() => {
+    setSteps &&
+      setSteps([
+        {
+          selector: ".first-step",
+          content: "Enter a YouTube Playlist and press download.",
+        },
+      ]);
+  }, []);
 
   async function handleSubmit(event: FormEvent) {
     event.preventDefault();
@@ -52,7 +66,7 @@ export default function Home() {
         <div className="mt-8 flex gap-2 rounded-lg bg-gradient-to-r from-pink-500 to-red-500 p-1">
           <form
             onSubmit={handleSubmit}
-            className="flex w-full gap-2  bg-background p-1.5"
+            className="first-step flex w-full gap-2 bg-background p-1.5"
           >
             <input
               onChange={(e) => setPlaylistURL(e.target.value)}

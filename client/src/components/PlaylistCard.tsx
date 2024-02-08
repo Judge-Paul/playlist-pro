@@ -48,7 +48,11 @@ export default function PlaylistCard({
         </p>
       </div>
       <div className="hidden flex-col justify-between sm:flex">
-        <Link href={link || `${router.asPath}#`} target="_blank">
+        <Link
+          href={link || `${router.asPath}#`}
+          target="_blank"
+          className="fourth-step"
+        >
           <TooltipProvider>
             <Tooltip>
               <TooltipTrigger>
@@ -61,7 +65,11 @@ export default function PlaylistCard({
             </Tooltip>
           </TooltipProvider>
         </Link>
-        <Link href={`https://youtu.be/${videoId}`} target="_blank">
+        <Link
+          href={`https://youtu.be/${videoId}`}
+          target="_blank"
+          className="fifth-step"
+        >
           <ExternalLink className="h-8 w-8 cursor-pointer hover:scale-[.90] active:scale-[.85]" />
         </Link>
       </div>
@@ -69,14 +77,14 @@ export default function PlaylistCard({
         <Link
           href={link || `${router.asPath}#`}
           target="_blank"
-          className="flex w-full items-center justify-center rounded-md bg-primary px-4 py-2 text-secondary"
+          className="fourth-step flex w-full items-center justify-center rounded-md bg-primary px-4 py-2 text-secondary"
         >
           Download {resolution} video <Download className="ml-2" />
         </Link>
         <Link
           href={`https://youtu.be/${videoId}`}
           target="_blank"
-          className="mt-2 flex w-full items-center justify-center rounded-md bg-primary px-4 py-2 text-secondary"
+          className="fifth-step mt-2 flex w-full items-center justify-center rounded-md bg-primary px-4 py-2 text-secondary"
         >
           Watch <Youtube className="ml-2" />
         </Link>

@@ -4,16 +4,25 @@ import { Github, XIcon, AlignRight } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
 import useSWRImmutable from "swr/immutable";
+import { useTour } from "@reactour/tour";
+import StopScroll from "@/components/StopScroll";
 
 export default function Navbar() {
-  const [isOpen, setIsOpen] = useState(false);
+  const { isOpen, setIsOpen } = useTour();
+  const [isNavOpen, setIsNavOpen] = useState(false);
   const { data, error } = useSWRImmutable(
     "https://api.github.com/repos/Judge-Paul/playlist-pro",
     fetcher,
   );
 
+  function startTour() {
+    setIsOpen(true);
+    setIsNavOpen(false);
+  }
+
   return (
     <>
+      <StopScroll stop={isOpen} />
       <nav className="mx-auto my-5 flex w-full max-w-6xl justify-between px-8">
         <Link href="/" className="my-auto flex">
           <svg
@@ -34,13 +43,15 @@ export default function Navbar() {
           <span className="my-auto text-xl font-semibold">PlaylistPro</span>
         </Link>
         <div className="my-auto hidden gap-6 font-semibold sm:flex">
-          <span>How it Works</span>
+          <span onClick={startTour} className="cursor-pointer">
+            How it Works
+          </span>
           <Link href="https://github.com/Judge-Paul/playlist-pro">
             Contribute
           </Link>
         </div>
         <AlignRight
-          onClick={() => setIsOpen(true)}
+          onClick={() => setIsNavOpen(true)}
           className="mr-2 h-10 w-10 cursor-pointer sm:hidden"
         />
         <Button
@@ -56,7 +67,7 @@ export default function Navbar() {
           </Link>
         </Button>
       </nav>
-      {isOpen && (
+      {isNavOpen && (
         <nav className="fixed inset-y-0 h-full w-full rounded-r-3xl bg-background px-8 py-7 sm:hidden">
           <span className="flex justify-between">
             <span className="flex">
@@ -77,12 +88,14 @@ export default function Navbar() {
               </svg>
               <span className="my-auto text-xl font-semibold">PlaylistPro</span>
             </span>
-            <Button variant="outline" onClick={() => setIsOpen(false)}>
+            <Button variant="outline" onClick={() => setIsNavOpen(false)}>
               <XIcon />
             </Button>
           </span>
           <ul className="flex flex-col gap-7 py-8 text-lg">
-            <Link href="#">How it Works</Link>
+            <span onClick={startTour} className="cursor-pointer">
+              How it Works
+            </span>
             <Link href="https://github.com/Judge-Paul/playlist-pro">
               Contribute
             </Link>
