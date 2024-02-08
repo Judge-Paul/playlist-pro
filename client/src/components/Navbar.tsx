@@ -5,9 +5,10 @@ import Link from "next/link";
 import { useState } from "react";
 import useSWRImmutable from "swr/immutable";
 import { useTour } from "@reactour/tour";
+import StopScroll from "@/components/StopScroll";
 
 export default function Navbar() {
-  const { setIsOpen } = useTour();
+  const { isOpen, setIsOpen } = useTour();
   const [isNavOpen, setIsNavOpen] = useState(false);
   const { data, error } = useSWRImmutable(
     "https://api.github.com/repos/Judge-Paul/playlist-pro",
@@ -21,6 +22,7 @@ export default function Navbar() {
 
   return (
     <>
+      <StopScroll stop={isOpen} />
       <nav className="mx-auto my-5 flex w-full max-w-6xl justify-between px-8">
         <Link href="/" className="my-auto flex">
           <svg
