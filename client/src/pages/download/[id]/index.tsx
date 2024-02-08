@@ -8,13 +8,42 @@ import { cn, fetcher, getQualities } from "@/lib/utils";
 import { PlaylistItem } from "@/types";
 import Link from "next/link";
 import Head from "next/head";
+import { useTour } from "@reactour/tour";
+import { useEffect } from "react";
 
 interface DownloadProps {
   id: string;
 }
 
 export default function Download({ id }: DownloadProps) {
+  const { setSteps } = useTour();
   const serverURL = process.env.NEXT_PUBLIC_SERVER_URL;
+
+  useEffect(() => {
+    setSteps &&
+      setSteps([
+        {
+          selector: ".first-step",
+          content: "Playlist Title",
+        },
+        {
+          selector: ".second-step",
+          content: "Return back to homepage to get another Playlist.",
+        },
+        {
+          selector: ".third-step",
+          content: "Download all videos in playlist as a zip file.",
+        },
+        {
+          selector: ".fourth-step",
+          content: "Download a single video in the playlist.",
+        },
+        {
+          selector: ".fifth-step",
+          content: "Play this video on YouTube",
+        },
+      ]);
+  }, []);
 
   const { data, error } = useSWRImmutable(
     `/api/playlistItems?id=${id}`,
@@ -32,7 +61,7 @@ export default function Download({ id }: DownloadProps) {
       </Head>
       {data && !data.error ? (
         <>
-          <h2 className="line-clamp-2 text-ellipsis px-8 text-center text-xl font-bold sm:px-20 md:px-40 lg:text-4xl">
+          <h2 className="first-step line-clamp-2 text-ellipsis px-8 text-center text-xl font-bold sm:px-20 md:px-40 lg:text-4xl">
             {data?.title ?? "Playlist Videos"}
           </h2>
           <h3 className="mt-3 line-clamp-3 px-8 text-center text-lg font-light lg:text-xl">
@@ -46,7 +75,7 @@ export default function Download({ id }: DownloadProps) {
         <div className="flex justify-between">
           <Link
             href="/"
-            className="my-auto flex w-max gap-2 hover:text-gray-800 active:text-secondary dark:hover:text-gray-300"
+            className="second-step my-auto flex w-max gap-2 hover:text-gray-800 active:text-secondary dark:hover:text-gray-300"
           >
             <ArrowLeft className="h-8 w-8" />{" "}
             <span className="my-auto hidden text-lg font-semibold sm:flex md:text-xl">
@@ -57,7 +86,7 @@ export default function Download({ id }: DownloadProps) {
             <Link
               href={`${serverURL}/createZip?id=${id}`}
               className={cn(
-                "mt-2 block w-full",
+                "third-step mt-2 block w-full",
                 buttonVariants({ variant: "outline" }),
               )}
             >

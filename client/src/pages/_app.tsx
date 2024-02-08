@@ -6,8 +6,16 @@ import { ThemeProvider } from "@/components/theme-provider";
 import Layout from "@/components/Layout";
 import { Analytics } from "@vercel/analytics/react";
 import { SpeedInsights } from "@vercel/speed-insights/next";
+import { TourProvider } from "@reactour/tour";
 
 export default function App({ Component, pageProps }: AppProps) {
+  const steps = [
+    {
+      selector: ".first-step",
+      content: "Enter a YouTube Playlist and press download.",
+    },
+  ];
+
   return (
     <>
       <ThemeProvider
@@ -16,22 +24,24 @@ export default function App({ Component, pageProps }: AppProps) {
         enableSystem
         disableTransitionOnChange
       >
-        <Head>
-          <title>YTPlaylistPro - Download YouTube Playlists</title>
-          <meta
-            name="description"
-            content="YTPlaylistPro is a free, easy to use, open source, YouTube playlist downloader, no ads, no signup, very fast."
-          />
-          <meta
-            name="google-site-verification"
-            content="23XufbDHBlhKy2wvMDOypKfHZhvAyneuSqIsp2jrMLI"
-          />
-          <link rel="icon" href="/favicon.png" />
-        </Head>
-        <Layout>
-          <Toaster richColors position="top-right" />
-          <Component {...pageProps} />
-        </Layout>
+        <TourProvider steps={steps}>
+          <Head>
+            <title>YTPlaylistPro - Download YouTube Playlists</title>
+            <meta
+              name="description"
+              content="YTPlaylistPro is a free, easy to use, open source, YouTube playlist downloader, no ads, no signup, very fast."
+            />
+            <meta
+              name="google-site-verification"
+              content="23XufbDHBlhKy2wvMDOypKfHZhvAyneuSqIsp2jrMLI"
+            />
+            <link rel="icon" href="/favicon.png" />
+          </Head>
+          <Layout>
+            <Toaster richColors position="top-right" />
+            <Component {...pageProps} />
+          </Layout>
+        </TourProvider>
         <Analytics />
         <SpeedInsights />
       </ThemeProvider>
