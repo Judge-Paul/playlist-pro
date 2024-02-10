@@ -36,7 +36,9 @@ app.get("/createZip", async (req: Request, res: Response) => {
 
   try {
     const playlist: any = await redis.get(id);
-
+    if (!playlist) {
+      return res.status(404).json({ error: "Playlist not found" });
+    }
     const zip = new JSZip();
 
     await Promise.all(
@@ -44,21 +46,23 @@ app.get("/createZip", async (req: Request, res: Response) => {
         const qualities = getQualities(playlist.items);
         const quality = qualities[0];
         const downloadLink = item.downloadLinks[quality]?.link;
-        const fileName = `${item.snippet.title} ytplaylistpro.vercel.app`;
-        const response = await axios.get(downloadLink, {
-          responseType: "stream",
-        });
-        zip.file(fileName, response.data, { binary: true });
+        const fileName = `${item.snippet.title} ${clientURL}`;
+        if (downloadLink) {
+          const response = await axios.get(downloadLink, {
+            responseType: "stream",
+          });
+          zip.file(fileName, response.data, { binary: true });
+        }
       }),
     );
     res.setHeader("Content-Type", "application/zip");
     res.setHeader(
       "Content-Disposition",
-      `attachment; filename=${playlist.title} ytplaylistpro.vercel.app.zip`,
+      `attachment; filename=${playlist.title} ${clientURL}.zip`,
     );
     zip.generateNodeStream({ streamFiles: true }).pipe(res);
   } catch (error) {
-    return res.status(500).json({ error: "Internal server error" });
+    return res.status(500).json({ error: "Internal Server Error" });
   }
 });
 
