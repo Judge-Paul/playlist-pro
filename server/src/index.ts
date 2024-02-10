@@ -62,8 +62,9 @@ app.get("/createZip", async (req: Request, res: Response) => {
     );
     zip.generateNodeStream({ streamFiles: true }).pipe(res);
   } catch (error) {
+    console.log(error)
     return res.status(500).json({ error: "Internal Server Error" });
-  }
+  }                                             
 });
 
 app.listen(port, () => {
