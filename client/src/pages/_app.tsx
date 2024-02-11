@@ -31,10 +31,6 @@ export default function App({ Component, pageProps }: AppProps) {
               name="description"
               content="YTPlaylistPro is a free, easy to use, open source, YouTube playlist downloader, no ads, no signup, very fast."
             />
-            <meta
-              name="google-site-verification"
-              content="23XufbDHBlhKy2wvMDOypKfHZhvAyneuSqIsp2jrMLI"
-            />
             <link rel="icon" href="/favicon.png" />
           </Head>
           <Layout>

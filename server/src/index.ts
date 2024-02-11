@@ -58,13 +58,13 @@ app.get("/createZip", async (req: Request, res: Response) => {
     res.setHeader("Content-Type", "application/zip");
     res.setHeader(
       "Content-Disposition",
-      `attachment; filename=${playlist.title} ${clientURL}.zip`,
+      `attachment; filename=${playlist.title} ytplay.tech.zip`,
     );
     zip.generateNodeStream({ streamFiles: true }).pipe(res);
   } catch (error) {
-    console.log(error)
+    console.log(error);
     return res.status(500).json({ error: "Internal Server Error" });
-  }                                             
+  }
 });
 
 app.listen(port, () => {

@@ -53,7 +53,7 @@ export default function Footer() {
           </Link>
           <Link
             className="mb-2 block w-max hover:text-gray-800 active:text-secondary dark:hover:text-gray-300  "
-            href="mailto:judgepaulogebe@gmail.com?subject=Ideas%20for%20Playlist%20Pro&body=Hey%2C%20my%20name%20is%20_%20and%20I'd%20love%20to%20incorporate%20_%20to%20your%20playlist%20pro%20web%20application."
+            href="mailto:paul@ytplay.tech?subject=Ideas%20for%20Playlist%20Pro&body=Hey%2C%20my%20name%20is%20_%20and%20I'd%20love%20to%20incorporate%20_%20to%20your%20playlist%20pro%20web%20application."
           >
             Send me a mail
           </Link>
