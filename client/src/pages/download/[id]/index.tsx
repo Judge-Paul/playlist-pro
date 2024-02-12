@@ -1,7 +1,7 @@
 import { ArrowLeft } from "lucide-react";
 import { buttonVariants } from "@/components/ui/button";
 import VideoLoadingCard from "@/components/VideoLoadingCard";
-import PlaylistCard from "@/components/PlaylistCard";
+import PlaylistCard from "@/components/VideoCard";
 import { toast } from "sonner";
 import useSWRImmutable from "swr/immutable";
 import { cn, fetcher, getQualities } from "@/lib/utils";
@@ -64,7 +64,7 @@ export default function Download({ id }: DownloadProps) {
           <h2 className="first-step line-clamp-2 text-ellipsis px-8 text-center text-xl font-bold sm:px-20 md:px-40 lg:text-4xl">
             {data?.title ?? "Playlist Videos"}
           </h2>
-          <h3 className="mt-3 line-clamp-3 px-8 text-center text-lg font-light lg:text-xl">
+          <h3 className="mt-3 line-clamp-2 px-8 text-center text-lg font-light lg:text-xl">
             {data?.description}
           </h3>
         </>
