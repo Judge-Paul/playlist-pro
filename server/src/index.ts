@@ -41,6 +41,7 @@ app.get("/createZip", async (req: Request, res: Response) => {
     }
     const zip = new JSZip();
 
+    let totalSize = 0;
     await Promise.all(
       playlist.items.map(async (item: PlaylistItem) => {
         const qualities = getQualities(playlist.items);
@@ -51,6 +52,8 @@ app.get("/createZip", async (req: Request, res: Response) => {
           const response = await axios.get(downloadLink, {
             responseType: "stream",
           });
+          const size = response.headers["content-length"] ?? 0;
+          totalSize += parseInt(size);
           zip.file(fileName, response.data, { binary: true });
         }
       }),
@@ -60,6 +63,7 @@ app.get("/createZip", async (req: Request, res: Response) => {
       "Content-Disposition",
       `attachment; filename=${playlist.title} ytplay.tech.zip`,
     );
+    res.setHeader("Content-Length", totalSize);
     zip.generateNodeStream({ streamFiles: true }).pipe(res);
   } catch (error) {
     console.log(error);
