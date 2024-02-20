@@ -6,7 +6,7 @@ import cors from "cors";
 import morgan from "morgan";
 import { getQualities } from "./utils";
 import { Redis } from "@upstash/redis";
-import { PlaylistItem } from "./@types";
+import { PlaylistItem, Quality } from "./@types";
 
 dotenv.config();
 
@@ -31,8 +31,10 @@ app.get("/", (req: Request, res: Response) => {
 
 app.get("/createZip", async (req: Request, res: Response) => {
   const id = req.query.id as string;
+  const quality = req.query.quality as Quality;
 
   if (!id) return res.status(400).json({ error: "Playlist id not specified" });
+  if (!quality) return res.status(400).json({ error: "Quality not specified" });
 
   try {
     const playlist: any = await redis.get(id);
@@ -44,8 +46,6 @@ app.get("/createZip", async (req: Request, res: Response) => {
     let totalSize = 0;
     await Promise.all(
       playlist.items.map(async (item: PlaylistItem) => {
-        const qualities = getQualities(playlist.items);
-        const quality = qualities[0];
         const downloadLink = item.downloadLinks[quality]?.link;
         const fileName = `${item.snippet.title} ${clientURL}`;
         if (downloadLink) {
@@ -61,7 +61,7 @@ app.get("/createZip", async (req: Request, res: Response) => {
     res.setHeader("Content-Type", "application/zip");
     res.setHeader(
       "Content-Disposition",
-      `attachment; filename=${playlist.title} ytplay.tech.zip`,
+      `attachment; filename=ytplay.tech ${playlist.title}.zip`,
     );
     res.setHeader("Content-Length", totalSize);
     zip.generateNodeStream({ streamFiles: true }).pipe(res);

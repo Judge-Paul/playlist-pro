@@ -1,5 +1,4 @@
 import { Download, ExternalLink, Youtube } from "lucide-react";
-import { useRouter } from "next/router";
 import { PlaylistItem, VideoLinkData } from "@/types";
 import Image from "next/image";
 import Link from "next/link";
@@ -10,23 +9,26 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
-import { buttonVariants } from "./ui/button";
+import { buttonVariants } from "@/components/ui/button";
 
-export default function PlaylistCard({
+export default function VideoCard({
   snippet,
   downloadLinks,
   qualities,
 }: PlaylistItem) {
-  const router = useRouter();
   const {
     title,
     description,
     thumbnails,
     resourceId: { videoId },
   } = snippet;
-  const { link, resolution } = (downloadLinks as Record<string, VideoLinkData>)[
-    qualities[0]
-  ];
+
+  let resolution = "";
+  let link = "";
+  if (qualities[0]) {
+    link = downloadLinks[qualities[0]].link;
+    resolution = downloadLinks[qualities[0]].resolution;
+  }
   return (
     <div className="mb-2 justify-between gap-3 border border-secondary p-5 sm:flex">
       <Image
@@ -50,11 +52,7 @@ export default function PlaylistCard({
       </div>
       <div className="sm:flex sm:flex-col sm:justify-between">
         <span className="fourth-step">
-          <Link
-            href={link || `${router.asPath}#`}
-            target="_blank"
-            className="hidden sm:flex"
-          >
+          <Link href={link} target="_blank" className="hidden sm:flex">
             <TooltipProvider>
               <Tooltip>
                 <TooltipTrigger>
@@ -68,7 +66,7 @@ export default function PlaylistCard({
             </TooltipProvider>
           </Link>
           <Link
-            href={link || `${router.asPath}#`}
+            href={link}
             target="_blank"
             className={cn(
               buttonVariants({ variant: "default" }),

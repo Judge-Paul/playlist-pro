@@ -1,25 +1,41 @@
-import { ArrowLeft } from "lucide-react";
-import { buttonVariants } from "@/components/ui/button";
+import { ArrowLeft, ChevronDown } from "lucide-react";
+import { Button, buttonVariants } from "@/components/ui/button";
 import VideoLoadingCard from "@/components/VideoLoadingCard";
-import PlaylistCard from "@/components/VideoCard";
+import VideoCard from "@/components/VideoCard";
 import { toast } from "sonner";
 import useSWRImmutable from "swr/immutable";
-import { cn, fetcher, getQualities } from "@/lib/utils";
-import { PlaylistItem } from "@/types";
+import { cn, fetcher, getQualities, resolutionMap } from "@/lib/utils";
+import { PlaylistItem, Quality } from "@/types";
 import Link from "next/link";
 import Head from "next/head";
 import { useTour } from "@reactour/tour";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
 
 interface DownloadProps {
   id: string;
 }
 
 export default function Download({ id }: DownloadProps) {
-  const { setSteps } = useTour();
   const serverURL = process.env.NEXT_PUBLIC_SERVER_URL;
+  const { setSteps } = useTour();
+  const [qualities, setQualities] = useState<Quality[]>([]);
 
-  useEffect(() => {
+  const { data, error } = useSWRImmutable(
+    `/api/playlistItems?id=${id}`,
+    fetcher,
+  );
+
+  if (data?.error || error) {
+    toast.error("Failed to get playlists.\nReload the page to Try Again.");
+  }
+
+  if (data && !data.error && qualities.length === 0) {
+    setQualities(getQualities(data.items));
     setSteps &&
       setSteps([
         {
@@ -43,15 +59,6 @@ export default function Download({ id }: DownloadProps) {
           content: "Play this video on YouTube",
         },
       ]);
-  }, []);
-
-  const { data, error } = useSWRImmutable(
-    `/api/playlistItems?id=${id}`,
-    fetcher,
-  );
-  // let qualities = getQualities(data);
-  if (data?.error || error) {
-    toast.error("Failed to get playlists.\nReload the page to Try Again.");
   }
 
   return (
@@ -77,21 +84,43 @@ export default function Download({ id }: DownloadProps) {
             href="/"
             className="second-step my-auto flex w-max gap-2 hover:text-gray-800 active:text-secondary dark:hover:text-gray-300"
           >
-            <ArrowLeft className="h-8 w-8" />{" "}
-            <span className="my-auto hidden text-lg font-semibold sm:flex md:text-xl">
+            <ArrowLeft className="h-7 w-7" />{" "}
+            <span className="text-md my-auto hidden font-semibold sm:flex md:text-xl">
               Get another playlist
             </span>
           </Link>
           <div className="flex gap-2 text-sm sm:text-lg">
-            <Link
-              href={`${serverURL}/createZip?id=${id}`}
-              className={cn(
-                "third-step mt-2 block w-full",
-                buttonVariants({ variant: "outline" }),
-              )}
-            >
-              Download All
-            </Link>
+            {data && !data?.error && qualities.length > 0 ? (
+              <Popover>
+                <PopoverTrigger>
+                  <Button variant="outline">Download All</Button>
+                </PopoverTrigger>
+                <PopoverContent align="end" className="w-52 px-3 py-2">
+                  {qualities.map((quality) => {
+                    return (
+                      <Link
+                        key={quality}
+                        href={`${serverURL}/createZip?id=${id}&quality=${quality}`}
+                        className={cn(
+                          "third-step mb-1 mt-1 w-full",
+                          buttonVariants({ variant: "outline" }),
+                        )}
+                      >
+                        Download ({resolutionMap[quality]}) .zip
+                      </Link>
+                    );
+                  })}
+                </PopoverContent>
+              </Popover>
+            ) : (
+              <Button
+                className="third-step mt-2 block w-full cursor-not-allowed hover:cursor-not-allowed hover:bg-none"
+                aria-disabled
+                variant="secondary"
+              >
+                Download All
+              </Button>
+            )}
           </div>
         </div>
         <div className="mt-7">
@@ -104,7 +133,7 @@ export default function Download({ id }: DownloadProps) {
                 (title !== "Deleted video" &&
                   description !== "This video is unavailable.")
               ) {
-                return <PlaylistCard key={playlist.id} {...playlist} />;
+                return <VideoCard key={playlist.id} {...playlist} />;
               }
             })
           ) : (

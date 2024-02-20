@@ -1,3 +1,11 @@
+export type Quality =
+  | "ultraHigh"
+  | "high"
+  | "medium"
+  | "standard"
+  | "low"
+  | "ultraLow";
+
 export type PlaylistItem = {
   id: string;
   snippet: {

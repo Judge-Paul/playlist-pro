@@ -1,11 +1,20 @@
 type URL = string;
 export type URL<T> = T extends null ? "" : T;
 
+export type Resolution = "144p" | "240p" | "360p" | "480p" | "720p" | "1080p";
+export type Quality =
+  | "ultraHigh"
+  | "high"
+  | "medium"
+  | "standard"
+  | "low"
+  | "ultraLow";
+
 export type VideoLinkData = {
   format: "mp4" | "3gp";
   link: string;
   size: number;
-  resolution: "144p" | "360p" | "720p";
+  resolution: "144p" | "240p" | "360p" | "480p" | "720p" | "1080p";
 };
 
 export type PlaylistItem = {

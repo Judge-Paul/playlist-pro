@@ -1,4 +1,4 @@
-import { PlaylistItem } from "@/types";
+import { PlaylistItem, Quality, Resolution } from "@/types";
 import { type ClassValue, clsx } from "clsx";
 import { twMerge } from "tailwind-merge";
 
@@ -25,12 +25,28 @@ export const formatBytes = (bytes: number, decimals = 2) => {
   return parseFloat((bytes / Math.pow(k, i)).toFixed(dm)) + " " + sizes[i];
 };
 
-export const getQualities = (items: PlaylistItem[]): string[] => {
+export const getQualities = (items: PlaylistItem[]): Quality[] => {
   if (!items?.length || items?.length === 0) return [];
-  const qualities = ["high", "medium", "low"];
+  const qualities: Quality[] = [
+    "ultraHigh",
+    "high",
+    "medium",
+    "standard",
+    "low",
+    "ultraLow",
+  ];
   const filteredQualities = qualities.filter(
-    (level) => items?.every((item) => item.downloadLinks[level]),
+    (quality) => items?.every((item) => item.downloadLinks[quality]),
   );
 
   return filteredQualities ?? [];
+};
+
+export const resolutionMap: Record<Quality, Resolution> = {
+  ultraHigh: "1080p",
+  high: "720p",
+  standard: "480p",
+  medium: "360p",
+  low: "240p",
+  ultraLow: "144p",
 };
