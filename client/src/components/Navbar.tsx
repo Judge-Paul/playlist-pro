@@ -23,7 +23,7 @@ export default function Navbar() {
   return (
     <>
       <StopScroll stop={isOpen} />
-      <nav className="mx-auto my-5 flex w-full max-w-6xl justify-between px-8">
+      <nav className="mx-auto my-5 flex w-full justify-between px-4 sm:max-w-6xl">
         <Link href="/" className="my-auto flex">
           <svg
             xmlns="http://www.w3.org/2000/svg"

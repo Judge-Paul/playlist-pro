@@ -58,7 +58,7 @@ export default function Download({ id }: DownloadProps) {
   }
 
   return (
-    <main className="mx-auto max-w-6xl py-5">
+    <main className="mx-auto  py-5 sm:max-w-6xl">
       <Head>
         <title>Playlist Pro</title>
       </Head>
@@ -74,14 +74,14 @@ export default function Download({ id }: DownloadProps) {
       ) : (
         <div className="mx-auto my-auto h-10 w-60 bg-secondary sm:w-96"></div>
       )}
-      <div className="mx-auto mt-7 max-w-6xl px-8">
-        <div className="flex justify-between">
+      <div className="mx-auto mt-5 sm:mt-7 sm:max-w-6xl">
+        <div className="flex justify-between px-4">
           <Link
             href="/"
             className="second-step my-auto flex w-max gap-2 hover:text-gray-800 active:text-secondary dark:hover:text-gray-300"
           >
             <ArrowLeft className="h-7 w-7" />{" "}
-            <span className="text-md my-auto hidden font-semibold sm:flex md:text-xl">
+            <span className="sm:text-md my-auto text-sm font-semibold sm:flex md:text-xl">
               Get another playlist
             </span>
           </Link>
@@ -123,7 +123,7 @@ export default function Download({ id }: DownloadProps) {
             )}
           </div>
         </div>
-        <div className="mt-7">
+        <div className="mt-5 sm:mt-7">
           {data && !data?.error ? (
             data?.items?.map((playlist: PlaylistItem) => {
               const { title, description } = playlist.snippet;

@@ -9,7 +9,7 @@ const Toggle = dynamic(() => import("@/components/Toggle"), { ssr: false });
 export default function Footer() {
   return (
     <footer className="border border-t-primary bg-background py-10">
-      <div className="container mx-auto flex max-w-6xl flex-wrap justify-between">
+      <div className="container mx-auto flex flex-wrap justify-between px-4 sm:max-w-6xl">
         <div className="mb-6 w-full md:mb-0 md:w-1/3 md:pr-4">
           <h2 className="mb-4 text-lg font-semibold">Playlist Pro</h2>
           <p>
