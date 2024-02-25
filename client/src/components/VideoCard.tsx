@@ -41,6 +41,7 @@ export default function VideoCard({
         height={thumbnails?.default?.height || 112}
         className="h-40 w-full bg-secondary sm:h-28 sm:w-40"
         alt={title ?? "Image not Available"}
+        unoptimized
       />
       <div className="mt-3 sm:mt-0 sm:w-3/4">
         <h4 className="line-clamp-2 h-12 w-full font-semibold sm:w-2/3 md:w-1/2">
