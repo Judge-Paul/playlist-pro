@@ -2,6 +2,7 @@ import type { NextApiRequest, NextApiResponse } from "next";
 import { PlaylistItem } from "@/types";
 import axios, { AxiosError } from "axios";
 import { redis } from "@/lib/redis";
+import { getQualities } from "@/lib/utils";
 
 export default async function handler(
   req: NextApiRequest,
@@ -65,10 +66,12 @@ export default async function handler(
         };
       });
 
+      const qualities = getQualities(items) ?? [];
       const playlist = {
         title: playlistRes.data.items[0].snippet.title,
         description: playlistRes.data.items[0].snippet.description,
         items,
+        qualities,
       };
 
       await redis.set(id, playlist);

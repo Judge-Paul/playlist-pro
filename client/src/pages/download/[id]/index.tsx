@@ -15,27 +15,19 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
+import usePlaylist from "@/hooks/usePlaylist";
 
 interface DownloadProps {
   id: string;
 }
 
+const serverURL = process.env.NEXT_PUBLIC_SERVER_URL;
+
 export default function Download({ id }: DownloadProps) {
-  const serverURL = process.env.NEXT_PUBLIC_SERVER_URL;
   const { setSteps } = useTour();
-  const [qualities, setQualities] = useState<Quality[]>([]);
+  const { data, error } = usePlaylist(id);
 
-  const { data, error } = useSWRImmutable(
-    `/api/playlistItems?id=${id}`,
-    fetcher,
-  );
-
-  if (data?.error || error) {
-    toast.error("Failed to get playlists.\nReload the page to Try Again.");
-  }
-
-  if (data && !data.error && qualities.length === 0) {
-    setQualities(getQualities(data.items));
+  useEffect(() => {
     setSteps &&
       setSteps([
         {
@@ -59,6 +51,10 @@ export default function Download({ id }: DownloadProps) {
           content: "Play this video on YouTube",
         },
       ]);
+  }, []);
+
+  if (data?.error || error) {
+    toast.error("Failed to get playlists.\nReload the page to Try Again.");
   }
 
   return (
@@ -76,7 +72,7 @@ export default function Download({ id }: DownloadProps) {
           </h3>
         </>
       ) : (
-        <div className="mx-auto my-auto h-10 w-96 bg-secondary"></div>
+        <div className="mx-auto my-auto h-10 w-60 bg-secondary sm:w-96"></div>
       )}
       <div className="mx-auto mt-7 max-w-6xl px-8">
         <div className="flex justify-between">
@@ -90,26 +86,30 @@ export default function Download({ id }: DownloadProps) {
             </span>
           </Link>
           <div className="flex gap-2 text-sm sm:text-lg">
-            {data && !data?.error && qualities.length > 0 ? (
+            {data && !data?.error && data.qualities?.length > 0 ? (
               <Popover>
                 <PopoverTrigger>
                   <Button variant="outline">Download All</Button>
                 </PopoverTrigger>
                 <PopoverContent align="end" className="w-52 px-3 py-2">
-                  {qualities.map((quality) => {
-                    return (
-                      <Link
-                        key={quality}
-                        href={`${serverURL}/createZip?id=${id}&quality=${quality}`}
-                        className={cn(
-                          "third-step mb-1 mt-1 w-full",
-                          buttonVariants({ variant: "outline" }),
-                        )}
-                      >
-                        Download ({resolutionMap[quality]}) .zip
-                      </Link>
-                    );
-                  })}
+                  {
+                    <>
+                      {data.qualities.map((quality: Quality) => {
+                        return (
+                          <Link
+                            key={quality}
+                            href={`${serverURL}/createZip?id=${id}&quality=${quality}`}
+                            className={cn(
+                              "third-step mb-1 mt-1 w-full",
+                              buttonVariants({ variant: "outline" }),
+                            )}
+                          >
+                            Download ({resolutionMap[quality]}) .zip
+                          </Link>
+                        );
+                      })}
+                    </>
+                  }
                 </PopoverContent>
               </Popover>
             ) : (
@@ -125,7 +125,7 @@ export default function Download({ id }: DownloadProps) {
         </div>
         <div className="mt-7">
           {data && !data?.error ? (
-            data.items.map((playlist: PlaylistItem) => {
+            data?.items?.map((playlist: PlaylistItem) => {
               const { title, description } = playlist.snippet;
               if (
                 (title !== "Private video" &&
