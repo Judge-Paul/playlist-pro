@@ -7,6 +7,7 @@ import Layout from "@/components/Layout";
 import { Analytics } from "@vercel/analytics/react";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import { TourProvider } from "@reactour/tour";
+import Script from "next/script"
 
 export default function App({ Component, pageProps }: AppProps) {
   const steps = [
@@ -32,6 +33,16 @@ export default function App({ Component, pageProps }: AppProps) {
               content="YTPlaylistPro is a free, easy to use, open source, YouTube playlist downloader, no ads, no signup, very fast."
             />
             <link rel="icon" href="/favicon.png" />
+            <Script async src="https://www.googletagmanager.com/gtag/js?id=G-M1JQ6VXFH5"></Script>
+            <Script id="google-analytics">
+              {
+                window.dataLayer = window.dataLayer || [];
+                function gtag(){dataLayer.push(arguments);}
+                gtag('js', new Date());
+              
+                gtag('config', 'G-M1JQ6VXFH5');
+              }
+            </Script>
           </Head>
           <Layout>
             <Toaster richColors position="top-right" />
