@@ -44,7 +44,7 @@ export default async function handler(
       videoIds.map(async (videoId: string) => {
         try {
           const response = await axios.get(
-            `https://ytsnag.com/download?v=https://www.youtube.com/watch?v=${videoId}`,
+            `https://ytdownloader.co/download?v=https%3A%2F%2Fwww.youtube.com%2Fwatch%3Fv%${videoId}&lang=en&type=video`,
           );
 
           if (response.status === 200) {

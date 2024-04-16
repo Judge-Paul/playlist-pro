@@ -124,25 +124,26 @@ export default function Download({ id }: DownloadProps) {
           </div>
         </div>
         <div className="mt-5 sm:mt-7">
-          {data && !data?.error ? (
-            data?.items?.map((playlist: PlaylistItem) => {
-              const { title, description } = playlist.snippet;
-              if (
-                (title !== "Private video" &&
-                  description !== "This video is private.") ||
-                (title !== "Deleted video" &&
-                  description !== "This video is unavailable.")
-              ) {
-                return <VideoCard key={playlist.id} {...playlist} />;
-              }
-            })
-          ) : (
-            <>
-              <VideoLoadingCard />
-              <VideoLoadingCard />
-              <VideoLoadingCard />
-            </>
-          )}
+          {data &&
+            (!data?.error ? (
+              data?.items?.map((playlist: PlaylistItem) => {
+                const { title, description } = playlist.snippet;
+                if (
+                  (title !== "Private video" &&
+                    description !== "This video is private.") ||
+                  (title !== "Deleted video" &&
+                    description !== "This video is unavailable.")
+                ) {
+                  return <VideoCard key={playlist.id} {...playlist} />;
+                }
+              })
+            ) : (
+              <>
+                <VideoLoadingCard />
+                <VideoLoadingCard />
+                <VideoLoadingCard />
+              </>
+            ))}
         </div>
       </div>
     </main>
