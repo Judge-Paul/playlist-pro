@@ -1,10 +1,18 @@
 import { NextApiRequest, NextApiResponse } from "next";
-import axios from "axios";
-import * as cheerio from "cheerio";
+import ytdl from "ytdl-core";
+
+type Resolution = "144p" | "240p" | "360p" | "480p" | "720p" | "1080p";
+type Quality =
+  | "ultraHigh"
+  | "high"
+  | "medium"
+  | "standard"
+  | "low"
+  | "ultraLow";
 
 interface DownloadLinks {
   [quality: string]: {
-    resolution: string;
+    resolution: Resolution;
     format: string;
     link: string;
     size: number;
@@ -21,16 +29,7 @@ export default async function handler(
     return res.status(400).json({ error: "Missing videoIds" });
   }
 
-  type Resolution = "144p" | "240p" | "360p" | "480p" | "720p" | "1080p";
-  type Quality =
-    | "ultraHigh"
-    | "high"
-    | "medium"
-    | "standard"
-    | "low"
-    | "ultraLow";
-
-  const qualityMap: Record<Resolution, Quality> = {
+  const qualityMap: any = {
     "1080p": "ultraHigh",
     "720p": "high",
     "480p": "standard",
@@ -38,52 +37,29 @@ export default async function handler(
     "240p": "low",
     "144p": "ultraLow",
   };
-
   try {
     const responses = await Promise.all(
       videoIds.map(async (videoId: string) => {
         try {
-          const response = await axios.get(
-            `https://ytdownloader.co/download?v=https%3A%2F%2Fwww.youtube.com%2Fwatch%3Fv%${videoId}&lang=en&type=video`,
+          const info = await ytdl.getInfo(
+            `https://www.youtube.com/watch?v=${videoId}`,
           );
+          const formats = ytdl.filterFormats(info.formats, "videoandaudio");
 
-          if (response.status === 200) {
-            const $ = cheerio.load(response.data);
-
-            const firstTable = $(".downloadsTable").first();
-            const rows = firstTable.find("tr:gt(0)");
-
-            const promises = rows
-              .map(async (i, row) => {
-                const resolution = $(row)
-                  .find("td:nth-child(1)")
-                  .text() as Resolution;
-                const format = $(row).find("td:nth-child(2)").text();
-                const link = $(row).find("a.downloadBtn").attr("href");
-                const quality: Quality = qualityMap[resolution];
-
-                return {
-                  [quality]: {
-                    resolution,
-                    format,
-                    link,
-                  },
-                };
-              })
-              .get();
-
-            const results = await Promise.all(promises);
-            let downloadLinks: DownloadLinks = {};
-
-            results.forEach(async (result) => {
-              Object.assign(downloadLinks, result);
-            });
-
-            return downloadLinks;
-          } else {
-            throw new Error("Failed getting download links");
-          }
-        } catch (error) {
+          const downloadLinks: any = {};
+          formats.forEach((format) => {
+            if (format.hasVideo && format.hasAudio && format.url) {
+              downloadLinks[qualityMap[format.qualityLabel]] = {
+                resolution: format.qualityLabel,
+                format: format.container,
+                link: format.url,
+                size: format.contentLength,
+              };
+            }
+          });
+          return downloadLinks;
+        } catch (e) {
+          console.error(e);
           throw new Error("Internal server error");
         }
       }),
