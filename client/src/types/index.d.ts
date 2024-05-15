@@ -1,4 +1,5 @@
-type URL = string;
+type URLSTR = string; // 'URL' is already defined.eslint@typescript-eslint/no-redeclare
+
 export type URL<T> = T extends null ? "" : T;
 
 export type Resolution = "144p" | "240p" | "360p" | "480p" | "720p" | "1080p";
