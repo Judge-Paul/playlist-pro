@@ -9,8 +9,8 @@ import {
 	TooltipProvider,
 	TooltipTrigger,
 } from "@/components/ui/tooltip";
-import { cn, formatBytes } from "@/lib/utils";
-import { PlaylistItem, VideoLinkData } from "@/types";
+import { cn } from "@/lib/utils";
+import { PlaylistItem } from "@/types";
 
 export default function VideoCard({
 	snippet,

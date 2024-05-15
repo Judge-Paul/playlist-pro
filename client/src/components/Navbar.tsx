@@ -11,7 +11,7 @@ import { fetcher } from "@/lib/utils";
 export default function Navbar() {
 	const { isOpen, setIsOpen } = useTour();
 	const [isNavOpen, setIsNavOpen] = useState(false);
-	const { data, error } = useSWRImmutable(
+	const { data } = useSWRImmutable(
 		"https://api.github.com/repos/Judge-Paul/playlist-pro",
 		fetcher,
 	);
@@ -23,7 +23,7 @@ export default function Navbar() {
 
 	return (
 		<>
-			<StopScroll stop={isOpen} />{" "}
+			<StopScroll stop={isOpen as boolean} />{" "}
 			{/* Need change to boolean the type of this var {isOpen} */}
 			<nav className="mx-auto my-5 flex w-full justify-between px-4 sm:max-w-6xl">
 				<Link href="/" className="my-auto flex">

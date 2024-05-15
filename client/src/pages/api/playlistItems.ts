@@ -1,4 +1,4 @@
-import axios, { AxiosError } from "axios";
+import axios from "axios";
 import type { NextApiRequest, NextApiResponse } from "next";
 
 import { redis } from "@/lib/redis";
@@ -82,7 +82,7 @@ export default async function handler(
 		} else {
 			return res.status(500).json({ error: "Failed getting playlists data" });
 		}
-	} catch (error: any) {
+	} catch {
 		return res.status(500).json({ error: "Unexpected error occurred" });
 	}
 }

@@ -2,6 +2,9 @@ import { NextApiRequest, NextApiResponse } from "next";
 import ytdl from "ytdl-core";
 
 type Resolution = "144p" | "240p" | "360p" | "480p" | "720p" | "1080p";
+
+// If you use this type, you can remove the eslint-disable-next-line comment
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 type Quality =
 	| "ultraHigh"
 	| "high"
@@ -10,6 +13,8 @@ type Quality =
 	| "low"
 	| "ultraLow";
 
+// If you use this interface, you can remove the eslint-disable-next-line comment
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 interface DownloadLinks {
 	[quality: string]: {
 		resolution: Resolution;
@@ -66,7 +71,7 @@ export default async function handler(
 		);
 
 		res.status(200).json(responses);
-	} catch (error) {
+	} catch {
 		res.status(500).json({ error: "Internal server error" });
 	}
 }

@@ -26,7 +26,8 @@ export default function Home() {
           content: "Enter a YouTube Playlist and press download.",
         },
       ]);
-  }, []);
+  }, []); // This line need attention
+  // React Hook useEffect has a missing dependency: 'setSteps'. Either include it or remove the dependency array.eslintreact-hooks/exhaustive-deps
 
   async function handleSubmit(event: FormEvent) {
     event.preventDefault();
@@ -40,7 +41,7 @@ export default function Home() {
       } else {
         toast.error("Error Generating Playlist Downloads...");
       }
-    } catch (error: any) {
+    } catch {
       toast.error("Enter a Valid YouTube Playlist URL");
     }
     setIsLoading(false);
