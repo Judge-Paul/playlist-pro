@@ -70,8 +70,8 @@ export default async function handler(
 			}),
 		);
 
-		res.status(200).json(responses);
+		return res.status(200).json(responses);
 	} catch {
-		res.status(500).json({ error: "Internal server error" });
+		return res.status(500).json({ error: "Internal server error" });
 	}
 }
