@@ -1,13 +1,13 @@
-import { Inter } from "next/font/google";
-import { Download } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { URLSchema } from "@/lib/zod";
-import { toast } from "sonner";
-import { useRouter } from "next/router";
-import { cn, getPlaylistId } from "@/lib/utils";
-import { FormEvent, useState } from "react";
 import { useTour } from "@reactour/tour";
-import { useEffect } from "react";
+import { Download } from "lucide-react";
+import { Inter } from "next/font/google";
+import { useRouter } from "next/router";
+import { FormEvent, useState, useEffect } from "react";
+import { toast } from "sonner";
+
+import { Button } from "@/components/ui/button";
+import { cn, getPlaylistId } from "@/lib/utils";
+import { URLSchema } from "@/lib/zod";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -33,7 +33,7 @@ export default function Home() {
     setIsLoading(true);
     try {
       URLSchema.parse(playlistURL);
-      let playlistId = getPlaylistId(playlistURL);
+      const playlistId = getPlaylistId(playlistURL);
       if (playlistId) {
         await router.push(`/download/${playlistId}`);
         toast.info("Generating Playlist Downloads...");

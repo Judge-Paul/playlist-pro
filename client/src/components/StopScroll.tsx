@@ -1,32 +1,32 @@
 import React, { useEffect } from "react";
 
 interface StopScrollProps {
-  stop: Boolean;
+	stop: boolean;
 }
 
 const StopScroll: React.FC<StopScrollProps> = ({ stop }) => {
-  useEffect(() => {
-    const handleBodyScroll = () => {
-      if (stop) {
-        document.body.style.overflow = "hidden";
-      } else {
-        document.body.style.overflow = "auto";
-      }
-    };
+	useEffect(() => {
+		const handleBodyScroll = () => {
+			if (stop) {
+				document.body.style.overflow = "hidden";
+			} else {
+				document.body.style.overflow = "auto";
+			}
+		};
 
-    handleBodyScroll();
+		handleBodyScroll();
 
-    if (stop) {
-      document.addEventListener("scroll", handleBodyScroll);
-    }
+		if (stop) {
+			document.addEventListener("scroll", handleBodyScroll);
+		}
 
-    return () => {
-      document.body.style.overflow = "auto";
-      document.removeEventListener("scroll", handleBodyScroll);
-    };
-  }, [stop]);
+		return () => {
+			document.body.style.overflow = "auto";
+			document.removeEventListener("scroll", handleBodyScroll);
+		};
+	}, [stop]);
 
-  return null;
+	return null;
 };
 
 export default StopScroll;
