@@ -1,6 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import { PlaylistItem } from "@/types";
-import axios, { AxiosError } from "axios";
+import axios from "axios";
 import { redis } from "@/lib/redis";
 import { getQualities } from "@/lib/utils";
 
@@ -82,6 +82,9 @@ export default async function handler(
       return res.status(500).json({ error: "Failed getting playlists data" });
     }
   } catch (error: any) {
+    if (error.response.status === 404) {
+      return res.status(404).json({ error: "Playlist not found" });
+    }
     return res.status(500).json({ error: "Unexpected error occurred" });
   }
 }

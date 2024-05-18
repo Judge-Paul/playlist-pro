@@ -1,19 +1,12 @@
 import { fetcher } from "@/lib/utils";
-import { Quality } from "@/types";
+import { Playlist } from "@/types";
 import useSWRImmutable from "swr/immutable";
 
 const usePlaylist = (id: string) => {
-  let qualities: Quality[] = [];
-  const { data, error } = useSWRImmutable(
-    `/api/playlistItems?id=${id}`,
-    fetcher,
-  );
+  const playlist = useSWRImmutable(`/api/playlist?id=${id}`, fetcher);
 
-  if (data?.error || error) {
-    return { error: "Failed to get playlist items", qualities };
-  }
-
-  return { data, error };
+  const data = playlist?.data?.data as unknown as Playlist;
+  return { ...playlist, ...data };
 };
 
 export default usePlaylist;

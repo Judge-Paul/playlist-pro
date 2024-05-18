@@ -1,4 +1,5 @@
 import { PlaylistItem, Quality, Resolution } from "@/types";
+import axios from "axios";
 import { type ClassValue, clsx } from "clsx";
 import { twMerge } from "tailwind-merge";
 
@@ -12,7 +13,7 @@ export function getPlaylistId(url: string): string {
   return playlistId;
 }
 
-export const fetcher = (url: string) => fetch(url).then((res) => res.json());
+export const fetcher = (url: string) => axios.get(url);
 
 export const formatBytes = (bytes: number, decimals = 2) => {
   if (bytes === 0) return "0 Bytes";

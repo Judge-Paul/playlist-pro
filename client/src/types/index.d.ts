@@ -40,3 +40,10 @@ export type PlaylistItem = {
   };
   qualities: string[];
 };
+
+export type Playlist = {
+  title: string;
+  description: string;
+  items: PlaylistItem[];
+  qualities: Quality[];
+};

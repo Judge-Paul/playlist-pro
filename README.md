@@ -20,7 +20,10 @@ npm install
 
 ```dotenv
 NEXT_PUBLIC_SERVER_URL=http://localhost:8080
+NEXT_PUBLIC_CLIENT_URL=http://localhost:3000
 ```
+
+**PS:** If the issue you were asked to work on requires you testing the /api/playlistItems endpoint, you'll need to get an API key from [cloud console](https://console.cloud.google.com) or you can reach out to me on [X (Twitter)](https://x.com/jadge_dev) for a temporary one.
 
 3. **Start the development server:**
 
@@ -44,8 +47,6 @@ npm install
 CLIENT_URL=http://localhost:3000
 SERVER_URL=http://localhost:8080
 ```
-
-**PS:** If the issue you were asked to work on requires you testing the /playlistItems endpoint, you'll need to get an API key from [cloud console](https://console.cloud.google.com) or you can reach out to me on [X (Twitter)](https://x.com/jadge_dev) for a temporary one.
 
 3. **Start the development server:**
 

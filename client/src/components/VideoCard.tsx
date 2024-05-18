@@ -1,8 +1,8 @@
 import { Download, ExternalLink, Youtube } from "lucide-react";
-import { PlaylistItem, VideoLinkData } from "@/types";
+import { PlaylistItem } from "@/types";
 import Image from "next/image";
 import Link from "next/link";
-import { cn, formatBytes } from "@/lib/utils";
+import { cn } from "@/lib/utils";
 import {
   Tooltip,
   TooltipContent,
@@ -33,13 +33,14 @@ export default function VideoCard({
     <div className="mb-2 justify-between gap-3 border border-secondary p-5 sm:flex">
       <Image
         src={
+          thumbnails?.medium?.url ??
           thumbnails?.standard?.url ??
           thumbnails?.default?.url ??
           "https://www.gravatar.com/avatar/18c42a6912b0288d4c6a5c0ec3e3553d?s=120&d=blank&r=g"
         }
         width={thumbnails?.default?.width || 160}
         height={thumbnails?.default?.height || 112}
-        className="h-40 w-full bg-secondary sm:h-28 sm:w-40"
+        className="aspect-video w-full bg-secondary sm:h-28 sm:w-40"
         alt={title ?? "Image not Available"}
         unoptimized
       />
