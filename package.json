@@ -1,0 +1,18 @@
+{
+	"name": "playlist-pro",
+	"version": "1.0.0",
+	"description": "<h1 align=\"center\" id=\"title\">YTPlaylistPro</h1>",
+	"main": "index.js",
+	"scripts": {
+		"dev": "concurrently \"npm run dev-client\" \"npm run dev-server\"",
+		"old-dev": "npm run dev-client & npm run dev-server",
+		"dev-client": "cd client && npm run dev",
+		"dev-server": "cd server && npm run dev"
+	},
+	"keywords": [],
+	"author": "",
+	"license": "ISC",
+	"devDependencies": {
+		"concurrently": "^8.2.2"
+	}
+}
