@@ -1,0 +1,12 @@
+[
+  {
+    "relation": ["delegate_permission/common.handle_all_urls"],
+    "target": {
+      "namespace": "android_app",
+      "package_name": "com.jadge.testapp",
+      "sha256_cert_fingerprints": [
+        "BE:6F:D7:AF:42:AC:E9:2D:AD:2D:56:00:07:9F:44:F2:E3:C6:1A:60:BE:22:82:40:16:11:CB:B0:2B:1D:C9:26"
+      ]
+    }
+  }
+]
