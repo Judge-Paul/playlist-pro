@@ -62,7 +62,7 @@ export default function Navbar() {
           <Link href="https://github.com/Judge-Paul/playlist-pro">
             <Github size="20px" /> Star on GitHub
             <span className="flex gap-2 rounded-full bg-secondary px-2 text-xs sm:text-sm">
-              {data?.stargazers_count ?? 0}
+              {data?.data?.stargazers_count ?? 0}
             </span>
           </Link>
         </Button>
@@ -108,7 +108,7 @@ export default function Navbar() {
               <Link href="https://github.com/Judge-Paul/playlist-pro">
                 <Github size="20px" /> Star on GitHub
                 <span className="flex gap-2 rounded-full bg-secondary px-2 text-xs sm:text-sm">
-                  {data?.stargazers_count ?? 0}
+                  {data?.data?.stargazers_count ?? 0}
                 </span>
               </Link>
             </Button>
