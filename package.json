@@ -4,10 +4,10 @@
 	"description": "<h1 align=\"center\" id=\"title\">YTPlaylistPro</h1>",
 	"main": "index.js",
 	"scripts": {
-		"dev": "concurrently \"npm run dev-client\" \"npm run dev-server\"",
+		"dev": "concurrently \"npm run dev:client\" \"npm run dev:server\"",
 		"old-dev": "npm run dev-client & npm run dev-server",
-		"dev-client": "cd client && npm run dev",
-		"dev-server": "cd server && npm run dev"
+		"dev:client": "cd client && npm run dev",
+		"dev:server": "cd server && npm run dev"
 	},
 	"keywords": [],
 	"author": "",
