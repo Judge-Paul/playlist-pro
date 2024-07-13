@@ -4,7 +4,8 @@ import { Toaster } from "sonner";
 import Head from "next/head";
 import { ThemeProvider } from "@/components/theme-provider";
 import Layout from "@/components/Layout";
-import { Analytics } from "@vercel/analytics/react";
+// import { Analytics } from "@vercel/analytics/react";
+import Mixpanel from "@/components/Mixpanel";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import { TourProvider } from "@reactour/tour";
 import Script from "next/script";
@@ -53,9 +54,10 @@ export default function App({ Component, pageProps }: AppProps) {
           <Layout>
             <Toaster richColors position="top-right" />
             <Component {...pageProps} />
+            <Mixpanel />
           </Layout>
         </TourProvider>
-        <Analytics />
+        {/* <Analytics /> */}
         <SpeedInsights />
       </ThemeProvider>
     </>
