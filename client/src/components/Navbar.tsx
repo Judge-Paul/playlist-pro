@@ -6,6 +6,7 @@ import { useState } from "react";
 import useSWRImmutable from "swr/immutable";
 import { useTour } from "@reactour/tour";
 import StopScroll from "@/components/StopScroll";
+import mixpanel from "@/lib/mixpanel";
 
 export default function Navbar() {
   const { isOpen, setIsOpen } = useTour();
@@ -16,6 +17,7 @@ export default function Navbar() {
   );
 
   function startTour() {
+    mixpanel.track("Walkthrough Started");
     setIsOpen(true);
     setIsNavOpen(false);
   }

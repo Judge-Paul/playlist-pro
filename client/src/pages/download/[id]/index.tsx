@@ -59,7 +59,7 @@ export default function Download({ id }: DownloadProps) {
     return (
       <main className="mx-auto py-5 sm:max-w-6xl">
         <Head>
-          <title>Playlist Pro</title>
+          <title>YTPlay</title>
         </Head>
         <Loader className="mx-auto h-10 w-60 rounded-xl sm:w-96" />
         <div className="mx-6 mt-5 space-y-6 sm:mt-7">
@@ -130,7 +130,7 @@ export default function Download({ id }: DownloadProps) {
   return (
     <main className="mx-auto py-5 sm:max-w-6xl">
       <Head>
-        <title>Playlist Pro {title}</title>
+        <title>YTPlay | {title}</title>
       </Head>
       <h1 className="first-step line-clamp-2 text-ellipsis px-8 text-center text-xl font-bold sm:px-20 md:px-40 lg:text-4xl">
         {title ?? "Playlist Videos"}
@@ -153,7 +153,9 @@ export default function Download({ id }: DownloadProps) {
             {qualities?.length > 0 ? (
               <Popover>
                 <PopoverTrigger>
-                  <Button variant="outline">Download All</Button>
+                  <Button className="third-step" variant="outline">
+                    Download All
+                  </Button>
                 </PopoverTrigger>
                 <PopoverContent align="end" className="w-52 px-3 py-2">
                   {qualities.map((quality: Quality) => {

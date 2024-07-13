@@ -3,6 +3,7 @@ import { PlaylistItem } from "@/types";
 import axios from "axios";
 import { redis } from "@/lib/redis";
 import { getQualities } from "@/lib/utils";
+import mixpanel from "@/lib/mixpanel";
 
 export default async function handler(
   req: NextApiRequest,
@@ -22,6 +23,7 @@ export default async function handler(
 
   const cachedData = await redis.get<PlaylistItem[]>(id);
   if (cachedData) {
+    mixpanel.track("Fetch Playlist", { fromCache: true });
     return res.status(200).json(cachedData);
   }
 
@@ -77,6 +79,7 @@ export default async function handler(
       await redis.set(id, playlist);
       await redis.expire(id, 21600);
 
+      mixpanel.track("Fetch Playlist");
       return res.status(200).json(playlist);
     } else {
       return res.status(500).json({ error: "Failed getting playlists data" });
