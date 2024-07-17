@@ -1,5 +1,5 @@
 import { NextApiRequest, NextApiResponse } from "next";
-import ytdl from "ytdl-core";
+import ytdl from "@distube/ytdl-core";
 
 type Resolution = "144p" | "240p" | "360p" | "480p" | "720p" | "1080p";
 type Quality =

@@ -9,6 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@distube/ytdl-core": "^4.13.5",
     "@radix-ui/react-popover": "^1.0.7",
     "@radix-ui/react-slot": "^1.0.2",
     "@radix-ui/react-tooltip": "^1.0.7",
@@ -32,7 +33,6 @@
     "swr": "^2.2.4",
     "tailwind-merge": "^1.14.0",
     "tailwindcss-animate": "^1.0.7",
-    "ytdl-core": "^4.11.5",
     "zod": "^3.22.4"
   },
   "devDependencies": {
