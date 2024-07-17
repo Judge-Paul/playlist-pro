@@ -1,15 +1,21 @@
-import { Download, ExternalLink, Youtube } from "lucide-react";
+import { ChevronDownIcon, Download, ExternalLink, Youtube } from "lucide-react";
 import { PlaylistItem } from "@/types";
 import Image from "next/image";
 import Link from "next/link";
-import { cn } from "@/lib/utils";
+import { cn, formatBytes } from "@/lib/utils";
 import {
   Tooltip,
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
-import { buttonVariants } from "@/components/ui/button";
+import { Button, buttonVariants } from "@/components/ui/button";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
 export default function VideoCard({
   snippet,
@@ -23,11 +29,13 @@ export default function VideoCard({
     resourceId: { videoId },
   } = snippet;
 
-  let resolution = "";
-  let link = "";
+  let baseResolution = "";
+  let baseLink = "";
+  let baseSize = 0;
   if (qualities[0]) {
-    link = downloadLinks[qualities[0]].link;
-    resolution = downloadLinks[qualities[0]].resolution;
+    baseLink = downloadLinks[qualities[0]].link;
+    baseResolution = downloadLinks[qualities[0]].resolution;
+    baseSize = downloadLinks[qualities[0]].size;
   }
   return (
     <div className="mb-2 justify-between gap-3 border border-secondary p-5 sm:flex">
@@ -54,29 +62,61 @@ export default function VideoCard({
       </div>
       <div className="sm:flex sm:flex-col sm:justify-between">
         <span className="fourth-step">
-          <Link href={link} target="_blank" className="hidden sm:flex">
+          <Link download={true} href={baseLink} className="hidden sm:flex">
             <TooltipProvider>
               <Tooltip>
                 <TooltipTrigger>
                   <Download className="h-8 w-8 cursor-pointer hover:scale-[.90] active:scale-[.85]" />
                 </TooltipTrigger>
                 <TooltipContent>
-                  {` ${resolution}`}
-                  {link ? "" : " (Not Available)"}
+                  {` ${baseResolution}`}
+                  {baseLink ? "" : " (Not Available)"}
                 </TooltipContent>
               </Tooltip>
             </TooltipProvider>
           </Link>
-          <Link
-            href={link}
-            target="_blank"
-            className={cn(
-              buttonVariants({ variant: "default" }),
-              "fourth-step mt-3 w-full sm:hidden",
+          <div className="relative mt-3 inline-flex w-full">
+            <Link
+              download={true}
+              href={baseLink}
+              className={cn(
+                buttonVariants({ variant: "default" }),
+                "fourth-step ml-auto w-full rounded-r-none sm:hidden",
+              )}
+            >
+              {baseResolution} {baseSize && `(${formatBytes(baseSize)})`}{" "}
+              <Download className="ml-2" />
+            </Link>
+            {Object.keys(downloadLinks).length > 1 && (
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button className="rounded-l-none">
+                    <ChevronDownIcon className="h-4 w-4" />
+                    <span className="sr-only">More options</span>
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end" className="w-max">
+                  {qualities.map((quality) => (
+                    <DropdownMenuItem key={quality}>
+                      <Link
+                        href={downloadLinks[quality].link}
+                        className="mx-auto flex items-center gap-2"
+                      >
+                        <Download className="h-4 w-4" />
+                        Download
+                        <span>{downloadLinks[quality].resolution}</span>
+                        {downloadLinks[quality].size && (
+                          <span>
+                            ({formatBytes(downloadLinks[quality].size)})
+                          </span>
+                        )}
+                      </Link>
+                    </DropdownMenuItem>
+                  ))}
+                </DropdownMenuContent>
+              </DropdownMenu>
             )}
-          >
-            Download {resolution} video <Download className="ml-2" />
-          </Link>
+          </div>
         </span>
         <span className="fifth-step">
           <Link
