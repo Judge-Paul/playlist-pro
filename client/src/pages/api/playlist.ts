@@ -85,7 +85,7 @@ export default async function handler(
       return res.status(500).json({ error: "Failed getting playlists data" });
     }
   } catch (error: any) {
-    if (error.response.status === 404) {
+    if (error?.response?.status === 404) {
       return res.status(404).json({ error: "Playlist not found" });
     }
     return res.status(500).json({ error: "Unexpected error occurred" });
