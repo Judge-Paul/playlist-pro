@@ -185,16 +185,16 @@ export default function Download({ id }: DownloadProps) {
             )}
           </div>
         </div>
-        <div className="mt-5 sm:mt-7">
-          {items?.map((playlist: PlaylistItem) => {
-            const { title, description } = playlist.snippet;
+        <div className="mt-5 px-4 sm:mt-7">
+          {items?.map((video: PlaylistItem) => {
+            const { title, description } = video.snippet;
             if (
               (title !== "Private video" &&
                 description !== "This video is private.") ||
               (title !== "Deleted video" &&
                 description !== "This video is unavailable.")
             ) {
-              return <VideoCard key={playlist.id} {...playlist} />;
+              return <VideoCard key={video.id} {...video} />;
             }
           })}
         </div>

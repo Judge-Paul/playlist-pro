@@ -17,6 +17,10 @@ export default async function handler(
   const clientURL = process.env.NEXT_PUBLIC_CLIENT_URL;
   const id = req.query.id as string;
 
+  if (!apiKey) {
+    return res.status(401).json({ error: "API Key not found" });
+  }
+
   if (!id) {
     return res.status(400).json({ error: "Missing playlistId" });
   }
@@ -79,7 +83,12 @@ export default async function handler(
       await redis.set(id, playlist);
       await redis.expire(id, 21600);
 
-      mixpanel.track("Fetch Playlist");
+      mixpanel.track("Fetch Playlist", {
+        id: id,
+        fromCache: false,
+        title: playlist?.title,
+        quantity: playlist?.items.length,
+      });
       return res.status(200).json(playlist);
     } else {
       return res.status(500).json({ error: "Failed getting playlists data" });
