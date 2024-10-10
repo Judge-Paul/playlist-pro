@@ -24,10 +24,10 @@ export default function FAQs() {
         <AccordionItem value="item-2">
           <AccordionTrigger>Is this illegal?</AccordionTrigger>
           <AccordionContent>
-            Downloading YouTube videos isn&apos;t inherently illegal. But gaining
-            offline access to copyrighted content without permission is. You can
-            use our tool to download any content you have the rights to or any
-            content that is uploaded under a Creative Commons license.
+            Downloading YouTube videos isn&apos;t inherently illegal. But
+            gaining offline access to copyrighted content without permission is.
+            You can use our tool to download any content you have the rights to
+            or any content that is uploaded under a Creative Commons license.
             <br />
             <br />
             We do not support using this tool to as a pirating site.
@@ -41,9 +41,9 @@ export default function FAQs() {
             I originally built this tool to as a personal project because I was
             trying to download a playlist of videos and all other services I
             found would have me download videos individually while going through
-            a new set of ads each time. So to answer the question it&apos;s because I
-            was just trying to solve that one problem and not build a full
-            startup.
+            a new set of ads each time. So to answer the question it&apos;s
+            because I was just trying to solve that one problem and not build a
+            full startup.
             <br />
             <br />
             But I am looking at adding other features to the app in the future.
@@ -63,8 +63,8 @@ export default function FAQs() {
             <br />
             <br />
             The site also barely got visitors in the past (like prior June 2024)
-            so I didn&apos;t see the need to constantly check on it cause no one was
-            using it.
+            so I didn&apos;t see the need to constantly check on it cause no one
+            was using it.
           </AccordionContent>
         </AccordionItem>
         <AccordionItem value="item-5">
@@ -96,15 +96,16 @@ export default function FAQs() {
             How do you (the Developer) make money from this?
           </AccordionTrigger>
           <AccordionContent>
-            You might have noticed that there&apos;s no ads or paid subscription on
-            this site and might be wondering how I manage that. Well I built
+            You might have noticed that there&apos;s no ads or paid subscription
+            on this site and might be wondering how I manage that. Well I built
             this app because I hated the alternatives which were very ad-heavy
             so as long as I can afford to run the site I can let it run for
             free.
             <br />
             <br />
             The project is also Open Source so self-hosting is an option if
-            there&apos;s ever ads or a subscripton tier you aren&apos;t comfortable with.
+            there&apos;s ever ads or a subscripton tier you aren&apos;t
+            comfortable with.
             <br />
             <br />
             <span className="font-bold">TL DR:</span> I don&apos;t
