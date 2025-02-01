@@ -4,14 +4,42 @@ import axios from "axios";
 import { redis } from "@/lib/redis";
 import { getQualities } from "@/lib/utils";
 import mixpanel from "@/lib/mixpanel";
+import ytdl from "@distube/ytdl-core";
+
+type Resolution = "144p" | "240p" | "360p" | "480p" | "720p" | "1080p";
+type Quality =
+  | "ultraHigh"
+  | "high"
+  | "medium"
+  | "standard"
+  | "low"
+  | "ultraLow";
+
+interface DownloadLinks {
+  [quality: string]: {
+    resolution: Resolution;
+    format: string;
+    link: string;
+    size: number;
+  };
+}
+
+const qualityMap: any = {
+  "1080p": "ultraHigh",
+  "720p": "high",
+  "480p": "standard",
+  "360p": "medium",
+  "240p": "low",
+  "144p": "ultraLow",
+};
 
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse,
 ) {
-  res.setHeader("Vercel-CDN-Cache-Control", "max-age=21600");
-  res.setHeader("CDN-Cache-Control", "max-age=21600");
-  res.setHeader("Cache-Control", "public, must-revalidate, max-age=21600");
+  // res.setHeader("Vercel-CDN-Cache-Control", "max-age=21600");
+  // res.setHeader("CDN-Cache-Control", "max-age=21600");
+  // res.setHeader("Cache-Control", "public, must-revalidate, max-age=21600");
 
   const apiKey = process.env.GOOGLE_API_KEY;
   const clientURL = process.env.NEXT_PUBLIC_CLIENT_URL;
@@ -46,16 +74,11 @@ export default async function handler(
       const videoIds = items.map((item) => item.snippet.resourceId.videoId);
 
       const [linksRes, playlistRes] = await Promise.all([
-        axios.get(
-          `${clientURL}/api/downloadLinks?videoIds=${encodeURIComponent(
-            JSON.stringify(videoIds),
-          )}`,
-        ),
+        getDownloadLinks(videoIds),
         axios.get(
           `https://youtube.googleapis.com/youtube/v3/playlists?part=snippet&id=${id}&key=${apiKey}`,
         ),
       ]);
-
       items = items.map((item: PlaylistItem, index: number) => {
         return {
           id: item.id,
@@ -67,8 +90,8 @@ export default async function handler(
               videoId: item.snippet.resourceId.videoId,
             },
           },
-          downloadLinks: linksRes.data[index],
-          qualities: Object.getOwnPropertyNames(linksRes.data[index]),
+          downloadLinks: linksRes[index],
+          qualities: Object.getOwnPropertyNames(linksRes[index]),
         };
       });
 
@@ -80,8 +103,8 @@ export default async function handler(
         qualities,
       };
 
-      await redis.set(id, playlist);
       await redis.expire(id, 21600);
+      await redis.set(id, playlist);
 
       mixpanel.track("Fetch Playlist", {
         id: id,
@@ -94,9 +117,54 @@ export default async function handler(
       return res.status(500).json({ error: "Failed getting playlists data" });
     }
   } catch (error: any) {
+    // console.error(error);
+    // if (axios.isAxiosError(error)) {
+    //   return res.status(500).json({ error });
+    // }
+    // return res.status(500).json({ error });
     if (error?.response?.status === 404) {
       return res.status(404).json({ error: "Playlist not found" });
     }
     return res.status(500).json({ error: "Unexpected error occurred" });
+  }
+}
+
+async function getDownloadLinks(videoIds: string[]) {
+  if (!videoIds) {
+    throw new Error("Missing videoIds");
+  }
+
+  try {
+    const responses = await Promise.all(
+      videoIds.map(async (videoId: string) => {
+        return ytdl
+          .getInfo(`https://www.youtube.com/watch?v=${videoId}`)
+          .then((info) => {
+            const formats = ytdl.filterFormats(info.formats, "videoandaudio");
+
+            const downloadLinks: any = {};
+            formats.forEach((format) => {
+              if (format.hasVideo && format.hasAudio && format.url) {
+                downloadLinks[qualityMap[format.qualityLabel]] = {
+                  resolution: format.qualityLabel,
+                  format: format.container,
+                  link: format.url,
+                  size: format.contentLength,
+                };
+              }
+            });
+            return downloadLinks;
+          })
+          .catch((err) => {
+            console.error(err);
+            throw new Error(err);
+          });
+      }),
+    );
+
+    return responses;
+  } catch (error) {
+    console.error("Download links error:", error);
+    throw new Error("Failed to generate download links");
   }
 }
