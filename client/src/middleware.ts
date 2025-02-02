@@ -24,7 +24,7 @@ export function middleware(request: NextRequest) {
               </h1>
               <p class="mt-3 px-8 text-center text-sm font-light sm:mt-7 sm:text-lg lg:text-xl">
                 Sorry our site is temporarily down.\nOur Engineers are working really
-                hard to get it back up.\nPlease bear with us. The site should be back on before 20th July 2024.
+                hard to get it back up.\nPlease bear with us. The site should be back soon.
               </p>
               <img
                 src="https://res.cloudinary.com/dyjxtk0dc/image/upload/v1721225698/penguin_iaszq6.webp"
