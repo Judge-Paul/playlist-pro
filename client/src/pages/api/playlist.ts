@@ -35,9 +35,14 @@ const qualityMap: any = {
 
 const cookies = JSON.parse(process.env.COOKIES || "");
 
-console.log("cookies", cookies);
+const agentOptions = {
+  maxSockets: 10, // Limit concurrent requests to avoid rate limits
+  maxFreeSockets: 5, // Avoid holding too many idle sockets
+  timeout: 30000, // Timeout in milliseconds (30s)
+  maxRedirections: 5, // Follow up to 5 redirects
+};
 
-const agent = ytdl.createAgent(cookies);
+const agent = ytdl.createAgent(cookies, agentOptions);
 
 export default async function handler(
   req: NextApiRequest,
