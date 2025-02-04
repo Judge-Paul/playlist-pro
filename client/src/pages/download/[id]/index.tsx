@@ -17,6 +17,7 @@ import usePlaylist from "@/hooks/usePlaylist";
 import Loader from "@/components/loader";
 import Image from "next/image";
 import Penguin from "@/assets/penguin.png";
+import { toast } from "sonner";
 
 interface DownloadProps {
   id: string;
@@ -150,39 +151,43 @@ export default function Download({ id }: DownloadProps) {
             </span>
           </Link>
           <div className="flex gap-2 text-sm sm:text-lg">
-            {qualities?.length > 0 ? (
-              <Popover>
-                <PopoverTrigger>
-                  <Button className="third-step" variant="outline">
-                    Download All
-                  </Button>
-                </PopoverTrigger>
-                <PopoverContent align="end" className="w-52 px-3 py-2">
-                  {qualities.map((quality: Quality) => {
-                    return (
-                      <Link
-                        key={quality}
-                        href={`${serverURL}/createZip?id=${id}&quality=${quality}`}
-                        className={cn(
-                          "third-step mb-1 mt-1 w-full",
-                          buttonVariants({ variant: "outline" }),
-                        )}
-                      >
-                        Download ({resolutionMap[quality]}) .zip
-                      </Link>
-                    );
-                  })}
-                </PopoverContent>
-              </Popover>
-            ) : (
-              <Button
-                className="third-step mt-2 block w-full cursor-not-allowed hover:cursor-not-allowed hover:bg-none"
-                aria-disabled
-                variant="secondary"
-              >
-                Download All
-              </Button>
-            )}
+            {
+              //qualities?.length > 0
+              false ? (
+                <Popover>
+                  <PopoverTrigger>
+                    <Button className="third-step" variant="outline">
+                      Download All
+                    </Button>
+                  </PopoverTrigger>
+                  <PopoverContent align="end" className="w-52 px-3 py-2">
+                    {qualities.map((quality: Quality) => {
+                      return (
+                        <Link
+                          key={quality}
+                          href={`${serverURL}/createZip?id=${id}&quality=${quality}`}
+                          className={cn(
+                            "third-step mb-1 mt-1 w-full",
+                            buttonVariants({ variant: "outline" }),
+                          )}
+                        >
+                          Download ({resolutionMap[quality]}) .zip
+                        </Link>
+                      );
+                    })}
+                  </PopoverContent>
+                </Popover>
+              ) : (
+                <Button
+                  className="third-step mt-2 block w-full cursor-not-allowed hover:cursor-not-allowed hover:bg-none"
+                  aria-disabled
+                  onClick={() => toast.error("Feature currently disabled")}
+                  variant="secondary"
+                >
+                  Download All
+                </Button>
+              )
+            }
           </div>
         </div>
         <div className="mt-5 px-4 sm:mt-7">

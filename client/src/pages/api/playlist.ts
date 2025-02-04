@@ -35,6 +35,8 @@ const qualityMap: any = {
 
 const cookies = JSON.parse(process.env.COOKIES || "");
 
+console.log("cookies", cookies);
+
 const agent = ytdl.createAgent(cookies);
 
 export default async function handler(
@@ -142,7 +144,16 @@ async function getDownloadLinks(videoIds: string[]) {
     const responses = await Promise.all(
       videoIds.map(async (videoId: string) => {
         return ytdl
-          .getInfo(`https://www.youtube.com/watch?v=${videoId}`, { agent })
+          .getInfo(`https://www.youtube.com/watch?v=${videoId}`, {
+            agent,
+            requestOptions: {
+              headers: {
+                "User-Agent":
+                  "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/132.0.0.0 Safari/537.36",
+              },
+            },
+            playerClients: ["WEB"],
+          })
           .then((info) => {
             const formats = ytdl.filterFormats(info.formats, "videoandaudio");
 
