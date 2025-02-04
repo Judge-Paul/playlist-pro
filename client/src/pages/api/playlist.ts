@@ -33,6 +33,95 @@ const qualityMap: any = {
   "144p": "ultraLow",
 };
 
+const cookies = [
+  {
+    domain: ".youtube.com",
+    expirationDate: 1747014825.795909,
+    hostOnly: false,
+    httpOnly: true,
+    name: "__Secure-1PSIDTS",
+    path: "/",
+    sameSite: "unspecified",
+    secure: true,
+    session: false,
+    storeId: "0",
+    value: process.env.COOKIE_1 || "",
+    id: 1,
+  },
+  {
+    domain: ".youtube.com",
+    expirationDate: 1747014825.796242,
+    hostOnly: false,
+    httpOnly: false,
+    name: "__Secure-3PAPISID",
+    path: "/",
+    sameSite: "no_restriction",
+    secure: true,
+    session: false,
+    storeId: "0",
+    value: process.env.COOKIE_2 || "",
+    id: 2,
+  },
+  {
+    domain: ".youtube.com",
+    expirationDate: 1747014825.796347,
+    hostOnly: false,
+    httpOnly: true,
+    name: "__Secure-3PSID",
+    path: "/",
+    sameSite: "no_restriction",
+    secure: true,
+    session: false,
+    storeId: "0",
+    value: process.env.COOKIE_3 || "",
+    id: 3,
+  },
+  {
+    domain: ".youtube.com",
+    expirationDate: 1747014825.796001,
+    hostOnly: false,
+    httpOnly: true,
+    name: "__Secure-3PSIDTS",
+    path: "/",
+    sameSite: "no_restriction",
+    secure: true,
+    session: false,
+    storeId: "0",
+    value: process.env.COOKIE_4 || "",
+    id: 4,
+  },
+  {
+    domain: ".youtube.com",
+    expirationDate: 1738663032.382918,
+    hostOnly: false,
+    httpOnly: true,
+    name: "GPS",
+    path: "/",
+    sameSite: "unspecified",
+    secure: true,
+    session: false,
+    storeId: "0",
+    value: process.env.COOKIE_5 || "",
+    id: 5,
+  },
+  {
+    domain: ".youtube.com",
+    expirationDate: 1739266071.005893,
+    hostOnly: false,
+    httpOnly: false,
+    name: "PREF",
+    path: "/",
+    sameSite: "unspecified",
+    secure: true,
+    session: false,
+    storeId: "0",
+    value: process.env.COOKIE_6 || "",
+    id: 6,
+  },
+];
+
+const agent = ytdl.createAgent(cookies);
+
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse,
@@ -103,8 +192,8 @@ export default async function handler(
         qualities,
       };
 
-      await redis.expire(id, 21600);
       await redis.set(id, playlist);
+      await redis.expire(id, 21600);
 
       mixpanel.track("Fetch Playlist", {
         id: id,
@@ -138,7 +227,7 @@ async function getDownloadLinks(videoIds: string[]) {
     const responses = await Promise.all(
       videoIds.map(async (videoId: string) => {
         return ytdl
-          .getInfo(`https://www.youtube.com/watch?v=${videoId}`)
+          .getInfo(`https://www.youtube.com/watch?v=${videoId}`, { agent })
           .then((info) => {
             const formats = ytdl.filterFormats(info.formats, "videoandaudio");
 
