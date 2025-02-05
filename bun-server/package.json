@@ -6,7 +6,8 @@
   "dependencies": {
     "@distube/ytdl-core": "^4.16.0",
     "@upstash/redis": "^1.34.4",
-    "hono": "^4.6.20"
+    "hono": "^4.6.20",
+    "mixpanel": "^0.18.0"
   },
   "devDependencies": {
     "@types/bun": "latest"

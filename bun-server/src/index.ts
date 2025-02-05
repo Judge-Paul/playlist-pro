@@ -2,7 +2,8 @@ import { Hono } from "hono";
 import { Playlist, PlaylistItem } from "@types";
 import { getQualities } from "@/lib/utils";
 import { getDownloadLinks } from "@/services";
-import { redis } from "@/lib/redis";
+import redis from "@/lib/redis";
+import mixpanel from "@/lib/mixpanel";
 
 const app = new Hono();
 const apiKey = process.env.GOOGLE_API_KEY;
@@ -20,15 +21,15 @@ app.get("/playlist", async (c) => {
 		return c.json({ error: "Missing playlistId" });
 	}
 
-	const cachedData = await redis.get<Playlist>(id);
-	if (cachedData) {
-		// mixpanel.track("Fetch Playlist", {
-		// 	id: id,
-		// 	fromCache: true,
-		// 	title: playlist?.title,
-		// 	quantity: playlist?.items.length,
-		// });
-		return c.json(cachedData);
+	const cachedPlaylist = await redis.get<Playlist>(id);
+	if (cachedPlaylist) {
+		mixpanel.track("Fetch Playlist", {
+			id: id,
+			fromCache: true,
+			title: cachedPlaylist?.title,
+			quantity: cachedPlaylist?.items.length,
+		});
+		return c.json(cachedPlaylist);
 	}
 
 	try {
@@ -86,12 +87,12 @@ app.get("/playlist", async (c) => {
 			await redis.set(id, playlist);
 			await redis.expire(id, 21600);
 
-			// mixpanel.track("Fetch Playlist", {
-			// 	id: id,
-			// 	fromCache: false,
-			// 	title: playlist?.title,
-			// 	quantity: playlist?.items.length,
-			// });
+			mixpanel.track("Fetch Playlist", {
+				id: id,
+				fromCache: false,
+				title: playlist?.title,
+				quantity: playlist?.items.length,
+			});
 			return c.json(playlist);
 		} else {
 			c.status(500);
