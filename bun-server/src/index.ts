@@ -1,4 +1,5 @@
 import { Hono } from "hono";
+import { cors } from "hono/cors";
 import { Playlist, PlaylistItem } from "@types";
 import { getQualities } from "@/lib/utils";
 import { getDownloadLinks } from "@/services";
@@ -7,6 +8,13 @@ import mixpanel from "@/lib/mixpanel";
 
 const app = new Hono();
 const apiKey = process.env.GOOGLE_API_KEY;
+
+app.use(
+	"/playlist",
+	cors({
+		origin: ["https://yt.jadge.me"],
+	}),
+);
 
 app.get("/playlist", async (c) => {
 	if (!apiKey) {
