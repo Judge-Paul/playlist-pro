@@ -114,5 +114,5 @@ const port = Number(process.env.PORT || 3000);
 export default {
 	fetch: app.fetch,
 	port,
-	idleTimeout: 45,
+	idleTimeout: 60,
 };

@@ -13,7 +13,7 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import usePlaylist from "@/hooks/usePlaylist";
+import usePlaylist, { serverURL } from "@/hooks/usePlaylist";
 import Loader from "@/components/loader";
 import Image from "next/image";
 import Penguin from "@/assets/penguin.png";
@@ -22,8 +22,6 @@ import { toast } from "sonner";
 interface DownloadProps {
   id: string;
 }
-
-const serverURL = process.env.NEXT_PUBLIC_SERVER_URL;
 
 export default function Download({ id }: DownloadProps) {
   const { setSteps } = useTour();
@@ -54,7 +52,7 @@ export default function Download({ id }: DownloadProps) {
           content: "Play this video on YouTube",
         },
       ]);
-  }, []);
+  }, [setSteps]);
 
   if (isLoading) {
     return (
