@@ -109,8 +109,10 @@ app.get("/playlist", async (c) => {
 	}
 });
 
+const port = Number(process.env.PORT || 3000);
+
 export default {
 	fetch: app.fetch,
-	port: 3001,
+	port,
 	idleTimeout: 45,
 };
