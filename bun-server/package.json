@@ -1,15 +1,16 @@
 {
-  "name": "bun-server",
-  "scripts": {
-    "dev": "bun run --hot src/index.ts"
-  },
-  "dependencies": {
-    "@distube/ytdl-core": "^4.16.0",
-    "@upstash/redis": "^1.34.4",
-    "hono": "^4.6.20",
-    "mixpanel": "^0.18.0"
-  },
-  "devDependencies": {
-    "@types/bun": "latest"
-  }
+	"name": "bun-server",
+	"scripts": {
+		"dev": "bun run --hot src/index.ts",
+		"start": "bun run src/index.ts"
+	},
+	"dependencies": {
+		"@distube/ytdl-core": "^4.16.0",
+		"@upstash/redis": "^1.34.4",
+		"hono": "^4.6.20",
+		"mixpanel": "^0.18.0"
+	},
+	"devDependencies": {
+		"@types/bun": "latest"
+	}
 }
