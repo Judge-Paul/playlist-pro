@@ -1,4 +1,5 @@
 import * as ytdl from "@distube/ytdl-core";
+import { cookies } from "@/utils/cookies";
 
 const qualityMap: any = {
 	"1080p": "ultraHigh",
@@ -8,8 +9,6 @@ const qualityMap: any = {
 	"240p": "low",
 	"144p": "ultraLow",
 };
-
-const cookies = JSON.parse(process.env.COOKIES || "");
 
 const agentOptions = {
 	maxSockets: 10, // Limit concurrent requests to avoid rate limits

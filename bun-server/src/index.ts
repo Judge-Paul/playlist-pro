@@ -92,8 +92,8 @@ app.get("/playlist", async (c) => {
 				qualities,
 			};
 
-			await redis.set(id, playlist);
-			await redis.expire(id, 21600);
+			redis.set(id, playlist);
+			redis.expire(id, 21600);
 
 			mixpanel.track("Fetch Playlist", {
 				id: id,

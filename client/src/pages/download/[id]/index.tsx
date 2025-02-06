@@ -179,7 +179,7 @@ export default function Download({ id }: DownloadProps) {
                 <Button
                   className="third-step mt-2 block w-full cursor-not-allowed hover:cursor-not-allowed hover:bg-none"
                   aria-disabled
-                  onClick={() => toast.error("Feature currently disabled")}
+                  onClick={() => toast.error("Feature currently unavailable")}
                   variant="secondary"
                 >
                   Download All
