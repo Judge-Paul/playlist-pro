@@ -54,7 +54,22 @@ app.get("/playlist", async (c) => {
 				return c.json({ error: "Playlist Items Not Found" });
 			}
 
-			const videoIds = items.map((item) => item.snippet.resourceId.videoId);
+			const videoIds: string[] = [];
+
+			items = items.filter((item) => {
+				const { title, description } = item.snippet;
+				const isPrivateOrDeleted =
+					(title === "Private video" &&
+						description === "This video is private.") ||
+					(title === "Deleted video" &&
+						description === "This video is unavailable.");
+
+				if (!isPrivateOrDeleted) {
+					videoIds.push(item.snippet.resourceId.videoId);
+				}
+
+				return !isPrivateOrDeleted;
+			});
 
 			const [linksRes, playlistRes] = await Promise.all([
 				getDownloadLinks(videoIds),
@@ -107,7 +122,7 @@ app.get("/playlist", async (c) => {
 			c.json({ error: "Failed getting playlists data" });
 		}
 	} catch (error: any) {
-		// console.error(error);
+		console.error(error);
 		// if (axios.isAxiosError(error)) {
 		//   return res.status(500).json({ error });
 		// }

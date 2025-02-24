@@ -11,10 +11,10 @@ const qualityMap: any = {
 };
 
 const agentOptions = {
-	maxSockets: 10, // Limit concurrent requests to avoid rate limits
-	maxFreeSockets: 5, // Avoid holding too many idle sockets
-	timeout: 30000, // Timeout in milliseconds (30s)
-	maxRedirections: 5, // Follow up to 5 redirects
+	maxSockets: 10,
+	maxFreeSockets: 5,
+	timeout: 30000,
+	maxRedirections: 5,
 };
 
 const agent = ytdl.createAgent(cookies, agentOptions);
@@ -55,7 +55,7 @@ export async function getDownloadLinks(videoIds: string[]) {
 						return downloadLinks;
 					})
 					.catch((err) => {
-						console.error(err);
+						console.error(`${videoId} caused err:`, err);
 						throw new Error(err);
 					});
 			}),
