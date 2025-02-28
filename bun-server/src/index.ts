@@ -1,11 +1,13 @@
 import { Hono } from "hono";
 import { cors } from "hono/cors";
-import * as archiver from "archiver";
+import axios from "axios";
+import * as JSZip from "jszip";
 import { Playlist, PlaylistItem, Quality } from "@types";
 import { getQualities, sanitizeFileName } from "@/lib/utils";
 import { getDownloadLinks } from "@/services";
 import redis from "@/lib/redis";
 import mixpanel from "@/lib/mixpanel";
+import { stream } from "hono/streaming";
 
 const app = new Hono();
 const apiKey = process.env.GOOGLE_API_KEY;
@@ -13,7 +15,7 @@ const apiKey = process.env.GOOGLE_API_KEY;
 app.use(
 	"/playlist",
 	cors({
-		origin: ["https://yt.jadge.me"],
+		origin: ["http://localhost:3000", "https://yt.jadge.me"],
 	}),
 );
 
@@ -42,12 +44,12 @@ app.get("/playlist", async (c) => {
 	}
 
 	try {
-		const res = await fetch(
+		const res = await axios.get(
 			`https://www.googleapis.com/youtube/v3/playlistItems?part=snippet&maxResults=50&playlistId=${id}&key=${apiKey}`,
 		);
 
-		if (res.ok) {
-			const data = await res.json();
+		if (res.status === 200) {
+			const data = res.data;
 			let items: PlaylistItem[] = data.items;
 
 			if (!items || items.length === 0) {
@@ -74,16 +76,12 @@ app.get("/playlist", async (c) => {
 
 			const [linksRes, playlistRes] = await Promise.all([
 				getDownloadLinks(videoIds),
-				fetch(
+				axios.get(
 					`https://youtube.googleapis.com/youtube/v3/playlists?part=snippet&id=${id}&key=${apiKey}`,
 				),
 			]);
 
-			if (!playlistRes.ok) {
-				throw new Error("Failed getting playlist data");
-			}
-
-			const playlistData = await playlistRes.json();
+			const playlistData = await playlistRes.data;
 
 			items = items.map((item: PlaylistItem, index: number) => {
 				return {
@@ -142,48 +140,34 @@ app.get("/download/zip", async (c) => {
 		if (!playlist) {
 			return c.json({ error: "Playlist not found" }, 404);
 		}
+		const zip = new JSZip();
 
-		const stream = new ReadableStream({
-			async start(controller) {
-				const archive = archiver("zip", { zlib: { level: 9 } });
-
-				archive.on("data", (chunk) => controller.enqueue(chunk));
-				archive.on("end", () => controller.close());
-				archive.on("error", (err) => controller.error(err));
-
-				playlist.items.forEach(async (item: any) => {
-					const downloadLink = item.downloadLinks[quality]?.link;
-					const fileName = `${item.snippet.title}.mp4`;
-
-					if (downloadLink) {
-						const res = await fetch(downloadLink);
-						if (!res.ok || !res.body) {
-							console.error(
-								`Failed to fetch: ${downloadLink} - Err status: ${res.statusText}`,
-							);
-							controller.error(
-								new Error(`Failed to fetch video: ${res.statusText}`),
-							);
-							return;
-						}
-
-						archive.append(res.body, { name: fileName });
-					}
-				});
-
-				archive.finalize();
-			},
-		});
-
+		await Promise.all(
+			playlist.items.map(async (item: PlaylistItem) => {
+				const downloadLink = item.downloadLinks[quality]?.link;
+				const fileName = `${item.snippet.title}`;
+				if (downloadLink) {
+					const response = await axios.get(downloadLink, {
+						responseType: "stream",
+					});
+					const size = response.headers["content-length"] ?? 0;
+					// totalSize += parseInt(size);
+					zip.file(fileName, response.data, { binary: true });
+				}
+			}),
+		);
+		c.header("Content-Type", "application/zip");
+		c.header(
+			"Content-Disposition",
+			`attachment; filename=yt.jadge.me ${playlist.title}.zip`,
+		);
 		mixpanel.track("Download Playlist", { id, quality, name: playlist?.title });
-
-		return new Response(stream, {
-			headers: {
-				"Content-Type": "application/zip",
-				"Content-Disposition": `attachment; filename=ytplay.tech "${sanitizeFileName(
-					playlist.title,
-				)}.zip"`,
-			},
+		const zipStream = zip.generateNodeStream({ streamFiles: true });
+		return stream(c, async (writer) => {
+			for await (const chunk of zipStream) {
+				await writer.write(chunk);
+			}
+			writer.close();
 		});
 	} catch (error) {
 		console.error(error);
