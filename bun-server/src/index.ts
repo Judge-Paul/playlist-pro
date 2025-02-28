@@ -1,7 +1,8 @@
 import { Hono } from "hono";
 import { cors } from "hono/cors";
-import { Playlist, PlaylistItem } from "@types";
-import { getQualities } from "@/lib/utils";
+import * as archiver from "archiver";
+import { Playlist, PlaylistItem, Quality } from "@types";
+import { getQualities, sanitizeFileName } from "@/lib/utils";
 import { getDownloadLinks } from "@/services";
 import redis from "@/lib/redis";
 import mixpanel from "@/lib/mixpanel";
@@ -129,6 +130,64 @@ app.get("/playlist", async (c) => {
 		// return res.status(500).json({ error });
 		c.status(500);
 		return c.json({ error: "Unexpected error occurred" });
+	}
+});
+
+app.get("/download/zip", async (c) => {
+	try {
+		const id = c.req.query("id") as string;
+		const quality = c.req.query("quality") as Quality;
+
+		const playlist: any = await redis.get(id);
+		if (!playlist) {
+			return c.json({ error: "Playlist not found" }, 404);
+		}
+
+		const stream = new ReadableStream({
+			async start(controller) {
+				const archive = archiver("zip", { zlib: { level: 9 } });
+
+				archive.on("data", (chunk) => controller.enqueue(chunk));
+				archive.on("end", () => controller.close());
+				archive.on("error", (err) => controller.error(err));
+
+				playlist.items.forEach(async (item: any) => {
+					const downloadLink = item.downloadLinks[quality]?.link;
+					const fileName = `${item.snippet.title}.mp4`;
+
+					if (downloadLink) {
+						const res = await fetch(downloadLink);
+						if (!res.ok || !res.body) {
+							console.error(
+								`Failed to fetch: ${downloadLink} - Err status: ${res.statusText}`,
+							);
+							controller.error(
+								new Error(`Failed to fetch video: ${res.statusText}`),
+							);
+							return;
+						}
+
+						archive.append(res.body, { name: fileName });
+					}
+				});
+
+				archive.finalize();
+			},
+		});
+
+		mixpanel.track("Download Playlist", { id, quality, name: playlist?.title });
+
+		return new Response(stream, {
+			headers: {
+				"Content-Type": "application/zip",
+				"Content-Disposition": `attachment; filename=ytplay.tech "${sanitizeFileName(
+					playlist.title,
+				)}.zip"`,
+			},
+		});
+	} catch (error) {
+		console.error(error);
+		return c.json({ error: "Internal Server Error" }, 500);
 	}
 });
 

@@ -16,3 +16,7 @@ export const getQualities = (items: PlaylistItem[]): Quality[] => {
 
 	return filteredQualities ?? [];
 };
+
+export const sanitizeFileName = (name: string): string => {
+	return name.replace(/[\/\\:*?"<>|]/g, "_");
+};
