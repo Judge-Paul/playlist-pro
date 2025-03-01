@@ -1,13 +1,12 @@
 import { Hono } from "hono";
 import { cors } from "hono/cors";
 import axios from "axios";
-import * as JSZip from "jszip";
+import archiver from "archiver";
 import { Playlist, PlaylistItem, Quality } from "@types";
-import { getQualities, sanitizeFileName } from "@/lib/utils";
+import { getQualities } from "@/lib/utils";
 import { getDownloadLinks } from "@/services";
 import redis from "@/lib/redis";
 import mixpanel from "@/lib/mixpanel";
-import { stream } from "hono/streaming";
 
 const app = new Hono();
 const apiKey = process.env.GOOGLE_API_KEY;
@@ -137,10 +136,14 @@ app.get("/download/zip", async (c) => {
 		const quality = c.req.query("quality") as Quality;
 
 		const playlist: any = await redis.get(id);
+
 		if (!playlist) {
-			return c.json({ error: "Playlist not found" }, 404);
+			return c.redirect(`https://yt.jadge.me/download/${id}`);
 		}
-		const zip = new JSZip();
+
+		const archive = archiver("zip", {
+			zlib: { level: 9 },
+		});
 
 		await Promise.all(
 			playlist.items.map(async (item: PlaylistItem) => {
@@ -152,26 +155,21 @@ app.get("/download/zip", async (c) => {
 					});
 					const size = response.headers["content-length"] ?? 0;
 					// totalSize += parseInt(size);
-					zip.file(fileName, response.data, { binary: true });
+					archive.append(response.data, { name: fileName });
 				}
 			}),
 		);
+		archive.finalize();
 		c.header("Content-Type", "application/zip");
 		c.header(
 			"Content-Disposition",
 			`attachment; filename=yt.jadge.me ${playlist.title}.zip`,
 		);
 		mixpanel.track("Download Playlist", { id, quality, name: playlist?.title });
-		const zipStream = zip.generateNodeStream({ streamFiles: true });
-		return stream(c, async (writer) => {
-			for await (const chunk of zipStream) {
-				await writer.write(chunk);
-			}
-			writer.close();
-		});
+		return c.body(archive as unknown as ReadableStream);
 	} catch (error) {
 		console.error(error);
-		return c.json({ error: "Internal Server Error" }, 500);
+		return c.text("Failed", 500);
 	}
 });
 
