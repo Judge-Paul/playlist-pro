@@ -1,0 +1,44 @@
+name: Bun Server CI/CD
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check and Install SSH
+        run: |
+          if ! command -v ssh &> /dev/null; then
+          echo "SSH not found. Installing..."
+          if command -v sudo &> /dev/null; then
+              echo "Using sudo for installation..."
+              sudo apt-get update && sudo apt-get install -y openssh-client
+          else
+              echo "sudo not found. Installing without sudo..."
+              apt-get update && apt-get install -y openssh-client
+          fi
+          else
+          echo "SSH is already installed."
+          ssh -V
+          fi
+
+      - name: Configure SSH
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+          ssh-keyscan -H ${{ secrets.SERVER_IP }} >> ~/.ssh/known_hosts
+          chmod 644 ~/.ssh/known_hosts
+
+      - name: Pull and Rebuild
+        run: |
+          ssh ${{ secrets.SSH_USER }}@${{ secrets.SERVER_IP }} "bash --login -i << 'EOF'
+            cd ${{ secrets.REPO_PATH }}
+            git pull origin main --force
+            bun build
+            pm2 restart all
+          EOF"
