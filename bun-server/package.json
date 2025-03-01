@@ -2,8 +2,7 @@
 	"name": "bun-server",
 	"scripts": {
 		"dev": "bun run --hot src/index.ts",
-		"build": "git pull && bun install",
-		"start": "bun run build && pm2 start --interpreter bun src/index.ts"
+		"start": "pm2 start --interpreter bun src/index.ts"
 	},
 	"dependencies": {
 		"@distube/ytdl-core": "^4.16.0",

@@ -39,6 +39,6 @@ jobs:
           ssh ${{ secrets.SSH_USER }}@${{ secrets.SERVER_IP }} "bash --login -i << 'EOF'
             cd ${{ secrets.REPO_PATH }}
             git pull origin main --force
-            bun build
-            pm2 restart all
+            bun install
+            bun start
           EOF"
