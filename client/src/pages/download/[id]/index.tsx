@@ -149,7 +149,8 @@ export default function Download({ id }: DownloadProps) {
             </span>
           </Link>
           <div className="flex gap-2 text-sm sm:text-lg">
-            {qualities?.length > 0 ? (
+            {false ? (
+              // qualities?.length > 0 ? (
               <Popover>
                 <PopoverTrigger>
                   <Button className="third-step" variant="outline">
@@ -177,7 +178,7 @@ export default function Download({ id }: DownloadProps) {
               <Button
                 className="third-step mt-2 block w-full cursor-not-allowed hover:cursor-not-allowed hover:bg-none"
                 aria-disabled
-                // onClick={() => toast.error("Feature currently unavailable")}
+                onClick={() => toast.error("Feature currently unavailable")}
                 variant="secondary"
               >
                 Download All

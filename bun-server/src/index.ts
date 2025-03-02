@@ -130,48 +130,48 @@ app.get("/playlist", async (c) => {
 	}
 });
 
-app.get("/download/zip", async (c) => {
-	try {
-		const id = c.req.query("id") as string;
-		const quality = c.req.query("quality") as Quality;
+// app.get("/download/zip", async (c) => {
+// 	try {
+// 		const id = c.req.query("id") as string;
+// 		const quality = c.req.query("quality") as Quality;
 
-		const playlist: any = await redis.get(id);
+// 		const playlist: any = await redis.get(id);
 
-		if (!playlist) {
-			return c.redirect(`https://yt.jadge.me/download/${id}`);
-		}
+// 		if (!playlist) {
+// 			return c.redirect(`https://yt.jadge.me/download/${id}`);
+// 		}
 
-		const archive = archiver("zip", {
-			zlib: { level: 9 },
-		});
+// 		const archive = archiver("zip", {
+// 			zlib: { level: 9 },
+// 		});
 
-		await Promise.all(
-			playlist.items.map(async (item: PlaylistItem) => {
-				const downloadLink = item.downloadLinks[quality]?.link;
-				const fileName = `${item.snippet.title}`;
-				if (downloadLink) {
-					const response = await axios.get(downloadLink, {
-						responseType: "stream",
-					});
-					const size = response.headers["content-length"] ?? 0;
-					// totalSize += parseInt(size);
-					archive.append(response.data, { name: fileName });
-				}
-			}),
-		);
-		archive.finalize();
-		c.header("Content-Type", "application/zip");
-		c.header(
-			"Content-Disposition",
-			`attachment; filename=yt.jadge.me ${playlist.title}.zip`,
-		);
-		mixpanel.track("Download Playlist", { id, quality, name: playlist?.title });
-		return c.body(archive as unknown as ReadableStream);
-	} catch (error) {
-		console.error(error);
-		return c.text("Failed", 500);
-	}
-});
+// 		await Promise.all(
+// 			playlist.items.map(async (item: PlaylistItem) => {
+// 				const downloadLink = item.downloadLinks[quality]?.link;
+// 				const fileName = `${item.snippet.title}`;
+// 				if (downloadLink) {
+// 					const response = await axios.get(downloadLink, {
+// 						responseType: "stream",
+// 					});
+// 					const size = response.headers["content-length"] ?? 0;
+// 					// totalSize += parseInt(size);
+// 					archive.append(response.data, { name: fileName });
+// 				}
+// 			}),
+// 		);
+// 		archive.finalize();
+// 		c.header("Content-Type", "application/zip");
+// 		c.header(
+// 			"Content-Disposition",
+// 			`attachment; filename=yt.jadge.me ${playlist.title}.zip`,
+// 		);
+// 		mixpanel.track("Download Playlist", { id, quality, name: playlist?.title });
+// 		return c.body(archive as unknown as ReadableStream);
+// 	} catch (error) {
+// 		console.error(error);
+// 		return c.text("Failed", 500);
+// 	}
+// });
 
 const port = Number(process.env.PORT || 3000);
 
