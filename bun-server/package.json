@@ -2,7 +2,8 @@
 	"name": "bun-server",
 	"scripts": {
 		"dev": "bun run --hot src/index.ts",
-		"start": "pm2 start --interpreter bun src/index.ts"
+		"start": "pm2 start --interpreter bun src/index.ts",
+		"restart": "pm2 reload all || bun start"
 	},
 	"dependencies": {
 		"@distube/ytdl-core": "^4.16.0",

@@ -40,5 +40,5 @@ jobs:
             cd ${{ secrets.REPO_PATH }}
             git pull origin main --force
             bun install
-            bun start
+            bun restart
           EOF"
