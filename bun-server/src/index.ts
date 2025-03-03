@@ -47,80 +47,84 @@ app.get("/playlist", async (c) => {
 			`https://www.googleapis.com/youtube/v3/playlistItems?part=snippet&maxResults=50&playlistId=${id}&key=${apiKey}`,
 		);
 
-		if (res.status === 200) {
-			const data = res.data;
-			let items: PlaylistItem[] = data.items;
+		const data = res.data;
+		let items: PlaylistItem[] = data.items;
 
-			if (!items || items.length === 0) {
-				c.status(404);
-				return c.json({ error: "Playlist Items Not Found" });
+		if (!items || items.length === 0) {
+			c.status(404);
+			return c.json({ error: "Playlist Items Not Found" });
+		}
+
+		const videoIds: string[] = [];
+
+		items = items.filter((item) => {
+			const { title, description } = item.snippet;
+			const isPrivateOrDeleted =
+				(title === "Private video" &&
+					description === "This video is private.") ||
+				(title === "Deleted video" &&
+					description === "This video is unavailable.");
+
+			if (!isPrivateOrDeleted) {
+				videoIds.push(item.snippet.resourceId.videoId);
 			}
 
-			const videoIds: string[] = [];
+			return !isPrivateOrDeleted;
+		});
 
-			items = items.filter((item) => {
-				const { title, description } = item.snippet;
-				const isPrivateOrDeleted =
-					(title === "Private video" &&
-						description === "This video is private.") ||
-					(title === "Deleted video" &&
-						description === "This video is unavailable.");
+		const [linksRes, playlistRes] = await Promise.all([
+			getDownloadLinks(videoIds),
+			axios.get(
+				`https://youtube.googleapis.com/youtube/v3/playlists?part=snippet&id=${id}&key=${apiKey}`,
+			),
+		]);
 
-				if (!isPrivateOrDeleted) {
-					videoIds.push(item.snippet.resourceId.videoId);
-				}
+		const playlistData = await playlistRes.data;
 
-				return !isPrivateOrDeleted;
-			});
-
-			const [linksRes, playlistRes] = await Promise.all([
-				getDownloadLinks(videoIds),
-				axios.get(
-					`https://youtube.googleapis.com/youtube/v3/playlists?part=snippet&id=${id}&key=${apiKey}`,
-				),
-			]);
-
-			const playlistData = await playlistRes.data;
-
-			items = items.map((item: PlaylistItem, index: number) => {
-				return {
-					id: item.id,
-					snippet: {
-						title: item.snippet.title,
-						description: item.snippet.description,
-						thumbnails: item.snippet.thumbnails,
-						resourceId: {
-							videoId: item.snippet.resourceId.videoId,
-						},
+		items = items.map((item: PlaylistItem, index: number) => {
+			return {
+				id: item.id,
+				snippet: {
+					title: item.snippet.title,
+					description: item.snippet.description,
+					thumbnails: item.snippet.thumbnails,
+					resourceId: {
+						videoId: item.snippet.resourceId.videoId,
 					},
-					downloadLinks: linksRes[index],
-					qualities: Object.getOwnPropertyNames(linksRes[index]),
-				};
-			});
-			const qualities = getQualities(items) ?? [];
-			const playlist = {
-				title: playlistData.items[0].snippet.title,
-				description: playlistData.items[0].snippet.description,
-				items,
-				qualities,
+				},
+				downloadLinks: linksRes[index],
+				qualities: Object.getOwnPropertyNames(linksRes[index]),
 			};
+		});
+		const qualities = getQualities(items) ?? [];
+		const playlist = {
+			title: playlistData.items[0].snippet.title,
+			description: playlistData.items[0].snippet.description,
+			items,
+			qualities,
+		};
 
-			redis.set(id, playlist);
-			redis.expire(id, 21600);
+		redis.set(id, playlist);
+		redis.expire(id, 21600);
 
-			mixpanel.track("Fetch Playlist", {
-				id: id,
-				fromCache: false,
-				title: playlist?.title,
-				quantity: playlist?.items.length,
-			});
-			return c.json(playlist);
-		} else {
-			c.status(500);
-			c.json({ error: "Failed getting playlists data" });
-		}
+		mixpanel.track("Fetch Playlist", {
+			id: id,
+			fromCache: false,
+			title: playlist?.title,
+			quantity: playlist?.items.length,
+		});
+		return c.json(playlist);
 	} catch (error: any) {
 		console.error(error);
+		if (axios.isAxiosError(error)) {
+			if (error.response?.status === 404) {
+				c.status(404);
+				return c.json({ error: "Playlist Items Not Found" });
+			} else {
+				c.status(500);
+				c.json({ error: "Failed getting playlists data" });
+			}
+		}
 		// if (axios.isAxiosError(error)) {
 		//   return res.status(500).json({ error });
 		// }
