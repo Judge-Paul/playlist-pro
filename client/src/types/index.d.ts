@@ -46,4 +46,5 @@ export type Playlist = {
   description: string;
   items: PlaylistItem[];
   qualities: Quality[];
+  nextPageToken?: string;
 };

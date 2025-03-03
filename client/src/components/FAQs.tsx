@@ -16,9 +16,9 @@ export default function FAQs() {
         <AccordionItem value="item-1">
           <AccordionTrigger>How many videos can I download?</AccordionTrigger>
           <AccordionContent>
-            You can download any playlist with up to 50 videos. If you paste a
-            playlist that has more than 50 videos only the first 50 will be
-            selected.
+            You can download any playlist with any number of videos. If the
+            playlist has more than 50 videos you will have to get them in
+            batches of 50.
           </AccordionContent>
         </AccordionItem>
         <AccordionItem value="item-2">

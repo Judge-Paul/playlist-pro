@@ -1,4 +1,4 @@
-import { ArrowLeft } from "lucide-react";
+import { ArrowLeft, Loader2 } from "lucide-react";
 import { Button, buttonVariants } from "@/components/ui/button";
 import VideoLoadingCard from "@/components/VideoLoadingCard";
 import VideoCard from "@/components/VideoCard";
@@ -25,8 +25,17 @@ interface DownloadProps {
 
 export default function Download({ id }: DownloadProps) {
   const { setSteps } = useTour();
-  const { error, isLoading, title, description, items, qualities } =
-    usePlaylist(id);
+  const {
+    error,
+    isLoading,
+    title,
+    description,
+    items,
+    qualities,
+    nextPageToken,
+    fetchMore,
+    isLoadingMore,
+  } = usePlaylist(id);
 
   useEffect(() => {
     setSteps &&
@@ -190,6 +199,18 @@ export default function Download({ id }: DownloadProps) {
           {items?.map((video: PlaylistItem) => (
             <VideoCard key={video.id} {...video} />
           ))}
+          {nextPageToken && (
+            <Button
+              onClick={() => fetchMore(nextPageToken)}
+              disabled={isLoadingMore}
+              className="mx-auto flex w-full md:w-1/2"
+            >
+              Get More
+              {isLoadingMore && (
+                <Loader2 className="ml-2 h-4 w-4 animate-spin" />
+              )}
+            </Button>
+          )}
         </div>
       </div>
     </main>

@@ -25,6 +25,7 @@ app.get("/playlist", async (c) => {
 	}
 
 	const id = c.req.query("id");
+	const nextPageToken = c.req.query("nextPageToken");
 
 	if (!id) {
 		c.status(400);
@@ -32,7 +33,7 @@ app.get("/playlist", async (c) => {
 	}
 
 	const cachedPlaylist = await redis.get<Playlist>(id);
-	if (cachedPlaylist) {
+	if (cachedPlaylist && !nextPageToken) {
 		mixpanel.track("Fetch Playlist", {
 			id: id,
 			fromCache: true,
@@ -44,7 +45,9 @@ app.get("/playlist", async (c) => {
 
 	try {
 		const res = await axios.get(
-			`https://www.googleapis.com/youtube/v3/playlistItems?part=snippet&maxResults=50&playlistId=${id}&key=${apiKey}`,
+			`https://www.googleapis.com/youtube/v3/playlistItems?part=snippet&maxResults=50&playlistId=${id}&key=${apiKey}${
+				nextPageToken ? `&pageToken=${nextPageToken}` : ""
+			}`,
 		);
 
 		const data = res.data;
@@ -97,16 +100,28 @@ app.get("/playlist", async (c) => {
 			};
 		});
 		const qualities = getQualities(items) ?? [];
-		const playlist = {
+		const playlist: Playlist = {
 			title: playlistData.items[0].snippet.title,
 			description: playlistData.items[0].snippet.description,
 			items,
 			qualities,
+			nextPageToken: data.nextPageToken,
 		};
-
-		redis.set(id, playlist);
-		redis.expire(id, 21600);
-
+		if (cachedPlaylist) {
+			const newQualities = new Set([
+				...(cachedPlaylist?.qualities || []),
+				...qualities,
+			]);
+			const totalPlaylist: Playlist = {
+				...cachedPlaylist,
+				items: [...(cachedPlaylist?.items || []), ...items],
+				qualities: Array.from(newQualities),
+			};
+			redis.set(id, totalPlaylist);
+		} else {
+			redis.set(id, playlist);
+			redis.expire(id, 21600);
+		}
 		mixpanel.track("Fetch Playlist", {
 			id: id,
 			fromCache: false,
