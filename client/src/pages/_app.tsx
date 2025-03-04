@@ -43,10 +43,10 @@ export default function App({ Component, pageProps }: AppProps) {
       >
         <TourProvider steps={steps}>
           <Head>
-            <title>YTPlaylistPro - Download YouTube Playlists</title>
+            <title>YTPlay - Download YouTube Playlists</title>
             <meta
               name="description"
-              content="YTPlaylistPro is a free, easy to use, open source, YouTube playlist downloader, no ads, no signup, very fast."
+              content="YTPlay is a free, easy to use, open source, YouTube playlist downloader, no ads, no signup, very fast."
             />
 
             <link rel="icon" href="/favicon.png" />

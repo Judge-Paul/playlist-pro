@@ -42,7 +42,7 @@ export default function Navbar() {
               transform="matrix(.1 0 0 -.1 0 500)"
             ></path>
           </svg>
-          <span className="my-auto text-xl font-semibold">PlaylistPro</span>
+          <span className="my-auto text-xl font-semibold">YTPlay</span>
         </Link>
         <div className="my-auto hidden gap-6 font-semibold sm:flex">
           <span onClick={startTour} className="cursor-pointer">
