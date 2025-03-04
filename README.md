@@ -19,7 +19,7 @@ npm install
    Create a `.env.local` file in the root of the `client` folder and add:
 
 ```dotenv
-NEXT_PUBLIC_SERVER_URL=http://localhost:8080
+NEXT_PUBLIC_SERVER_URL=http://localhost:3001
 NEXT_PUBLIC_CLIENT_URL=http://localhost:3000
 ```
 
@@ -33,7 +33,7 @@ npm run dev
 
 ### Server Setup
 
-1. **Navigate to the `server` folder and install dependencies:**
+1. **Navigate to the `bun-server` folder and install dependencies:**
 
 ```bash
 cd server
@@ -41,22 +41,25 @@ npm install
 ```
 
 2. **Set environment variables:**
-   Create a `.env` file in the root of the `server` folder and add the following:
+   Create a `.env` file in the root of the `bun-server` folder and add the following:
 
 ```dotenv
-CLIENT_URL=http://localhost:3000
-SERVER_URL=http://localhost:8080
+GOOGLE_API_KEY=*******
+REDIS_URL=*******
+REDIS_TOKEN=*******
+NEXT_PUBLIC_MIXPANEL_TEST_TOKEN=**********
+NEXT_PUBLIC_MIXPANEL_LIVE_TOKEN=**********
 ```
 
 3. **Start the development server:**
 
 ```bash
-npm run dev
+bun dev
 ```
 
 <h2>💻 Built with</h2>
 
-<img src="https://img.shields.io/badge/Next-black?style=for-the-badge&logo=next.js&logoColor=white" /> <img src="https://img.shields.io/badge/typescript-%23007ACC.svg?style=for-the-badge&logo=typescript&logoColor=white" /> <img src="https://img.shields.io/badge/Tailwind_CSS-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white" /> <img src="https://img.shields.io/badge/shadcn/ui-000000.svg?style=for-the-badge&logo=shadcn/ui&logoColor=white" /> <img src="https://img.shields.io/badge/Radix%20UI-161618.svg?style=for-the-badge&logo=Radix-UI&logoColor=white" /> <img src="https://img.shields.io/badge/Zod-3E67B1.svg?style=for-the-badge&logo=Zod&logoColor=white" /> <img src="https://img.shields.io/badge/SWR-000000.svg?style=for-the-badge&logo=SWR&logoColor=white" /> <img src="https://img.shields.io/badge/Axios-5A29E4.svg?style=for-the-badge&logo=Axios&logoColor=white" /> <img src="https://img.shields.io/badge/Node.js-43853D?style=for-the-badge&logo=node.js&logoColor=white" /> <img src="https://img.shields.io/badge/npm-CB3837?style=for-the-badge&logo=npm&logoColor=white" /> <img src="https://img.shields.io/badge/express.js-%23404d59.svg?style=for-the-badge&logo=express&logoColor=%2361DAFB" /> <img src="https://img.shields.io/badge/GIT-E44C30?style=for-the-badge&logo=git&logoColor=white" /> <img src="https://img.shields.io/badge/Vercel-000000.svg?style=for-the-badge&logo=Vercel&logoColor=white" /> <img src="https://img.shields.io/badge/Google%20Cloud-4285F4.svg?style=for-the-badge&logo=Google-Cloud&logoColor=white"/>
+<img src="https://img.shields.io/badge/Next-black?style=for-the-badge&logo=next.js&logoColor=white" /> <img src="https://img.shields.io/badge/typescript-%23007ACC.svg?style=for-the-badge&logo=typescript&logoColor=white" /> <img src="https://img.shields.io/badge/Tailwind_CSS-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white" /> <img src="https://img.shields.io/badge/shadcn/ui-000000.svg?style=for-the-badge&logo=shadcn/ui&logoColor=white" /> <img src="https://img.shields.io/badge/Radix%20UI-161618.svg?style=for-the-badge&logo=Radix-UI&logoColor=white" /> <img src="https://img.shields.io/badge/Zod-3E67B1.svg?style=for-the-badge&logo=Zod&logoColor=white" /> <img src="https://img.shields.io/badge/SWR-000000.svg?style=for-the-badge&logo=SWR&logoColor=white" /> <img src="https://img.shields.io/badge/Axios-5A29E4.svg?style=for-the-badge&logo=Axios&logoColor=white" /> <img src="https://img.shields.io/badge/Node.js-43853D?style=for-the-badge&logo=node.js&logoColor=white" /> <img src="https://img.shields.io/badge/npm-CB3837?style=for-the-badge&logo=npm&logoColor=white" /> <img src="https://img.shields.io/badge/express.js-%23404d59.svg?style=for-the-badge&logo=express&logoColor=%2361DAFB" /> <img src="https://img.shields.io/badge/GIT-E44C30?style=for-the-badge&logo=git&logoColor=white" /> <img src="https://img.shields.io/badge/Vercel-000000.svg?style=for-the-badge&logo=Vercel&logoColor=white" /> <img src="https://img.shields.io/badge/GitHub_Actions-2088FF?style=for-the-badge&logo=github-actions&logoColor=white" /> <img src="https://img.shields.io/badge/AWS-%23FF9900.svg?style=for-the-badge&logo=amazon-web-services&logoColor=white" />
 
 <h2>🤝 Contributing</h2>
 
