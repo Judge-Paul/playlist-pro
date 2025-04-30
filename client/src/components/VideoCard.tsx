@@ -62,7 +62,11 @@ export default function VideoCard({
       </div>
       <div className="sm:flex sm:flex-col sm:justify-between">
         <span className="fourth-step">
-          <Link target="_blank" href={baseLink} className="hidden sm:flex">
+          <Link
+            // target="_blank"
+            href={baseLink}
+            className="hidden sm:flex"
+          >
             <TooltipProvider>
               <Tooltip>
                 <TooltipTrigger>
@@ -77,7 +81,7 @@ export default function VideoCard({
           </Link>
           <div className="relative mt-3 inline-flex w-full">
             <Link
-              target="_blank"
+              // target="_blank"
               href={baseLink}
               className={cn(
                 buttonVariants({ variant: "default" }),
@@ -99,7 +103,7 @@ export default function VideoCard({
                   {qualities.map((quality) => (
                     <DropdownMenuItem key={quality}>
                       <Link
-                        target="_blank"
+                        // target="_blank"
                         href={downloadLinks[quality].link}
                         className="mx-auto flex items-center gap-2"
                       >

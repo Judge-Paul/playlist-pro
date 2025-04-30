@@ -44,10 +44,12 @@ export async function getDownloadLinks(videoIds: string[]) {
 						const downloadLinks: any = {};
 						formats.forEach((format) => {
 							if (format.hasVideo && format.hasAudio && format.url) {
+								const url = new URL(format.url);
+								url.searchParams.set("title", info.videoDetails.title);
 								downloadLinks[qualityMap[format.qualityLabel]] = {
 									resolution: format.qualityLabel,
 									format: format.container,
-									link: format.url,
+									link: url.toString(),
 									size: format.contentLength,
 								};
 							}
