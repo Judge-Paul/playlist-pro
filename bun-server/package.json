@@ -6,7 +6,7 @@
 		"restart": "pm2 reload all || bun start"
 	},
 	"dependencies": {
-		"@distube/ytdl-core": "^4.16.0",
+		"@distube/ytdl-core": "github:1ly4s0/ytdl-core",
 		"@upstash/redis": "^1.34.4",
 		"archiver": "^7.0.1",
 		"axios": "^1.8.1",
