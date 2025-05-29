@@ -4,7 +4,7 @@ import axios from "axios";
 import archiver from "archiver";
 import { Playlist, PlaylistItem, Quality } from "@types";
 import { getQualities } from "@/lib/utils";
-import { getDownloadLinks } from "@/services";
+import { getDownloadLinks, keepDBAlive } from "@/services";
 import redis from "@/lib/redis";
 import mixpanel from "@/lib/mixpanel";
 
@@ -119,8 +119,9 @@ app.get("/playlist", async (c) => {
 			};
 			redis.set(id, totalPlaylist);
 		} else {
-			redis.set(id, playlist);
-			redis.expire(id, 21600);
+			redis.set(id, playlist, {
+				ex: 60 * 60 * 6,
+			});
 		}
 		mixpanel.track("Fetch Playlist", {
 			id: id,
@@ -148,6 +149,8 @@ app.get("/playlist", async (c) => {
 		return c.json({ error: "Unexpected error occurred" });
 	}
 });
+
+keepDBAlive();
 
 // app.get("/download/zip", async (c) => {
 // 	try {

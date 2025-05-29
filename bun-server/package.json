@@ -12,7 +12,8 @@
 		"axios": "^1.8.1",
 		"hono": "^4.6.20",
 		"jszip": "^3.10.1",
-		"mixpanel": "^0.18.0"
+		"mixpanel": "^0.18.0",
+		"node-cron": "^4.0.7"
 	},
 	"devDependencies": {
 		"@types/archiver": "^6.0.3",

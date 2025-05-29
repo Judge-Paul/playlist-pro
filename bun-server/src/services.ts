@@ -1,5 +1,9 @@
 import * as ytdl from "@distube/ytdl-core";
 import { cookies } from "@/utils/cookies";
+import cron from "node-cron";
+import crypto from "crypto";
+import redis from "@/lib/redis";
+import { getRandomWholeNumber } from "./lib/utils";
 
 const qualityMap: any = {
 	"1080p": "ultraHigh",
@@ -68,4 +72,24 @@ export async function getDownloadLinks(videoIds: string[]) {
 		console.error("Download links error:", error);
 		throw new Error("Failed to generate download links");
 	}
+}
+
+export async function keepDBAlive() {
+	return cron
+		.schedule(
+			`0 ${getRandomWholeNumber(1, 5)},${getRandomWholeNumber(
+				14,
+				18,
+			)},${getRandomWholeNumber(20, 23)} * * *`,
+			async () => {
+				const id = crypto.randomBytes(10).toString("hex");
+
+				const data =
+					crypto.randomBytes(60).toString("base64") +
+					`\nSet at ${Date.now().toLocaleString()}`;
+
+				await redis.set(id, data, { ex: 60 * 60 * 2 });
+			},
+		)
+		.start();
 }
