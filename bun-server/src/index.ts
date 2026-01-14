@@ -14,7 +14,11 @@ const apiKey = process.env.GOOGLE_API_KEY;
 app.use(
 	"/playlist",
 	cors({
-		origin: ["http://localhost:3000", "https://yt.jadge.me"],
+		origin: [
+			"http://localhost:3000",
+			"https://yt.jadge.me",
+			"https://ytplay.vercel.app",
+		],
 	}),
 );
 
