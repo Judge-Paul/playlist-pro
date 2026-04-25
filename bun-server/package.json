@@ -2,7 +2,7 @@
 	"name": "bun-server",
 	"scripts": {
 		"dev": "bun run --hot src/index.ts",
-		"start": "pm2 start --interpreter bun src/index.ts",
+		"start": "pm2 start 'bun src/index.ts' --name playlist-pro-be",
 		"restart": "pm2 reload all || bun start"
 	},
 	"dependencies": {
